@@ -1,0 +1,9 @@
+# Artefatos derivados do Markdown, gerados por Requisitos/gerar-docx.py.
+# A fonte da verdade é sempre o .md — ver README.md, seção "Documentos oficiais".
+*.docx
+*.pdf
+
+# Ambiente Python local para gerar os artefatos.
+.venv/
+venv/
+__pycache__/
