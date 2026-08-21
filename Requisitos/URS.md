@@ -1,381 +1,1267 @@
 # URS — Especificação de Requisitos do Usuário
 
 **Projeto:** VinceArt
-**Versão:** 0.9
-**Status:** Rascunho — em elaboração
-**Data:** 2026-08-11
+**Versão:** 0.1
+**Status:** Em elaboração — fatia estrutural registrada; fatia de correção pendente
+**Data:** 2026-08-19
 
 ---
 
-## 1. Objetivo e escopo do documento
+## 1. Objetivo
 
-Este documento especifica os requisitos do sistema VinceArt. Nesta versão estão consolidados
-exclusivamente os **requisitos não funcionais e as restrições** decorrentes das decisões de
-arquitetura tomadas até a data acima. Os requisitos funcionais permanecem pendentes de
-consolidação (seção 5).
+Este documento especifica **o que as partes interessadas do VinceArt precisam que o sistema faça**.
 
-Este documento declara **o que o sistema deve satisfazer**. As decisões que determinam **como**
-cada requisito é satisfeito estão registradas em `ADR/`, referenciadas na coluna de rastreio.
+Todo item registrado aqui DEVE ter origem em parte interessada e DEVE ser rastreável até a evidência
+que o originou. Decisão da equipe NÃO DEVE ser registrada nesta URS: o seu lugar é
+[`Padroes/Padroes-de-Engenharia.md`](../Padroes/Padroes-de-Engenharia.md) ou um ADR em
+[`ADR/`](../ADR/).
 
----
+As regras de redação desta URS — identificação, prioridade, origem, rastreabilidade e estrutura do
+requisito funcional — estão em `PAD-REQ-001` a `PAD-REQ-008`. Elas dizem **como** escrever um
+requisito, nunca **qual** requisito escrever.
 
-## 2. Convenções
-
-### 2.1 Termos normativos
-
-| Termo | Significado |
-| :--- | :--- |
-| **DEVE** / **NÃO DEVE** | Obrigatório / proibido. Não conformidade reprova a entrega. |
-| **PODE** | Permitido, sem obrigação. |
-
-### 2.2 Identificação
-
-`<TIPO>-<CATEGORIA>-<NNN>`, com numeração sequencial e imutável dentro da categoria.
-
-| Tipo | Significado |
-| :--- | :--- |
-| `RF` | Requisito funcional |
-| `RNF` | Requisito não funcional |
-| `RES` | Restrição de projeto — imposta, não derivada de análise |
-
-### 2.3 Prioridade
-
-| Sigla | Significado |
-| :--- | :--- |
-| **E** | Essencial — sem ele o sistema não atende ao propósito. |
-| **I** | Importante — ausência degrada significativamente o resultado. |
-| **D** | Desejável — agrega valor, pode ser postergado. |
-
-### 2.4 Origem
-
-| Sigla | Significado |
-| :--- | :--- |
-| `ARQ` | Decisão de arquitetura registrada em ADR. |
-| `STK` | Imposição de stakeholder. |
-| `ELI` | Elicitação junto a usuários. |
+O material bruto de elicitação está em [`Coleta de Requisitos/`](Coleta%20de%20Requisitos/).
 
 ---
 
-## 3. Visão geral do sistema
+## 2. Escopo desta versão
 
-> **Pendente.** A ser redigida após a consolidação dos requisitos funcionais.
+Esta versão registra a **fatia estrutural** do sistema: identidade e acesso, hierarquia
+institucional, evento acadêmico, formação de equipes e o artigo como entidade.
+
+**Não está nesta versão**, e será registrado a seguir: o ciclo de correção — submissão de versões,
+apontamentos, verificação de atendimento entre etapas, conformidade a normas e template,
+acompanhamento de progresso e relatórios à coordenação.
+
+**Fora do escopo do produto nesta fase**, por decisão registrada em §10: eventos científicos
+externos e periódicos (radar de oportunidades), participação de um usuário em mais de uma
+instituição e matrícula em mais de uma turma.
+
+---
+
+## 3. Convenções
+
+### 3.1 Identificação
+
+`RF-<CATEGORIA>-<NNN>`, numeração sequencial e imutável dentro da categoria (`PAD-REQ-002`).
+
+| Categoria | Domínio |
+| :--- | :--- |
+| `ACS` | Acesso e identidade |
+| `INS` | Instituição |
+| `CUR` | Curso |
+| `TUR` | Turma |
+| `EVT` | Evento |
+| `EQP` | Equipe |
+| `ART` | Artigo |
+| `INT` | Internacionalização |
+
+Os códigos de categoria acompanham a convenção em português já adotada pelos identificadores
+`PAD-*`. Isso não conflita com o padrão de nomeação em inglês: aquele rege **identificadores de
+software** — código, tabela, coluna, rota, papel, permissão e código de resposta —, não os
+identificadores de documento.
+
+### 3.2 Prioridade
+
+Escala `E` (essencial), `I` (importante), `D` (desejável).
+
+Por `PAD-REQ-003`, a prioridade DEVE ser atribuída pela parte interessada. **Nenhuma prioridade
+desta versão foi atribuída por parte interessada.** Os valores aqui registrados aparecem com o
+sufixo **`(proposta)`** e são sugestão da equipe, sem valor de acordo, pendentes de ratificação —
+ver §10, item 1.
+
+### 3.3 Origem
+
+| Código | Significado |
+| :--- | :--- |
+| `ELI` | Declarado por parte interessada na elicitação |
+| `STK` | Imposto por parte interessada fora da elicitação |
+| `DER` | Derivado; indica o item de origem e NÃO É considerado acordado antes de validação (`PAD-REQ-004`) |
+
+### 3.4 Rastreio
+
+| Sigla | Evidência |
+| :--- | :--- |
+| `M-P<n>` | Marciele R. Siveres, resposta à pergunta `<n>` — `Coleta de Requisitos/Requisitos Marciele.md` |
+| `M-perfil` | Marciele, perfil do respondente |
+| `A-P<n>` | Angélica P. S. Meurer, resposta à pergunta `<n>` — `Coleta de Requisitos/Requisitos Angélica.md` |
+| `A-perfil` | Angélica, perfil do respondente |
 
 ---
 
 ## 4. Partes interessadas
 
-> **Pendente.** A ser consolidada a partir do material em `Requisitos/Coleta de Requisitos/`.
-
----
-
-## 5. Requisitos funcionais
-
-### 5.1 Estrutura do requisito funcional
-
-Todo requisito funcional DEVE conter os campos abaixo. Requisito que omita campo obrigatório
-DEVE ser considerado incompleto e NÃO DEVE ser encaminhado à implementação.
-
-| Campo | Obrigatório | Conteúdo |
-| :--- | :--: | :--- |
-| Identificador | Sim | `RF-<CATEGORIA>-<NNN>` |
-| Nome | Sim | Frase verbal curta, na voz do usuário |
-| Descrição | Sim | O que o sistema deve permitir, sem definir solução técnica |
-| Ator | Sim | Perfil que executa a ação |
-| Pré-condições | Sim | Estado exigido para que a ação seja possível |
-| Fluxo principal | Sim | Sequência de passos do caminho de sucesso |
-| Fluxos alternativos e de exceção | Sim | Desvios, erros e seus tratamentos |
-| Regras de negócio | Sim | Invariantes e validações aplicáveis |
-| **Permissões geradas** | **Sim** | Permissões `RECURSO:ACAO` originadas por este requisito |
-| Escopo de titularidade | Sim | Se a ação é restrita a registros do próprio ator; ausente quando irrestrita |
-| Prioridade | Sim | `E`, `I` ou `D` |
-| Origem | Sim | `STK`, `ELI` ou `ARQ` |
-| Critério de aceitação | Sim | Condição objetiva e verificável de conclusão |
-| Rastreio | Não | RNFs e ADRs relacionados |
-
-O campo **Permissões geradas** decorre de `RNF-SEG-008`. O campo **Escopo de titularidade** decorre
-de `RNF-SEG-010`: RBAC autoriza a ação, mas não autoriza a ação sobre um registro específico — a
-distinção precisa estar declarada no requisito, não deduzida na implementação.
-
-### 5.2 Requisitos
-
-> **Pendente.** A elicitação está em andamento; o material bruto encontra-se em
-> `Requisitos/Coleta de Requisitos/`. Os requisitos funcionais serão consolidados,
-> identificados e priorizados em versão posterior deste documento.
-
-### 5.3 Catálogo de permissões
-
-Consolida as permissões declaradas pelos requisitos funcionais. É documento derivado: nenhuma
-permissão DEVE constar aqui sem requisito de origem (`RNF-SEG-008`).
-
-**Formato:** `RECURSO:ACAO` — recurso no singular, ambos em maiúsculas, sem curinga.
-Exemplo: `USUARIO:CRIAR`, `USUARIO:ATUALIZAR`, `USUARIO:EXCLUIR`, `USUARIO:CONSULTAR`.
-
-| Permissão | Recurso | Requisito de origem | Descrição |
-| :--- | :--- | :--- | :--- |
-| *(a preencher)* | | | |
-
-> **Pendente.** Será preenchido conforme os requisitos funcionais forem consolidados em 5.2.
-
-### 5.4 Catálogo de códigos de resposta
-
-Consolida os códigos retornados em `status.code` e em `errors[].code`, conforme ADR-0025.
-É documento derivado: nenhum código DEVE existir sem requisito ou regra de negócio que o origine.
-
-**Formato:** identificador em maiúsculas, sem acento, independente de idioma.
-Exemplo de estado: `ARTIGO_CRIADO`, `VALIDACAO_FALHOU`. Exemplo de campo: `OBRIGATORIO`,
-`TAMANHO_MAXIMO_EXCEDIDO`.
-
-| Código | Escopo | Severidade | Origem | Descrição |
-| :--- | :--- | :--- | :--- | :--- |
-| *(a preencher)* | | | | |
-
-> **Pendente.** Será preenchido conforme os requisitos funcionais forem consolidados em 5.2.
-
----
-
-## 6. Requisitos não funcionais
-
-### 6.1 Modularidade e manutenibilidade
-
-| ID | Requisito | Prior. | Origem | Verificação | Rastreio |
-| :--- | :--- | :--: | :--: | :--- | :--- |
-| RNF-MOD-001 | O backend DEVE ser organizado em módulos delimitados por capacidade de negócio, e não por camada técnica. | E | ARQ | Inspeção da estrutura de diretórios contra a estrutura normativa. | ADR-0001 §1; ADR-0003 §1, §2 |
-| RNF-MOD-002 | Cada módulo DEVE expor uma única superfície pública, sendo todo o restante de sua implementação inacessível aos demais módulos. | E | ARQ | Análise estática: nenhuma importação entre módulos fora de `contracts/`. | ADR-0004 §1, §4, §5 |
-| RNF-MOD-003 | Um módulo NÃO DEVE depender de detalhe de implementação de outro módulo. | E | ARQ | Análise estática de importações; ausência de referência a classe concreta externa. | ADR-0004 §6; ADR-0005 §1, §5 |
-| RNF-MOD-004 | A conformidade com as fronteiras entre módulos DEVE ser verificada automaticamente a cada integração, impedindo a incorporação de código não conforme. | E | ARQ | Pipeline de CI reprova build com violação de fronteira. | ADR-0007 §1, §6, §7 |
-| RNF-MOD-005 | NÃO DEVEM existir dependências cíclicas entre módulos. | E | ARQ | Verificação automatizada de ciclos no CI. | ADR-0005 §6; ADR-0007 §10 |
-| RNF-MOD-006 | A adição ou remoção de um módulo NÃO DEVE exigir alteração no código dos demais módulos. | E | ARQ | Remoção do módulo do composition root sem erro de compilação nos demais. | ADR-0003 §10, §11 |
-| RNF-MOD-007 | O código DEVE observar os princípios SOLID, DRY e KISS, com precedência definida em caso de conflito. | E | STK | Critério explícito de revisão de código. | ADR-0001 §5; ADR-0009 |
-| RNF-MOD-008 | Código de infraestrutura transversal compartilhado NÃO DEVE conter semântica de negócio. | I | ARQ | Inspeção do conteúdo de `shared/` em revisão. | ADR-0009 §4, §5, §7 |
-| RNF-MOD-009 | Cada fila de processamento assíncrono DEVE ser de propriedade de um único módulo, e NÃO DEVE ser publicada ou consumida por módulo diverso do proprietário. | E | STK | Inspeção do registro de filas por módulo; análise estática. | ADR-0012 §7; ADR-0020 §5–§9 |
-| RNF-MOD-010 | Nenhum módulo DEVE acessar model de dados pertencente a outro módulo, ainda que o cliente de persistência seja único no processo. | E | ARQ | Inspeção do cliente escopado; regra de análise estática. | ADR-0010 §4, §5, §6 |
-| RNF-MOD-011 | O frontend DEVE ser organizado em features correspondentes aos módulos do backend, cada uma com superfície pública única, e NÃO DEVE ter diretórios de primeiro nível por camada técnica fora de `shared/`. | E | ARQ | Inspeção da estrutura; análise estática de importações entre features. | ADR-0015 §1–§5 |
-| RNF-MOD-012 | As fronteiras entre features do frontend DEVEM ser verificadas automaticamente na integração contínua, com violação classificada como erro, e NÃO DEVEM existir dependências cíclicas entre features. | E | ARQ | Pipeline reprova build com violação de fronteira ou ciclo. | ADR-0015 §8, §9 |
-| RNF-MOD-013 | Dado proveniente da API NÃO DEVE ser copiado para store de estado de cliente nem tratado como fonte da verdade no frontend. | E | ARQ | Inspeção dos stores; ausência de dado originado da API. | ADR-0015 §11–§13 |
-| RNF-MOD-014 | Componente de biblioteca visual do frontend NÃO DEVE conter regra de negócio nem realizar chamada à API. | I | ARQ | Inspeção de `shared/ui/`. | ADR-0016 §21 |
-| RNF-MOD-015 | Toda fila DEVE ser nomeada com o prefixo do módulo proprietário e toda chave criada no Redis DEVE ser prefixada pelo nome do módulo. | E | ARQ | Análise estática dos nomes de fila e de chave. | ADR-0020 §5, §6, §9 |
-| RNF-MOD-016 | Um módulo NÃO DEVE enfileirar tarefa em fila de outro módulo, nem conhecer os módulos consumidores dos eventos que publica. | E | ARQ | Inspeção do registro de filas e do publicador. | ADR-0020 §13; ADR-0021 §18 |
-| RNF-MOD-017 | Módulo de plataforma DEVE observar integralmente as mesmas regras estruturais dos módulos de negócio, e sua criação DEVE ser justificada pela existência de dados próprios que `shared/` não pode possuir. | E | ARQ | Inspeção da estrutura e da justificativa no ADR do módulo. | ADR-0003 §1, §14, §15 |
-| RNF-MOD-018 | DEVE existir um único comando de verificação, definido em ponto único e reutilizado por gancho local e por execução remota, executando tipos, análise estática, formatação, fronteiras e testes. | E | ARQ | Comparação entre a definição local e a do workflow remoto. | ADR-0023 §8–§10 |
-
-### 6.2 Evolutividade e capacidade de extração
-
-| ID | Requisito | Prior. | Origem | Verificação | Rastreio |
-| :--- | :--- | :--: | :--: | :--- | :--- |
-| RNF-EVO-001 | Qualquer módulo DEVE poder ser extraído para serviço independente sem alteração no código dos módulos consumidores. | E | STK | Substituição da implementação da fachada por cliente remoto, sem alteração em consumidores. | ADR-0001 §3; ADR-0004 §10 |
-| RNF-EVO-002 | A extração de um módulo NÃO DEVE exigir migração de dados nem alteração de schema pertencente a outro módulo. | E | ARQ | Ausência de junções e de chaves estrangeiras entre módulos. | ADR-0006 §3, §4 |
-| RNF-EVO-003 | Toda decisão arquitetural DEVE ser registrada de forma versionada, rastreável e imutável. | I | ARQ | Existência do ADR correspondente antes da implementação. | ADR-0000 |
-| RNF-EVO-004 | Alteração incompatível em contrato público de módulo DEVE permitir convivência entre versões durante a migração dos consumidores. | I | ARQ | Revisão de contrato; presença das duas versões no período de transição. | ADR-0004 §11 |
-| RNF-EVO-005 | Módulo extraído para serviço independente DEVE receber a identidade já autenticada pela borda e NÃO DEVE reautenticar credencial de usuário final. | I | ARQ | Inspeção do fluxo de autenticação do módulo extraído. | ADR-0013 §19 |
-| RNF-EVO-006 | Os tipos do contrato de API usados pelo frontend DEVEM ser derivados da especificação publicada pelo backend, e divergência entre ambos DEVE reprovar o build do frontend. | E | ARQ | Regeneração dos tipos na integração contínua com comparação. | ADR-0017 §1–§5 |
-| RNF-EVO-007 | O backend DEVE publicar especificação de API gerada a partir do próprio código, mantida como contrato e não como documentação. | E | ARQ | Comparação entre a especificação publicada e as rotas expostas. | ADR-0017 §1 |
-| RNF-EVO-008 | A extração dos dados de um módulo DEVE ser possível pelo despejo integral de seu schema, sem seleção manual de tabelas. | E | ARQ | Despejo e restauração do schema de um módulo em instância distinta. | ADR-0018 §1, §2 |
-| RNF-EVO-009 | Toda resposta JSON de negócio DEVE usar o envelope único com `data` e `status`, em `camelCase`, omitindo `pagination` e `errors` quando não aplicáveis em vez de enviá-los nulos. | E | STK | Inspeção das respostas de cada endpoint contra o envelope. | ADR-0025 §1–§6 |
-| RNF-EVO-010 | `status.code` DEVE ser identificador estável e independente de idioma, e NÃO DEVE ter sua semântica alterada após publicado; o cliente DEVE decidir por ele, nunca pelo texto da mensagem. | E | ARQ | Inspeção do catálogo e do tratamento no cliente. | ADR-0025 §7, §8, §11 |
-| RNF-EVO-011 | O código de status HTTP NÃO DEVE ser replicado no corpo, e o corpo NÃO DEVE contradizer o status HTTP. | E | ARQ | Verificação de falha retornada sob status de sucesso. | ADR-0025 §13, §14 |
-| RNF-EVO-012 | Falha de validação DEVE incluir `errors` com um item por campo inválido, contendo identificação do campo e código; falha inesperada NÃO DEVE incluir `errors`. | E | ARQ | Submissão com múltiplos campos inválidos e provocação de falha inesperada. | ADR-0025 §16, §17, §19 |
-
-### 6.3 Escalabilidade e desempenho
-
-| ID | Requisito | Prior. | Origem | Verificação | Rastreio |
-| :--- | :--- | :--: | :--: | :--- | :--- |
-| RNF-ESC-001 | O sistema DEVE permitir escalar de forma independente a capacidade de processamento de cada módulo, sem replicar a aplicação inteira e sem extrair o módulo para serviço próprio. | E | STK | Execução do artefato com papel e conjunto de módulos definidos por variável de ambiente. | ADR-0008 §2, §6, §11 |
-| RNF-ESC-002 | Todo processo da aplicação DEVE ser stateless, admitindo replicação horizontal sem afinidade de sessão. | E | ARQ | Ausência de estado em memória entre requisições; teste com múltiplas réplicas. | ADR-0008 §9 |
-| RNF-ESC-003 | Processamento intensivo de CPU ou de longa duração NÃO DEVE ser executado no ciclo de requisição HTTP. | E | ARQ | Inspeção dos casos de uso expostos por rota; medição de tempo de resposta. | ADR-0008 §12 |
-| RNF-ESC-004 | Nenhum módulo DEVE presumir execução no mesmo processo que outro módulo. | E | ARQ | Ausência de comunicação por estado compartilhado em memória. | ADR-0008 §10 |
-| RNF-ESC-005 | O tempo de resposta medido no servidor DEVE observar: leitura — p95 ≤ 300 ms e p99 ≤ 800 ms; escrita transacional — p95 ≤ 500 ms e p99 ≤ 1500 ms. | E | STK | Teste de carga sob a carga de referência, com medição por percentil. | ADR-0011 §1, §2 |
-| RNF-ESC-006 | A disponibilidade mensal DEVE ser de, no mínimo, 99,5%. | I | ARQ | Monitoramento de disponibilidade em janela mensal. | ADR-0011 §4 |
-| RNF-ESC-007 | A experiência de carregamento do frontend DEVE observar, no percentil 75: LCP ≤ 2,5 s, INP ≤ 200 ms e CLS ≤ 0,1. | I | STK | Medição de campo das métricas Core Web Vitals. | ADR-0011 §3 |
-| RNF-ESC-008 | Toda listagem DEVE ser paginada, com limite máximo de 100 itens por página. | E | ARQ | Inspeção do contrato da API; requisição acima do limite. | ADR-0011 §6, §7 |
-| RNF-ESC-009 | Toda chamada a dependência externa DEVE declarar timeout explícito. | E | ARQ | Inspeção de código; teste com dependência não responsiva. | ADR-0011 §8 |
-| RNF-ESC-010 | O número de consultas ao banco por requisição DEVE ser constante em relação à quantidade de registros retornados. | E | STK | Teste de invariância: mesmo endpoint com um e com dez registros DEVE emitir a mesma contagem de consultas. | ADR-0011 §9, §10, §12 |
-| RNF-ESC-011 | Divergência no teste de invariância de contagem de consultas DEVE reprovar o build. | E | ARQ | Execução do teste no pipeline de CI. | ADR-0011 §11 |
-| RNF-ESC-012 | Toda coluna utilizada como filtro ou ordenação de consulta recorrente DEVE possuir índice. | I | ARQ | Revisão de migração; análise de plano de execução. | ADR-0011 §16 |
-| RNF-ESC-013 | A carga de referência sob a qual as metas de desempenho são aferidas DEVE ser definida. | I | — | *A definir.* | ADR-0011 §17; *pendente* |
-| RNF-ESC-014 | O código do frontend DEVE ser dividido por rota, e conteúdo carregado de forma assíncrona DEVE ter espaço reservado com dimensão equivalente à do conteúdo final. | I | ARQ | Inspeção dos pacotes gerados por rota; medição de CLS. | ADR-0015 §16, §17 |
-| RNF-ESC-015 | NÃO DEVE ser adotada no frontend solução de estilo com custo em tempo de execução. | I | ARQ | Inspeção das dependências de estilização. | ADR-0016 §20 |
-| RNF-ESC-016 | O tamanho do pool de conexões por processo DEVE ser declarado, e o produto entre réplicas e pool DEVE caber em orçamento de conexões inferior ao limite do servidor, com reserva para migração e manutenção. | E | ARQ | Cálculo do orçamento contra a configuração de réplicas; medição das conexões em uso. | ADR-0019 §9–§13 |
-| RNF-ESC-017 | A indicação de existência de próxima página DEVE ser obtida pela busca de um registro além do tamanho da página, sem consulta de contagem; totais DEVEM ser retornados apenas quando solicitados explicitamente. | E | ARQ | Inspeção das consultas emitidas em listagem com e sem solicitação de totais. | ADR-0025 §22–§24 |
-
-### 6.4 Confiabilidade e integridade
-
-| ID | Requisito | Prior. | Origem | Verificação | Rastreio |
-| :--- | :--- | :--: | :--: | :--- | :--- |
-| RNF-CON-001 | Todo dado persistido DEVE ter exatamente um módulo proprietário, responsável por sua escrita. | E | ARQ | Mapa de propriedade de tabelas por módulo; análise estática de acesso. | ADR-0006 §1, §2 |
-| RNF-CON-002 | O reprocessamento de uma mesma mensagem ou evento NÃO DEVE produzir efeito duplicado. | E | ARQ | Teste de entrega repetida com verificação de estado final. | ADR-0005 §10; ADR-0012 §16 |
-| RNF-CON-003 | Falha no processamento assíncrono de um módulo NÃO DEVE reverter nem impedir a conclusão da operação do módulo publicador. | E | ARQ | Teste de falha injetada no consumidor. | ADR-0005 §12 |
-| RNF-CON-004 | A integridade referencial entre dados de módulos distintos DEVE ser assegurada pela aplicação. | E | ARQ | Validação no módulo proprietário; teste de referência inexistente. | ADR-0006 §4, §5 |
-| RNF-CON-005 | O sistema DEVE tolerar consistência eventual entre módulos, e a interface DEVE representar esse estado quando perceptível ao usuário. | I | ARQ | Revisão de fluxos assíncronos com reflexo em interface. | ADR-0005 §2; ADR-0006 §7 |
-| RNF-CON-006 | Réplica local de dado pertencente a outro módulo NÃO DEVE ser tratada como fonte da verdade nem alterada por escrita própria. | E | ARQ | Inspeção das projeções; ausência de escrita fora do consumo de evento. | ADR-0006 §7, §8 |
-| RNF-CON-007 | Toda fila DEVE aplicar número máximo de tentativas e backoff exponencial com jitter, sendo o padrão de 5 tentativas, atraso inicial de 5 s, fator 2 e teto de 5 min. | E | STK | Inspeção da configuração da fila; teste de falha sucessiva com medição dos intervalos. | ADR-0012 §1–§4 |
-| RNF-CON-008 | Falhas DEVEM ser classificadas em transitórias e permanentes; falha permanente NÃO DEVE ser retentada e DEVE ser encaminhada imediatamente à dead-letter queue. | E | ARQ | Teste com payload inválido: ausência de retentativa e encaminhamento imediato. | ADR-0012 §5, §6 |
-| RNF-CON-009 | Cada fila DEVE possuir dead-letter queue de propriedade do mesmo módulo, e NÃO DEVE existir consumidor automático de dead-letter queue. | E | STK | Inspeção da topologia de filas e dos consumidores registrados. | ADR-0012 §7, §9 |
-| RNF-CON-010 | Mensagem irrecuperável NÃO DEVE ser descartada; DEVE ser retida por no mínimo 30 dias com payload original, histórico de tentativas, erro e identificador de correlação. | E | ARQ | Teste de esgotamento de tentativas com inspeção do conteúdo retido. | ADR-0012 §8, §12, §15 |
-| RNF-CON-011 | O reprocessamento a partir da dead-letter queue DEVE ser ação explícita, sujeita a permissão e registrada em auditoria. | E | ARQ | Tentativa de reprocessamento sem permissão; verificação da trilha de auditoria. | ADR-0012 §10, §11 |
-| RNF-CON-012 | O ingresso de mensagem em dead-letter queue DEVE emitir alerta observável, e o crescimento sustentado de uma dead-letter queue DEVE ser tratado como incidente. | I | ARQ | Simulação de falha permanente com verificação do alerta emitido. | ADR-0012 §13, §14 |
-| RNF-CON-013 | Cada módulo DEVE possuir schema próprio no banco de dados, com todas as suas tabelas nele residentes; NÃO DEVE existir schema compartilhado nem tabela de negócio em `public`. | E | ARQ | Inspeção da distribuição de tabelas por schema. | ADR-0018 §1–§4 |
-| RNF-CON-014 | A chave primária de toda tabela DEVE ser um UUID versão 7 gerado pela aplicação. | E | ARQ | Inspeção do schema e da origem da geração do identificador. | ADR-0018 §9, §10 |
-| RNF-CON-015 | Referência a registro do mesmo módulo DEVE declarar chave estrangeira; referência a registro de outro módulo DEVE ser coluna de identificador indexada, sem chave estrangeira. | E | ARQ | Inspeção das restrições e dos índices declarados. | ADR-0018 §12–§14 |
-| RNF-CON-016 | Colunas de data e hora DEVEM usar tipo com fuso horário, e toda tabela DEVE registrar instante de criação e de última atualização. | E | ARQ | Inspeção dos tipos de coluna declarados. | ADR-0018 §15, §17 |
-| RNF-CON-017 | Toda transação DEVE estar contida em um único caso de uso de um único módulo, com tempo limite declarado, sem abranger chamada à fachada de outro módulo nem chamada de rede. | E | ARQ | Inspeção do escopo transacional; teste com dependência externa não responsiva. | ADR-0019 §1–§5 |
-| RNF-CON-018 | A gravação do evento em outbox DEVE ocorrer na mesma transação do fato que o originou, e a consistência entre módulos NÃO DEVE ser obtida por transação distribuída. | E | ARQ | Teste de falha após o commit do fato, com verificação da presença do evento. | ADR-0019 §7, §8 |
-| RNF-CON-019 | Cada módulo DEVE possuir tabela de outbox em seu próprio schema, e o evento NÃO DEVE ser publicado no barramento dentro da transação que o originou. | E | ARQ | Inspeção do schema e do ponto de publicação. | ADR-0021 §1–§3 |
-| RNF-CON-020 | A entrega de eventos é garantida como pelo menos uma vez; a publicação DEVE preservar a ordem de criação dentro de cada módulo e a linha DEVE ser marcada apenas após confirmação. | E | ARQ | Teste de falha entre publicação e marcação, com verificação de republicação. | ADR-0021 §8–§11 |
-| RNF-CON-021 | A falha de entrega a um consumidor NÃO DEVE impedir a entrega aos demais; cada fila de consumidor DEVE possuir retentativa e dead-letter queue próprias. | E | ARQ | Falha injetada em um consumidor com verificação dos demais. | ADR-0021 §14, §16, §17 |
-| RNF-CON-022 | Linhas de outbox publicadas DEVEM ser marcadas e expurgadas após 7 dias; linha não publicada NÃO DEVE ser expurgada. | I | ARQ | Execução da rotina de expurgo com verificação das linhas remanescentes. | ADR-0021 §19–§21 |
-
-### 6.5 Observabilidade
-
-| ID | Requisito | Prior. | Origem | Verificação | Rastreio |
-| :--- | :--- | :--: | :--: | :--- | :--- |
-| RNF-OBS-001 | Fluxo de negócio que atravesse módulos DEVE ser rastreável de ponta a ponta por identificador de correlação. | I | ARQ | Rastreio de uma operação completa nos registros de log. | ADR-0005 (implicações); ADR-0009 §4 |
-| RNF-OBS-002 | Cada processo DEVE identificar, em seus registros, o papel de execução e os módulos ativos. | I | ARQ | Inspeção dos registros de log de processos `api` e `worker`. | ADR-0008 (implicações) |
-| RNF-OBS-003 | Cada processo DEVE expor endpoint de verificação de saúde. | I | ARQ | Requisição ao endpoint em ambos os papéis. | ADR-0008 §5 |
-| RNF-OBS-004 | Consulta ao banco com duração superior a 200 ms DEVE ser registrada em log em ambiente de desenvolvimento, e estatísticas de consulta DEVEM estar habilitadas em produção. | I | ARQ | Inspeção do log em desenvolvimento; verificação de `pg_stat_statements` em produção. | ADR-0011 §14, §15 |
-| RNF-OBS-005 | Toda negativa de autorização DEVE ser registrada em log. | I | ARQ | Requisição sem permissão com verificação do registro. | ADR-0014 §14 |
-| RNF-OBS-006 | O atraso entre a gravação e a publicação de um evento DEVE ser observável e sujeito a alerta, e o crescimento sustentado de eventos não publicados DEVE ser tratado como incidente. | I | ARQ | Interrupção do relay com verificação do alerta emitido. | ADR-0021 §13, §22 |
-| RNF-OBS-007 | Todo processo DEVE emitir log estruturado na saída padrão como canal primário e síncrono, sem depender de banco de dados, fila ou serviço externo. | E | ARQ | Registro de falha com banco e fila indisponíveis. | ADR-0022 §1, §2 |
-| RNF-OBS-008 | As falhas DEVEM ser classificadas em esperadas e inesperadas, registradas na mesma estrutura e distinguidas por classificação. | E | STK | Inspeção da estrutura e da classificação atribuída. | ADR-0022 §12, §16 |
-| RNF-OBS-009 | O registro de erros DEVE ser agregado por assinatura derivada do tipo da exceção, do primeiro quadro do código do projeto e da mensagem normalizada, sem número de linha; NÃO DEVE ser persistida uma linha por ocorrência. | E | ARQ | Geração de ocorrências repetidas com verificação de uma única linha e do contador. | ADR-0022 §20–§25 |
-| RNF-OBS-010 | Falha inesperada DEVE reter amostras de contexto em quantidade limitada; falha esperada NÃO DEVE reter contexto. As assinaturas DEVEM ser retidas indefinidamente e as amostras expurgadas em 30 dias. | E | ARQ | Execução da rotina de expurgo com verificação do que permanece. | ADR-0022 §26–§29 |
-| RNF-OBS-011 | A falha na publicação ou na persistência de um erro NÃO DEVE propagar-se à requisição de origem. | E | ARQ | Indisponibilidade do consumidor de erros durante requisição bem-sucedida. | ADR-0022 §19 |
-| RNF-OBS-012 | Cada processo DEVE expor métricas em formato Prometheus, em porta distinta da API e não publicada externamente, incluindo latência por rota, profundidade de filas, atraso do outbox, ingresso em dead-letter queue e conexões em uso. | I | ARQ | Requisição ao endpoint pela rede interna e tentativa pela externa. | ADR-0022 §31–§33 |
-| RNF-OBS-013 | A verificação de saúde DEVE distinguir vivacidade de prontidão; a vivacidade NÃO DEVE consultar dependência externa e a prontidão NÃO DEVE reprovar por indisponibilidade transitória. | E | ARQ | Indisponibilidade breve de dependência com verificação de que as réplicas permanecem em rotação. | ADR-0008 §14 |
-
-### 6.6 Segurança
-
-| ID | Requisito | Prior. | Origem | Verificação | Rastreio |
-| :--- | :--- | :--: | :--: | :--- | :--- |
-| RNF-SEG-001 | Autenticação e autorização DEVEM ser tratadas de forma transversal, fora da regra de negócio dos módulos, e nenhum módulo DEVE implementar mecanismo próprio. | E | ARQ | Inspeção da localização do mecanismo; ausência de implementação em módulos. | ADR-0009 §4; ADR-0013 §17, §18; ADR-0014 §22, §23 |
-| RNF-SEG-002 | A autenticação DEVE ser baseada em sessão opaca mantida no servidor, com identificador sem significado semântico e no mínimo 128 bits de entropia. | E | STK | Inspeção do identificador emitido; ausência de dado decodificável. | ADR-0013 §1–§5 |
-| RNF-SEG-003 | A sessão DEVE expirar por inatividade em 8 horas e por prazo absoluto em 7 dias; a janela de inatividade DEVE ser renovada a cada requisição autenticada e o prazo absoluto NÃO DEVE ser renovado. | E | ARQ | Teste de expiração por inatividade e por prazo absoluto. | ADR-0013 §6, §7 |
-| RNF-SEG-004 | O encerramento de sessão DEVE ter efeito imediato, e DEVE ser possível revogar em uma operação todas as sessões ativas de um usuário. | E | ARQ | Requisição com credencial encerrada imediatamente após o encerramento. | ADR-0013 §10, §11 |
-| RNF-SEG-005 | A credencial de sessão DEVE ser transportada em cookie `HttpOnly`, `Secure`, `SameSite` e com `Path` restrito, e NÃO DEVE trafegar em URL, corpo de requisição, cabeçalho customizado ou armazenamento acessível a script. | E | ARQ | Inspeção dos atributos do cookie e do armazenamento no cliente. | ADR-0013 §8, §9 |
-| RNF-SEG-006 | Toda requisição que altere estado DEVE ser protegida contra falsificação de requisição entre sítios. | E | ARQ | Requisição forjada a partir de origem distinta. | ADR-0013 §13, §14 |
-| RNF-SEG-007 | A autorização DEVE ser baseada em papéis, com permissões no formato `RECURSO:ACAO` e sem curinga. | E | STK | Inspeção do catálogo de permissões e do mecanismo de verificação. | ADR-0014 §1–§5 |
-| RNF-SEG-008 | Todo requisito funcional DEVE declarar as permissões que origina, e NÃO DEVE existir permissão sem requisito funcional de origem. | E | STK | Revisão da seção 5 desta URS contra o catálogo em 5.3. | ADR-0014 §6–§8 |
-| RNF-SEG-009 | As permissões efetivas DEVEM ser resolvidas no servidor a cada requisição, com cache invalidado imediatamente a cada alteração de papel, concessão ou revogação. | E | ARQ | Teste de revogação com verificação de efeito na requisição seguinte. | ADR-0014 §9, §10 |
-| RNF-SEG-010 | A verificação de permissão DEVE ocorrer na borda, e a titularidade do registro DEVE ser verificada dentro do caso de uso; regras de titularidade NÃO DEVEM ser modeladas como permissões. | E | ARQ | Teste com usuário autorizado operando sobre registro de terceiro. | ADR-0014 §11–§13 |
-| RNF-SEG-011 | A concessão de permissão DEVE ser restrita às permissões efetivas do concedente e condicionada à posse da permissão de concessão; um usuário NÃO DEVE conceder permissão a si mesmo. | E | STK | Teste de concessão de permissão não possuída e de autoconcessão. | ADR-0014 §15, §16 |
-| RNF-SEG-012 | A revogação de uma permissão de um usuário NÃO DEVE revogar as concessões por ele realizadas. | E | STK | Teste de revogação do concedente com verificação do beneficiário. | ADR-0014 §17 |
-| RNF-SEG-013 | Toda concessão e toda revogação DEVEM ser registradas em trilha de auditoria imutável, com concedente, beneficiário, permissão e instante. | E | ARQ | Inspeção da trilha após concessão e revogação. | ADR-0014 §18 |
-| RNF-SEG-014 | DEVE existir consulta das concessões diretas ativas de um usuário, com concedente e data; a concessão PODE ter prazo de validade e sua revogação DEVE ser possível a qualquer momento por usuário com permissão de revogação. | E | ARQ | Execução da consulta; teste de expiração e de revogação por terceiro autorizado. | ADR-0014 §19–§21 |
-| RNF-SEG-015 | O tratamento de dados pessoais DEVE observar a legislação aplicável. | E | — | *A definir.* | *Pendente* |
-| RNF-SEG-016 | O identificador de sessão DEVE ser regenerado na autenticação bem-sucedida e em qualquer elevação de privilégio. | E | ARQ | Comparação do identificador antes e depois da autenticação. | ADR-0013 §12 |
-| RNF-SEG-017 | A indisponibilidade do repositório de sessões DEVE resultar em negativa de autenticação; NÃO DEVE existir modo degradado que aceite requisição sem verificação. | E | ARQ | Requisição com o repositório de sessões indisponível. | ADR-0013 §16 |
-| RNF-SEG-018 | As permissões expostas ao cliente destinam-se exclusivamente à composição da interface e NÃO DEVEM ser consideradas em decisão de autorização. | E | ARQ | Requisição direta à API sem a permissão, com a ação oculta na interface. | ADR-0013 §20; ADR-0014 §11; ADR-0015 §19, §20 |
-| RNF-SEG-019 | O backend DEVE restringir as origens aceitas a uma lista explícita e NÃO DEVE aceitar origem curinga; frontend e backend DEVEM ser servidos sob o mesmo domínio registrável. | E | ARQ | Requisição a partir de origem não listada. | ADR-0017 §9, §10 |
-| RNF-SEG-020 | Rota protegida NÃO DEVE ser renderizada antes da resolução da identidade do usuário. | E | ARQ | Acesso direto a rota protegida sem sessão estabelecida. | ADR-0015 §18; ADR-0017 §16 |
-| RNF-SEG-021 | O consumidor de uma mensagem NÃO DEVE executar com a autoridade do usuário que a originou; o identificador do ator destina-se exclusivamente a auditoria. | E | ARQ | Processamento de mensagem cujo ator perdeu a permissão original. | ADR-0020 §17 |
-| RNF-SEG-022 | O payload de uma mensagem NÃO DEVE conter entidade de domínio, tipo gerado pelo ORM nem dado pessoal além do estritamente necessário ao processamento. | E | ARQ | Inspeção dos payloads publicados. | ADR-0020 §15, §16 |
-| RNF-SEG-023 | Os campos registrados em log e em contexto de erro DEVEM ser definidos por lista de permissão declarada em ponto único; NÃO DEVE ser usada lista de bloqueio. | E | ARQ | Introdução de campo sensível não declarado, com verificação de sua ausência no registro. | ADR-0022 §4, §5 |
-| RNF-SEG-024 | A resposta ao cliente NÃO DEVE conter mensagem de exceção, rastro de pilha ou identificação de componente interno, e DEVE conter o identificador de correlação. | E | ARQ | Provocação de falha inesperada com inspeção da resposta. | ADR-0022 §10, §15; ADR-0025 §30 |
-| RNF-SEG-025 | O detalhamento de erro por campo NÃO DEVE conter o valor submetido pelo usuário. | E | ARQ | Submissão de campo inválido com dado pessoal e inspeção da resposta. | ADR-0025 §18 |
-
----
-
-### 6.7 Verificação e qualidade
-
-| ID | Requisito | Prior. | Origem | Verificação | Rastreio |
-| :--- | :--- | :--: | :--: | :--- | :--- |
-| RNF-VER-001 | O ambiente de desenvolvimento DEVE ser provisionado por Docker Compose, com PostgreSQL e Redis em versões fixadas correspondentes às de produção, iniciado por um único comando e com carga inicial reproduzível. | E | STK | Provisionamento em máquina limpa a partir do repositório. | ADR-0023 §1–§5 |
-| RNF-VER-002 | A integração na ramificação principal DEVE ocorrer por pull request, e a ramificação DEVE ter proteção que exija a aprovação do workflow de verificação como condição de incorporação. | E | ARQ | Tentativa de incorporação com verificação reprovada. | ADR-0023 §16–§18 |
-| RNF-VER-003 | O gancho de pré-commit DEVE executar formatação e análise estática sobre os arquivos alterados; o gancho de pré-push DEVE executar o comando de verificação completo. | E | ARQ | Commit e push com violação deliberada. | ADR-0023 §11, §12 |
-| RNF-VER-004 | A fronteira do teste unitário DEVE ser o caso de uso exercitado pela fachada, com o interno do módulo real; somente fachadas de outros módulos DEVEM ser substituídas. | E | STK | Inspeção dos testes; refatoração interna sem quebra de teste. | ADR-0024 §2–§5 |
-| RNF-VER-005 | Repositórios e adaptadores DEVEM ser testados contra PostgreSQL e Redis reais; NÃO DEVE ser usado substituto em memória do banco de dados. | E | ARQ | Inspeção da configuração de teste. | ADR-0024 §9, §10 |
-| RNF-VER-006 | O isolamento entre testes DEVE usar schema por processo com truncate entre testes; NÃO DEVE usar transação revertida. | E | ARQ | Execução paralela da suíte com verificação de ausência de interferência. | ADR-0024 §11–§13 |
-| RNF-VER-007 | Toda regra de negócio, todo caso de uso e toda correção de defeito DEVEM possuir teste correspondente. | E | STK | Revisão de código contra o critério. | ADR-0024 §18–§20 |
-| RNF-VER-008 | NÃO DEVE ser adotada meta percentual de cobertura como critério de aprovação, e teste intermitente DEVE ser corrigido ou removido, nunca silenciado. | E | ARQ | Inspeção da configuração e da lista de testes ignorados. | ADR-0024 §21, §22 |
-| RNF-VER-009 | O teste de invariância de contagem de consultas DEVE integrar o comando de verificação; NÃO DEVE existir nele teste que reprove por limiar de tempo de resposta. | E | ARQ | Inspeção da composição do comando de verificação. | ADR-0024 §23, §24 |
-| RNF-VER-010 | As metas de tempo de resposta DEVEM ser aferidas por teste de carga executado deliberadamente, contra base com massa representativa e reproduzível. | I | STK | Execução do teste de carga com relatório por percentil. | ADR-0024 §25, §26 |
-| RNF-VER-011 | Os testes ponta a ponta DEVEM cobrir a autenticação e o caminho principal de cada capacidade, e NÃO DEVEM cobrir variações de regra de negócio. | I | STK | Inspeção do escopo dos cenários. | ADR-0024 §8 |
-| RNF-VER-012 | Os arquivos de teste DEVEM residir junto do código que exercitam, e os dados de teste DEVEM ser produzidos por construtores parametrizáveis. | I | ARQ | Inspeção da localização dos arquivos e da origem dos dados. | ADR-0024 §16, §17 |
-
----
-
-## 7. Restrições de projeto
-
-Impostas pelas partes interessadas ou pelo ambiente; não derivadas de análise e não sujeitas a
-negociação técnica nesta versão.
-
-| ID | Restrição | Origem | Rastreio |
-| :--- | :--- | :--: | :--- |
-| RES-001 | O backend DEVE ser implementado em NestJS sobre Node.js, com TypeScript em modo estrito. | STK | ADR-0002 §1, §2 |
-| RES-002 | O backend DEVE ser um monolito modular, com repositório, artefato de build e unidade de deploy únicos. | STK | ADR-0001 §1; ADR-0008 §1 |
-| RES-003 | O frontend DEVE residir em repositório separado do backend. | STK | ADR-0016 §2 |
-| RES-004 | A persistência DEVE utilizar uma única instância de PostgreSQL, compartilhada por todos os módulos. | STK | ADR-0018; ADR-0019 |
-| RES-005 | O enfileiramento DEVE utilizar uma única instância de Redis, compartilhada por todos os módulos. | STK | ADR-0020; ADR-0021 |
-| RES-006 | NÃO DEVE ser adotada arquitetura de microsserviços no estágio atual do projeto. | STK | ADR-0001 §2 |
-| RES-007 | A camada HTTP DEVE ser o adapter Express do NestJS. | STK | ADR-0010 §1 |
-| RES-008 | O acesso a dados DEVE utilizar Prisma ORM. | STK | ADR-0010 §2 |
-| RES-009 | O frontend DEVE ser implementado em React com TypeScript em modo estrito. | STK | ADR-0016 §1 |
-| RES-010 | O frontend DEVE ser uma aplicação de página única entregue como artefato estático, sem servidor de renderização. | STK | ADR-0016 §3 |
-| RES-011 | O ferramental de build do frontend DEVE ser Vite. | STK | ADR-0016 §4 |
-| RES-012 | Tailwind CSS DEVE ser a única solução de estilização do frontend; NÃO DEVE ser adotada biblioteca de componentes com sistema de estilo ou tokens próprios. | STK | ADR-0016 §11, §13 |
-| RES-013 | O repositório DEVE ser hospedado no GitHub, com verificação automatizada executada a cada envio e em cada pull request. | STK | ADR-0023 §13, §14 |
-| RES-014 | NÃO DEVE ser adotada automação de implantação no estágio atual. | STK | ADR-0023 §19 |
-| RES-015 | A documentação de arquitetura e de requisitos DEVE residir em repositório próprio, distinto dos repositórios de código, e NÃO DEVE ser duplicada neles. | STK | ADR-0023 §13 |
-
----
-
-## 8. Matriz de rastreabilidade — ADR para requisito
-
-| ADR | Requisitos atendidos |
-| :--- | :--- |
-| ADR-0000 — Adoção de ADRs | RNF-EVO-003 |
-| ADR-0001 — Monolito modular | RNF-MOD-001, RNF-MOD-007, RNF-EVO-001, RES-002, RES-006 |
-| ADR-0002 — Stack NestJS + TypeScript | RES-001 |
-| ADR-0003 — Fronteira e estrutura de módulo | RNF-MOD-001, RNF-MOD-006 |
-| ADR-0004 — Fachada como superfície pública | RNF-MOD-002, RNF-MOD-003, RNF-EVO-001, RNF-EVO-004 |
-| ADR-0005 — Comunicação entre módulos | RNF-MOD-003, RNF-MOD-005, RNF-CON-002, RNF-CON-003, RNF-CON-005, RNF-OBS-001 |
-| ADR-0006 — Propriedade de dados por módulo | RNF-EVO-002, RNF-CON-001, RNF-CON-004, RNF-CON-006 |
-| ADR-0007 — Enforcement de fronteiras | RNF-MOD-004, RNF-MOD-005 |
-| ADR-0008 — Escalabilidade por papel de processo | RNF-ESC-001, RNF-ESC-002, RNF-ESC-003, RNF-ESC-004, RNF-OBS-002, RNF-OBS-003 |
-| ADR-0009 — DRY e shared kernel | RNF-MOD-007, RNF-MOD-008, RNF-OBS-001, RNF-SEG-001 |
-| ADR-0010 — Camada HTTP e ORM | RNF-MOD-010, RES-007, RES-008 |
-| ADR-0011 — Desempenho e prevenção de N+1 | RNF-ESC-005, RNF-ESC-006, RNF-ESC-007, RNF-ESC-008, RNF-ESC-009, RNF-ESC-010, RNF-ESC-011, RNF-ESC-012, RNF-ESC-013, RNF-OBS-004 |
-| ADR-0012 — Retentativa e dead-letter queue | RNF-MOD-009, RNF-CON-002, RNF-CON-007, RNF-CON-008, RNF-CON-009, RNF-CON-010, RNF-CON-011, RNF-CON-012 |
-| ADR-0013 — Autenticação por sessão opaca | RNF-EVO-005, RNF-SEG-001, RNF-SEG-002, RNF-SEG-003, RNF-SEG-004, RNF-SEG-005, RNF-SEG-006, RNF-SEG-016, RNF-SEG-017, RNF-SEG-018 |
-| ADR-0014 — Autorização por RBAC e delegação | RNF-SEG-001, RNF-SEG-007, RNF-SEG-008, RNF-SEG-009, RNF-SEG-010, RNF-SEG-011, RNF-SEG-012, RNF-SEG-013, RNF-SEG-014, RNF-OBS-005 |
-| ADR-0015 — Arquitetura do frontend | RNF-MOD-011, RNF-MOD-012, RNF-MOD-013, RNF-ESC-014, RNF-SEG-018, RNF-SEG-020 |
-| ADR-0016 — Stack do frontend | RNF-MOD-014, RNF-ESC-015, RES-003, RES-009, RES-010, RES-011, RES-012 |
-| ADR-0017 — Contrato de integração frontend–backend | RNF-EVO-006, RNF-EVO-007, RNF-SEG-019, RNF-SEG-020 |
-| ADR-0018 — Organização física do banco de dados | RNF-CON-013, RNF-CON-014, RNF-CON-015, RNF-CON-016, RNF-EVO-008, RES-004 |
-| ADR-0019 — Transações e gestão de conexões | RNF-CON-017, RNF-CON-018, RNF-ESC-016, RES-004 |
-| ADR-0020 — Transporte de mensagens e isolamento de filas | RNF-MOD-009, RNF-MOD-015, RNF-MOD-016, RNF-SEG-021, RNF-SEG-022, RES-005 |
-| ADR-0021 — Outbox transacional e relay de eventos | RNF-MOD-016, RNF-CON-019, RNF-CON-020, RNF-CON-021, RNF-CON-022, RNF-OBS-006, RES-005 |
-| ADR-0022 — Observabilidade e registro de erros | RNF-OBS-007 a RNF-OBS-012, RNF-SEG-023, RNF-SEG-024 |
-| ADR-0023 — Ambiente de desenvolvimento e verificação | RNF-MOD-018, RNF-VER-001, RNF-VER-002, RNF-VER-003, RES-013, RES-014 |
-| ADR-0024 — Estratégia de testes | RNF-VER-004 a RNF-VER-012 |
-| ADR-0025 — Formato de resposta da API | RNF-EVO-009 a RNF-EVO-012, RNF-ESC-017, RNF-SEG-024, RNF-SEG-025 |
-
----
-
-## 9. Pendências
-
-| Item | Seção afetada | Bloqueia |
+| Parte interessada | Papel na elicitação | Estado |
 | :--- | :--- | :--- |
-| Consolidação dos requisitos funcionais a partir da elicitação | 3, 4, 5.2 | Visão geral, partes interessadas, catálogo de permissões |
-| Catálogo de permissões | 5.3 | RNF-SEG-008 |
-| Catálogo de códigos de resposta | 5.4 | RNF-EVO-010 |
-| Decomposição do sistema em módulos, com capacidade de negócio e tabelas de cada um | 5.2, 6.1 | RNF-MOD-001, RNF-MOD-006, RNF-CON-001 |
-| Infraestrutura de implantação: ambientes, segredos, coletor de log e servidor de métricas | 6.5 | RNF-OBS-007, RNF-OBS-012 |
-| Carga de referência e capacidade | 6.3 | RNF-ESC-005, RNF-ESC-013 |
-| Conformidade legal no tratamento de dados pessoais | 6.6 | RNF-SEG-015 |
-| Massa de dados representativa para teste de carga | 6.7 | RNF-VER-010 |
+| Marciele R. Siveres | Orientadora, Administração, 5 anos, ~35 orientandos simultâneos | Entrevistada |
+| Angélica P. S. Meurer | Orientadora, Administração, 12 anos, 50+ orientandos por semestre | Entrevistada |
+| Aluno orientando | Ator de grande parte dos requisitos | **Não entrevistado** — §10, item 5 |
+| Coordenador de curso | Destinatário dos relatórios | **Não entrevistado** — §10, item 5 |
+
+Ambas as entrevistadas pertencem ao curso de Administração. Não há evidência de outras áreas, o que
+limita a generalização das normas exigidas — ver §10, item 6.
 
 ---
 
-## 10. Histórico de revisões
+## 5. Atores e papéis
+
+Os papéis são **globais e pré-criados por carga inicial**. O papel autoriza a ação; **o escopo vem
+do vínculo**, verificado como titularidade dentro do caso de uso, conforme `ADR-0014` §12 e §13.
+Não existe papel escopado.
+
+| Papel | Identificador | Escopo obtido por |
+| :--- | :--- | :--- |
+| Administrador de Sistema | `SYSTEM_ADMIN` | Nenhum — atua sobre todas as instituições |
+| Administrador Institucional | `INSTITUTION_ADMIN` | Designação a uma instituição |
+| Coordenador | `COORDINATOR` | Designação a um curso |
+| Professor | `PROFESSOR` | Designação a turmas e a eventos/equipes |
+| Aluno | `STUDENT` | Matrícula em uma turma |
+
+### 5.1 Premissas de identidade
+
+1. O primeiro usuário `SYSTEM_ADMIN` é criado por script de carga inicial. Não existe autocadastro
+   para esse papel nem para nenhum outro papel administrativo.
+2. O e-mail é identificador único global do usuário. Quem atua em mais de uma instituição usa
+   e-mails distintos, um por conta — consequência da decisão de §10, item 4.
+3. O `SYSTEM_ADMIN` administra instituições e configurações gerais de suporte. **Não** acessa
+   conteúdo acadêmico: artigo, apontamento, nota ou avaliação.
+
+---
+
+## 6. Modelo de domínio
+
+```
+Instituição
+├── Curso                              INSTITUTION_ADMIN cria; designa COORDINATOR
+│   └── Turma                          COORDINATOR cria; período letivo, data de início;
+│       │                              designa PROFESSOR
+│       └── Matrícula ── Aluno         PROFESSOR cadastra ou aluno ingressa por convite
+└── Evento                             escopo: INSTITUICAO | CURSO | TURMA
+    ├── tema, problema, objetivos       definidos pelo dono do escopo
+    ├── limites de equipe               quantidade de equipes e tamanho máximo
+    ├── cronograma de etapas            3 a 4 entregas com prazo, fixadas no início do período
+    ├── orientadores do evento          podem ver e atuar sobre todas as equipes do evento
+    └── Equipe ──1:1── Artigo           STARTED → IN_PROGRESS → IN_REVIEW → FINISHED
+        └── orientador responsável      subconjunto dos orientadores do evento
+```
+
+### 6.1 Regras estruturais transversais
+
+| ID | Regra |
+| :--- | :--- |
+| RE-01 | O criador de um evento é o dono do seu escopo: `PROFESSOR` para escopo de turma, `COORDINATOR` para escopo de curso, `INSTITUTION_ADMIN` para escopo de instituição. |
+| RE-02 | A elegibilidade a um evento é automática por escopo: todos os professores e todos os alunos vinculados ao alvo do escopo são elegíveis. Não existe inscrição prévia. |
+| RE-03 | Participar de um evento significa pertencer a uma equipe dele. Aluno elegível sem equipe não participa. |
+| RE-04 | Um aluno pertence a no máximo uma equipe por evento e pode participar de eventos distintos simultaneamente. |
+| RE-05 | Uma equipe possui exatamente um artigo. |
+| RE-06 | Uma equipe pode reunir alunos de turmas e de cursos distintos quando o escopo do evento o permitir. |
+| RE-07 | Um evento possui exatamente um tema nesta versão. Múltiplos temas por evento estão previstos como expansão. |
+| RE-08 | O orientador possui dois vínculos de natureza distinta: com a **turma**, que autoriza cadastrar alunos e emitir convites; e com o **evento**, que autoriza orientar e avaliar. A designação a uma **equipe** nomeia o responsável direto por ela. |
+| RE-09 | A nota é individual por aluno e existe também uma nota do artigo. |
+
+---
+
+## 7. Requisitos funcionais
+
+### 7.1 ACS — Acesso e identidade
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-ACS-001 | Autenticar-se no sistema | E (proposta) | `DER` |
+| RF-ACS-002 | Encerrar a sessão | E (proposta) | `DER` |
+| RF-ACS-003 | Recuperar o acesso | E (proposta) | `DER` |
+| RF-ACS-004 | Definir ou alterar a própria senha | E (proposta) | `DER` |
+| RF-ACS-005 | Manter o próprio perfil | I (proposta) | `DER` |
+| RF-ACS-006 | Conceder permissão a outro usuário | I (proposta) | `ELI` |
+| RF-ACS-007 | Revogar concessão de permissão | I (proposta) | `DER` |
+| RF-ACS-008 | Consultar concessões diretas ativas | D (proposta) | `DER` |
+
+---
+
+#### RF-ACS-001 — Autenticar-se no sistema
+
+- **Descrição:** permite ao usuário estabelecer sessão autenticada mediante e-mail e senha, para
+  acessar as funcionalidades correspondentes aos seus papéis e vínculos.
+- **Ator:** Usuário
+- **Pré-condições:** conta ativa; instituição do usuário ativa.
+- **Fluxo principal:**
+  1. O ator informa e-mail e senha.
+  2. O sistema verifica a credencial.
+  3. O sistema estabelece a sessão e devolve a identidade do usuário e suas permissões efetivas.
+- **Fluxos alternativos e de exceção:**
+  - E1. Credencial inválida ou conta inexistente → `AUTHENTICATION_FAILED`, sem distinguir qual dos
+    dois ocorreu.
+  - E2. Conta desativada → `AUTHENTICATION_FAILED`.
+  - E3. Instituição do usuário desativada → `INSTITUTION_INACTIVE`.
+  - E4. Senha ainda não definida (conta criada por professor ou por convite) → o sistema conduz ao
+    fluxo de `RF-ACS-004`.
+- **Regras de negócio:**
+  - RN1. O e-mail é identificador único global.
+  - RN2. As permissões efetivas são a união das concedidas pelos papéis e das concessões diretas
+    ativas, resolvidas a cada requisição.
+  - RN3. As permissões devolvidas ao cliente destinam-se à composição da interface e não substituem
+    a verificação no servidor.
+- **Permissões geradas:** — (acesso público)
+- **Escopo de titularidade:** —
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de A-P8 e M-P8, que definem quem pode ver o trabalho em cada fase; a
+  restrição de acesso pressupõe identidade verificada.
+- **Critério de aceitação:** usuário com credencial válida obtém sessão e recebe suas permissões
+  efetivas; credencial inválida e conta inexistente produzem resposta indistinguível.
+- **Rastreio:** A-P8; M-P8; `ADR-0013`.
+
+#### RF-ACS-002 — Encerrar a sessão
+
+- **Descrição:** permite ao usuário encerrar a própria sessão, tornando a credencial inválida
+  imediatamente.
+- **Ator:** Usuário autenticado
+- **Pré-condições:** sessão ativa.
+- **Fluxo principal:**
+  1. O ator solicita o encerramento.
+  2. O sistema invalida a sessão e descarta a credencial do cliente.
+- **Fluxos alternativos e de exceção:**
+  - E1. Sessão já expirada → a operação é idempotente e conclui com sucesso.
+- **Regras de negócio:**
+  - RN1. O encerramento afeta apenas a sessão corrente.
+- **Permissões geradas:** — (própria sessão)
+- **Escopo de titularidade:** restrito à sessão do próprio ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de `RF-ACS-001`.
+- **Critério de aceitação:** após o encerramento, requisição com a credencial anterior é recusada.
+- **Rastreio:** `RF-ACS-001`; `ADR-0013`.
+
+#### RF-ACS-003 — Recuperar o acesso
+
+- **Descrição:** permite ao usuário que perdeu a senha solicitar, pelo próprio e-mail, um meio de
+  redefini-la.
+- **Ator:** Usuário
+- **Pré-condições:** nenhuma.
+- **Fluxo principal:**
+  1. O ator informa o e-mail.
+  2. O sistema envia mensagem contendo meio de redefinição com prazo de validade.
+  3. O ator conclui a redefinição por `RF-ACS-004`.
+- **Fluxos alternativos e de exceção:**
+  - E1. E-mail não cadastrado → a resposta é idêntica à do caso de sucesso, para não revelar a
+    existência da conta.
+  - E2. Meio de redefinição expirado ou já utilizado → `INVITATION_EXPIRED`.
+- **Regras de negócio:**
+  - RN1. O meio de redefinição é de uso único e possui prazo de validade.
+  - RN2. A resposta não revela se o e-mail existe.
+- **Permissões geradas:** — (acesso público)
+- **Escopo de titularidade:** —
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de `RF-ACS-001`.
+- **Critério de aceitação:** e-mail cadastrado recebe o meio de redefinição; e-mail não cadastrado
+  produz resposta indistinguível da de sucesso.
+- **Rastreio:** `RF-ACS-001`.
+
+#### RF-ACS-004 — Definir ou alterar a própria senha
+
+- **Descrição:** permite ao usuário definir a senha na primeira entrada ou alterá-la posteriormente.
+- **Ator:** Usuário
+- **Pré-condições:** possuir meio de redefinição válido ou sessão ativa.
+- **Fluxo principal:**
+  1. O ator informa a nova senha.
+  2. O sistema valida a política de senha e a registra.
+  3. O sistema encerra as demais sessões do usuário.
+- **Fluxos alternativos e de exceção:**
+  - E1. Senha fora da política → `VALIDATION_FAILED`.
+  - E2. Alteração por usuário autenticado sem informar a senha atual → `VALIDATION_FAILED`.
+  - E3. Meio de redefinição expirado → `INVITATION_EXPIRED`.
+- **Regras de negócio:**
+  - RN1. A alteração por usuário autenticado exige a senha atual; a definição por meio de
+    redefinição, não.
+  - RN2. Concluída a operação, as demais sessões do usuário são encerradas.
+- **Permissões geradas:** — (própria conta)
+- **Escopo de titularidade:** restrito à conta do próprio ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de `RF-ACS-001` e `RF-ACS-003`.
+- **Critério de aceitação:** senha alterada passa a ser exigida na entrada seguinte e as sessões
+  anteriores deixam de ser aceitas.
+- **Rastreio:** `RF-ACS-001`; `RF-ACS-003`.
+
+#### RF-ACS-005 — Manter o próprio perfil
+
+- **Descrição:** permite ao usuário consultar e atualizar os próprios dados de identificação e a
+  área de atuação ou pesquisa.
+- **Ator:** Usuário autenticado
+- **Pré-condições:** sessão ativa.
+- **Fluxo principal:**
+  1. O ator consulta o próprio perfil.
+  2. O ator altera nome, área de atuação ou pesquisa e preferência de idioma.
+  3. O sistema registra a alteração.
+- **Fluxos alternativos e de exceção:**
+  - E1. Dado obrigatório ausente ou inválido → `VALIDATION_FAILED`.
+  - E2. Tentativa de alterar o próprio e-mail, papéis ou vínculos → `PERMISSION_DENIED`.
+- **Regras de negócio:**
+  - RN1. E-mail, papéis e vínculos não são editáveis pelo próprio usuário.
+  - RN2. A área de atuação ou pesquisa é registrada no perfil do professor.
+- **Permissões geradas:** — (próprio perfil)
+- **Escopo de titularidade:** restrito ao registro do próprio ator.
+- **Prioridade:** I (proposta)
+- **Origem:** `DER` — deriva do perfil do respondente coletado na elicitação (nome, curso, área de
+  atuação ou pesquisa, tempo de experiência).
+- **Critério de aceitação:** alteração de nome e área persiste e é refletida nas consultas; tentativa
+  de alterar e-mail ou papéis é recusada.
+- **Rastreio:** M-perfil; A-perfil.
+
+#### RF-ACS-006 — Conceder permissão a outro usuário
+
+- **Descrição:** permite a um usuário conceder a outro uma permissão que ele próprio possui, para
+  que um professor assuma temporariamente atribuições de outro em período de sobrecarga.
+- **Ator:** Usuário autenticado com a permissão de concessão
+- **Pré-condições:** concedente e beneficiário ativos; concedente possui a permissão a conceder.
+- **Fluxo principal:**
+  1. O ator seleciona o beneficiário e a permissão.
+  2. O ator informa, opcionalmente, prazo de validade da concessão.
+  3. O sistema verifica que a permissão pertence às permissões efetivas do concedente.
+  4. O sistema registra a concessão e a trilha de auditoria.
+- **Fluxos alternativos e de exceção:**
+  - E1. Permissão não pertence ao concedente → `GRANT_NOT_HELD_BY_GRANTER`.
+  - E2. Concedente e beneficiário são o mesmo usuário → `SELF_GRANT_NOT_ALLOWED`.
+  - E3. Beneficiário inexistente ou inativo → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. Ninguém concede permissão a si mesmo.
+  - RN2. A concessão pode ter prazo de validade; expirada, deixa de compor as permissões efetivas.
+  - RN3. A revogação da permissão do concedente não revoga as concessões que ele realizou.
+  - RN4. Toda concessão é registrada em trilha de auditoria imutável com concedente, beneficiário,
+    permissão e instante.
+- **Permissões geradas:** `PERMISSION_GRANT:CREATE`
+- **Escopo de titularidade:** restrito às permissões efetivas do próprio ator.
+- **Prioridade:** I (proposta)
+- **Origem:** `ELI` — Marciele descreve a força-tarefa entre professores para socorrer trabalhos
+  próximos ao prazo, que exige que um orientador atue sobre trabalho de outro.
+- **Critério de aceitação:** usuário concede permissão que possui e o beneficiário passa a exercê-la;
+  tentativa de conceder permissão não possuída é recusada.
+- **Rastreio:** M-P3; M-P1 (acesso compartilhado entre orientadores); `ADR-0014` §15–§19.
+
+#### RF-ACS-007 — Revogar concessão de permissão
+
+- **Descrição:** permite revogar, a qualquer momento, uma concessão direta ativa, independentemente
+  de quem a concedeu.
+- **Ator:** Usuário autenticado com a permissão de revogação
+- **Pré-condições:** concessão direta ativa.
+- **Fluxo principal:**
+  1. O ator localiza a concessão ativa.
+  2. O ator solicita a revogação.
+  3. O sistema encerra a concessão e registra a trilha de auditoria.
+- **Fluxos alternativos e de exceção:**
+  - E1. Concessão inexistente ou já encerrada → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. A revogação é possível por qualquer usuário que possua a permissão de revogação, mesmo não
+    tendo sido o concedente.
+  - RN2. A revogação surte efeito imediato sobre as permissões efetivas do beneficiário.
+- **Permissões geradas:** `PERMISSION_GRANT:REVOKE`
+- **Escopo de titularidade:** —
+- **Prioridade:** I (proposta)
+- **Origem:** `DER` — deriva de `RF-ACS-006`.
+- **Critério de aceitação:** revogada a concessão, a requisição seguinte do beneficiário que dependa
+  dela é recusada.
+- **Rastreio:** `RF-ACS-006`; `ADR-0014` §21.
+
+#### RF-ACS-008 — Consultar concessões diretas ativas
+
+- **Descrição:** permite listar as concessões diretas ativas de um usuário, com concedente e data,
+  para revisão periódica de privilégios.
+- **Ator:** Usuário autenticado com a permissão de leitura de concessões
+- **Pré-condições:** sessão ativa.
+- **Fluxo principal:**
+  1. O ator seleciona o usuário a revisar.
+  2. O sistema lista as concessões ativas com permissão, concedente e data de concessão.
+- **Fluxos alternativos e de exceção:**
+  - E1. Usuário inexistente → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. Concessões expiradas não constam da lista de ativas.
+- **Permissões geradas:** `PERMISSION_GRANT:READ`
+- **Escopo de titularidade:** —
+- **Prioridade:** D (proposta)
+- **Origem:** `DER` — deriva de `RF-ACS-006`.
+- **Critério de aceitação:** a lista apresenta toda concessão ativa com seu concedente e nenhuma
+  concessão expirada.
+- **Rastreio:** `RF-ACS-006`; `ADR-0014` §20.
+
+---
+
+### 7.2 INS — Instituição
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-INS-001 | Manter instituição | E (proposta) | `DER` |
+| RF-INS-002 | Designar administrador institucional | E (proposta) | `DER` |
+
+---
+
+#### RF-INS-001 — Manter instituição
+
+- **Descrição:** permite ao administrador de sistema cadastrar, consultar, alterar e desativar
+  instituições, além de manter as suas configurações gerais de suporte.
+- **Ator:** Administrador de Sistema
+- **Pré-condições:** sessão ativa com o papel `SYSTEM_ADMIN`.
+- **Fluxo principal:**
+  1. O ator informa nome e dados de identificação da instituição.
+  2. O sistema registra a instituição em estado ativo.
+  3. O ator consulta, altera ou desativa a instituição quando necessário.
+- **Fluxos alternativos e de exceção:**
+  - E1. Dado obrigatório ausente → `VALIDATION_FAILED`.
+  - E2. Desativação de instituição com cursos ativos → a operação é aceita e a desativação se propaga
+    ao acesso dos seus usuários, conforme RN2.
+- **Regras de negócio:**
+  - RN1. A instituição é a fronteira de isolamento dos dados: todo curso, turma, evento, equipe,
+    artigo e usuário pertence a exatamente uma instituição.
+  - RN2. Usuário de instituição desativada não autentica (`INSTITUTION_INACTIVE`).
+  - RN3. O `SYSTEM_ADMIN` não acessa conteúdo acadêmico: artigo, apontamento, nota ou avaliação.
+- **Permissões geradas:** `INSTITUTION:CREATE`, `INSTITUTION:READ`, `INSTITUTION:UPDATE`,
+  `INSTITUTION:DEACTIVATE`
+- **Escopo de titularidade:** —
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de M-P5 e M-P9, que situam o trabalho dentro de uma instituição com
+  congresso interno e coordenação própria.
+- **Critério de aceitação:** instituição cadastrada passa a admitir cursos; instituição desativada
+  impede a autenticação dos seus usuários.
+- **Rastreio:** M-P5; M-P9; A-P1; decisão de escopo de §10, item 4.
+
+#### RF-INS-002 — Designar administrador institucional
+
+- **Descrição:** permite ao administrador de sistema atribuir a um usuário o papel de administrador
+  de uma instituição, e revogar essa atribuição.
+- **Ator:** Administrador de Sistema
+- **Pré-condições:** instituição ativa; usuário beneficiário ativo.
+- **Fluxo principal:**
+  1. O ator seleciona a instituição e o usuário.
+  2. O sistema atribui o papel `INSTITUTION_ADMIN` ao usuário e cria o vínculo com a instituição.
+  3. O sistema registra a operação em trilha de auditoria.
+- **Fluxos alternativos e de exceção:**
+  - E1. Usuário já é administrador dessa instituição → a operação é idempotente.
+  - E2. Instituição inativa → `INSTITUTION_INACTIVE`.
+  - E3. Usuário inexistente → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. Uma instituição admite mais de um administrador institucional ativo.
+  - RN2. O papel é global; o escopo decorre do vínculo com a instituição.
+  - RN3. A revogação do vínculo remove o papel quando não houver outro vínculo que o justifique.
+- **Permissões geradas:** `INSTITUTION:ASSIGN_ADMIN`, `INSTITUTION:REVOKE_ADMIN`
+- **Escopo de titularidade:** —
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de `RF-INS-001` e da cadeia de criação de usuários definida para o
+  produto.
+- **Critério de aceitação:** designado, o usuário passa a criar cursos naquela instituição e em
+  nenhuma outra.
+- **Rastreio:** `RF-INS-001`; §10, item 2.
+
+---
+
+### 7.3 CUR — Curso
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-CUR-001 | Manter curso | E (proposta) | `DER` |
+| RF-CUR-002 | Designar coordenador do curso | E (proposta) | `ELI` |
+
+---
+
+#### RF-CUR-001 — Manter curso
+
+- **Descrição:** permite ao administrador institucional cadastrar, consultar, alterar e desativar os
+  cursos da sua instituição.
+- **Ator:** Administrador Institucional
+- **Pré-condições:** instituição ativa; ator vinculado a ela.
+- **Fluxo principal:**
+  1. O ator informa nome e identificação do curso.
+  2. O sistema registra o curso, vinculado à instituição do ator, em estado ativo.
+  3. O ator consulta, altera ou desativa o curso quando necessário.
+- **Fluxos alternativos e de exceção:**
+  - E1. Dado obrigatório ausente → `VALIDATION_FAILED`.
+  - E2. Curso de outra instituição → `PERMISSION_DENIED`.
+- **Regras de negócio:**
+  - RN1. O curso pertence a exatamente uma instituição.
+  - RN2. Curso desativado não admite novas turmas nem novos eventos.
+- **Permissões geradas:** `COURSE:CREATE`, `COURSE:READ`, `COURSE:UPDATE`, `COURSE:DEACTIVATE`
+- **Escopo de titularidade:** restrito aos cursos da instituição à qual o ator está vinculado.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de M-perfil e A-perfil, que identificam o curso como unidade de
+  organização da orientação, e de M-P9, cujo relatório é prestado à coordenação do curso.
+- **Critério de aceitação:** curso criado admite turmas; administrador de outra instituição não o
+  enxerga.
+- **Rastreio:** M-perfil; A-perfil; M-P9.
+
+#### RF-CUR-002 — Designar coordenador do curso
+
+- **Descrição:** permite ao administrador institucional atribuir a um usuário o papel de coordenador
+  de um curso, e revogar essa atribuição.
+- **Ator:** Administrador Institucional
+- **Pré-condições:** curso ativo na instituição do ator; usuário beneficiário ativo.
+- **Fluxo principal:**
+  1. O ator seleciona o curso e o usuário.
+  2. O sistema atribui o papel `COORDINATOR` e cria o vínculo com o curso.
+  3. O sistema registra a operação em trilha de auditoria.
+- **Fluxos alternativos e de exceção:**
+  - E1. Curso já possui coordenador ativo → `COORDINATOR_ALREADY_ASSIGNED`.
+  - E2. Curso de outra instituição → `PERMISSION_DENIED`.
+  - E3. Usuário inexistente → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. O curso possui no máximo um coordenador ativo por vez — premissa a confirmar, §10, item 7.
+  - RN2. O coordenador do curso é o destinatário dos relatórios de pesquisa; não existe papel
+    separado de coordenador de pesquisa.
+  - RN3. A revogação do vínculo não revoga as concessões diretas realizadas pelo coordenador.
+- **Permissões geradas:** `COURSE:ASSIGN_COORDINATOR`, `COURSE:REVOKE_COORDINATOR`
+- **Escopo de titularidade:** restrito aos cursos da instituição à qual o ator está vinculado.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — Marciele identifica o coordenador como destinatário do relatório de
+  orientações e publicações.
+- **Critério de aceitação:** designado, o usuário cria turmas naquele curso e em nenhum outro.
+- **Rastreio:** M-P9; `ADR-0014` §17.
+
+---
+
+### 7.4 TUR — Turma
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-TUR-001 | Manter turma | E (proposta) | `ELI` |
+| RF-TUR-002 | Designar professor à turma | E (proposta) | `ELI` |
+| RF-TUR-003 | Cadastrar aluno na turma | E (proposta) | `DER` |
+| RF-TUR-004 | Emitir convite de ingresso na turma | E (proposta) | `DER` |
+| RF-TUR-005 | Ingressar na turma por convite | E (proposta) | `DER` |
+
+---
+
+#### RF-TUR-001 — Manter turma
+
+- **Descrição:** permite ao coordenador cadastrar, consultar, alterar e desativar turmas do seu
+  curso, delimitando o período letivo em que a orientação ocorre.
+- **Ator:** Coordenador
+- **Pré-condições:** curso ativo; ator designado a esse curso.
+- **Fluxo principal:**
+  1. O ator informa identificação da turma, período letivo, data de início e data de término.
+  2. O sistema registra a turma vinculada ao curso, em estado ativo.
+  3. O ator consulta, altera ou desativa a turma quando necessário.
+- **Fluxos alternativos e de exceção:**
+  - E1. Data de término anterior à de início → `VALIDATION_FAILED`.
+  - E2. Turma de curso ao qual o ator não está designado → `PERMISSION_DENIED`.
+  - E3. Curso desativado → `VALIDATION_FAILED`.
+- **Regras de negócio:**
+  - RN1. A turma pertence a exatamente um curso e carrega o período letivo, sem o qual não é possível
+    consolidar por semestre os relatórios à coordenação.
+  - RN2. A identificação da turma deve ser única dentro do curso e do período letivo.
+- **Permissões geradas:** `COHORT:CREATE`, `COHORT:READ`, `COHORT:UPDATE`, `COHORT:DEACTIVATE`
+- **Escopo de titularidade:** restrito aos cursos aos quais o ator está designado.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — ambas descrevem a orientação organizada por semestre, com formalização das
+  atividades e datas no início do período.
+- **Critério de aceitação:** turma criada com período letivo admite professores e alunos; coordenador
+  de outro curso não a enxerga.
+- **Rastreio:** A-P1; A-P3; M-P1; M-P9.
+
+#### RF-TUR-002 — Designar professor à turma
+
+- **Descrição:** permite ao coordenador designar professores a uma turma do seu curso, e revogar a
+  designação.
+- **Ator:** Coordenador
+- **Pré-condições:** turma ativa em curso ao qual o ator está designado; usuário beneficiário ativo.
+- **Fluxo principal:**
+  1. O ator seleciona a turma e o usuário.
+  2. O sistema atribui o papel `PROFESSOR` e cria o vínculo com a turma.
+  3. O sistema registra a operação em trilha de auditoria.
+- **Fluxos alternativos e de exceção:**
+  - E1. Professor já designado à turma → a operação é idempotente.
+  - E2. Turma de curso ao qual o ator não está designado → `PERMISSION_DENIED`.
+- **Regras de negócio:**
+  - RN1. Uma turma admite mais de um professor designado.
+  - RN2. O vínculo com a turma autoriza cadastrar alunos e emitir convites; não autoriza, por si só,
+    orientar ou avaliar — isso decorre do vínculo com o evento (RE-08).
+- **Permissões geradas:** `COHORT:ASSIGN_PROFESSOR`, `COHORT:REVOKE_PROFESSOR`
+- **Escopo de titularidade:** restrito aos cursos aos quais o ator está designado.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — Angélica registra três professores atuando conjuntamente sobre a mesma
+  população de alunos, o que exige mais de um professor por turma.
+- **Critério de aceitação:** designado, o professor cadastra alunos naquela turma e em nenhuma outra.
+- **Rastreio:** A-perfil; A-P1; M-P1.
+
+#### RF-TUR-003 — Cadastrar aluno na turma
+
+- **Descrição:** permite ao professor registrar um aluno e matriculá-lo na turma, criando a conta
+  quando o e-mail ainda não existir no sistema.
+- **Ator:** Professor
+- **Pré-condições:** turma ativa; ator designado a essa turma.
+- **Fluxo principal:**
+  1. O ator informa nome e e-mail do aluno.
+  2. O sistema cria o usuário com o papel `STUDENT`, quando o e-mail ainda não existir.
+  3. O sistema cria a matrícula do aluno na turma, em situação ativa.
+  4. O sistema envia ao aluno a mensagem de definição de senha (`RF-ACS-004`).
+- **Fluxos alternativos e de exceção:**
+  - E1. E-mail já cadastrado no sistema → `EMAIL_ALREADY_REGISTERED`.
+  - E2. Aluno já possui matrícula ativa → `STUDENT_ALREADY_ENROLLED`.
+  - E3. Turma inativa ou ator não designado a ela → `PERMISSION_DENIED`.
+- **Regras de negócio:**
+  - RN1. **A matrícula é entidade própria** (`Enrollment`: aluno, turma, situação), nunca coluna no
+    registro do usuário. Nesta versão o aluno possui no máximo uma matrícula ativa; a expansão para
+    múltiplas turmas será a remoção dessa restrição, sem migração de dados, e o histórico
+    multissemestral exigido pelos relatórios já nasce apoiado nessa entidade.
+  - RN2. O e-mail é identificador único global; quem atua em mais de uma instituição usa e-mails
+    distintos.
+  - RN3. A conta criada por este fluxo nasce sem senha definida.
+- **Permissões geradas:** `ENROLLMENT:CREATE`, `ENROLLMENT:READ`
+- **Escopo de titularidade:** restrito às turmas às quais o ator está designado.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de A-P1 e M-P1, que descrevem a formalização da turma e das atividades
+  do semestre pelo professor.
+- **Critério de aceitação:** professor designado cadastra aluno inexistente e ele passa a constar na
+  turma com matrícula ativa; professor não designado é recusado.
+- **Rastreio:** A-P1; M-P1; §10, item 4.
+
+#### RF-TUR-004 — Emitir convite de ingresso na turma
+
+- **Descrição:** permite ao professor gerar um convite de ingresso na turma, para que os alunos criem
+  a própria conta em vez de serem cadastrados um a um.
+- **Ator:** Professor
+- **Pré-condições:** turma ativa; ator designado a essa turma.
+- **Fluxo principal:**
+  1. O ator solicita o convite para a turma.
+  2. O ator informa o prazo de validade.
+  3. O sistema gera o convite e devolve o endereço de ingresso.
+  4. O ator consulta ou revoga convites emitidos.
+- **Fluxos alternativos e de exceção:**
+  - E1. Turma inativa ou ator não designado → `PERMISSION_DENIED`.
+  - E2. Prazo de validade ausente ou no passado → `VALIDATION_FAILED`.
+- **Regras de negócio:**
+  - RN1. O convite é de uso múltiplo e vinculado a uma única turma.
+  - RN2. O convite possui prazo de validade obrigatório e pode ser revogado a qualquer momento.
+  - RN3. O convite concede exclusivamente o papel `STUDENT` e a matrícula na turma a que se refere.
+- **Permissões geradas:** `INVITATION:CREATE`, `INVITATION:READ`, `INVITATION:REVOKE`
+- **Escopo de titularidade:** restrito às turmas às quais o ator está designado.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de A-perfil e M-perfil: o volume de orientandos por professor torna
+  inviável o cadastro individual, que agravaria a falta de tempo relatada como dor principal.
+- **Critério de aceitação:** convite válido conduz ao ingresso; convite revogado ou expirado é
+  recusado.
+- **Rastreio:** A-perfil; A-P2; M-perfil; M-P2.
+
+#### RF-TUR-005 — Ingressar na turma por convite
+
+- **Descrição:** permite ao aluno criar a própria conta e matricular-se na turma a partir do convite
+  recebido.
+- **Ator:** Visitante
+- **Pré-condições:** possuir convite válido.
+- **Fluxo principal:**
+  1. O ator acessa o endereço do convite.
+  2. O ator informa nome, e-mail e senha.
+  3. O sistema cria a conta com o papel `STUDENT`.
+  4. O sistema cria a matrícula na turma indicada pelo convite.
+- **Fluxos alternativos e de exceção:**
+  - E1. Convite expirado → `INVITATION_EXPIRED`.
+  - E2. Convite revogado → `INVITATION_REVOKED`.
+  - E3. E-mail já cadastrado → `EMAIL_ALREADY_REGISTERED`.
+  - E4. Já existe matrícula ativa para esse aluno → `STUDENT_ALREADY_ENROLLED`.
+  - E5. Senha fora da política → `VALIDATION_FAILED`.
+- **Regras de negócio:**
+  - RN1. O ingresso por convite não permite escolher papel nem turma: ambos vêm do convite.
+  - RN2. Aplica-se a RN1 de `RF-TUR-003` quanto à matrícula como entidade própria.
+- **Permissões geradas:** — (acesso público mediante convite)
+- **Escopo de titularidade:** —
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de `RF-TUR-004`.
+- **Critério de aceitação:** o portador de convite válido conclui o ingresso e passa a constar na
+  turma; convite inválido não cria conta alguma.
+- **Rastreio:** `RF-TUR-004`.
+
+---
+
+### 7.5 EVT — Evento
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-EVT-001 | Manter evento | E (proposta) | `ELI` |
+| RF-EVT-002 | Definir o cronograma de etapas do evento | E (proposta) | `ELI` |
+| RF-EVT-003 | Designar orientadores ao evento | E (proposta) | `ELI` |
+| RF-EVT-004 | Consultar eventos por escopo | E (proposta) | `DER` |
+
+---
+
+#### RF-EVT-001 — Manter evento
+
+- **Descrição:** permite ao dono do escopo criar, consultar, alterar e cancelar um evento acadêmico,
+  definindo o tema, o problema de pesquisa, os objetivos e os limites de formação de equipes. O
+  evento é a unidade que organiza a produção dos artigos do período.
+- **Ator:** Professor, Coordenador ou Administrador Institucional, conforme o escopo
+- **Pré-condições:** ator vinculado ao alvo do escopo pretendido.
+- **Fluxo principal:**
+  1. O ator seleciona o escopo — turma, curso ou instituição — e o alvo correspondente.
+  2. O ator informa título, tema, problema de pesquisa e objetivos.
+  3. O ator informa a quantidade máxima de equipes e o tamanho máximo da equipe.
+  4. O sistema registra o evento e torna elegíveis todos os professores e alunos do alvo do escopo.
+  5. O ator consulta, altera ou cancela o evento quando necessário.
+- **Fluxos alternativos e de exceção:**
+  - E1. Escopo superior ao vínculo do ator → `EVENT_SCOPE_NOT_ALLOWED`.
+  - E2. Alvo do escopo inexistente ou inativo → `RESOURCE_NOT_FOUND`.
+  - E3. Limite de equipes ou tamanho de equipe ausente ou não positivo → `VALIDATION_FAILED`.
+  - E4. Alteração dos limites para valor inferior ao já utilizado → `VALIDATION_FAILED`.
+- **Regras de negócio:**
+  - RN1. O criador é o dono do escopo, conforme RE-01, e é ele quem define o tema.
+  - RN2. A elegibilidade é automática por escopo, conforme RE-02; não existe inscrição prévia.
+  - RN3. O evento possui exatamente um tema nesta versão (RE-07).
+  - RN4. Os limites de quantidade de equipes e de tamanho da equipe são definidos por evento.
+  - RN5. O evento pertence à instituição do seu alvo de escopo.
+- **Permissões geradas:** `EVENT:CREATE`, `EVENT:READ`, `EVENT:UPDATE`, `EVENT:CANCEL`
+- **Escopo de titularidade:** restrito ao alvo ao qual o ator está vinculado — sua turma, seu curso
+  ou sua instituição, conforme o papel.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — ambas descrevem a produção de artigos organizada por período, com tema,
+  problema e objetivos definidos pelo professor e com o congresso interno como destino.
+- **Critério de aceitação:** professor cria evento de escopo de turma e é recusado ao tentar escopo
+  de curso; criado o evento, os alunos do alvo passam a poder formar equipes nele.
+- **Rastreio:** A-P1 (tema, problema e objetivos definidos pelo professor); M-P1; M-P5 (template do
+  congresso interno).
+
+#### RF-EVT-002 — Definir o cronograma de etapas do evento
+
+- **Descrição:** permite ao dono do escopo definir as etapas de entrega do evento, com nome, ordem e
+  prazo, fixando o calendário no início do período.
+- **Ator:** Professor, Coordenador ou Administrador Institucional, conforme o escopo
+- **Pré-condições:** evento ativo; ator é o dono do seu escopo.
+- **Fluxo principal:**
+  1. O ator informa, para cada etapa, nome, ordem e data de entrega.
+  2. O sistema valida a sequência e registra o cronograma.
+  3. O ator altera ou remove etapas quando necessário.
+- **Fluxos alternativos e de exceção:**
+  - E1. Datas fora de ordem crescente em relação à sequência das etapas → `MILESTONE_DATE_CONFLICT`.
+  - E2. Remoção de etapa já iniciada → `VALIDATION_FAILED`.
+  - E3. Ator não é dono do escopo do evento → `PERMISSION_DENIED`.
+- **Regras de negócio:**
+  - RN1. O cronograma pertence ao evento, o que padroniza os prazos de todas as suas equipes desde o
+    início do período.
+  - RN2. As datas devem crescer estritamente conforme a ordem das etapas.
+  - RN3. A etapa é a unidade à qual se prendem as versões e os apontamentos do ciclo de correção,
+    especificado em versão posterior desta URS.
+- **Permissões geradas:** `MILESTONE:CREATE`, `MILESTONE:READ`, `MILESTONE:UPDATE`,
+  `MILESTONE:DELETE`
+- **Escopo de titularidade:** restrito aos eventos de cujo escopo o ator é dono.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — Angélica declara que o cronograma de entregas é definido no início do semestre;
+  Marciele registra de três a quatro etapas de entrega por período.
+- **Critério de aceitação:** cronograma com etapas em ordem crescente é aceito; etapa com data
+  anterior à da etapa precedente é recusada.
+- **Rastreio:** A-P1; A-P3; M-P1; M-P2.
+
+#### RF-EVT-003 — Designar orientadores ao evento
+
+- **Descrição:** permite ao dono do escopo designar os professores que orientarão no evento, e
+  revogar a designação.
+- **Ator:** Professor, Coordenador ou Administrador Institucional, conforme o escopo
+- **Pré-condições:** evento ativo; ator é o dono do seu escopo; professor elegível pelo escopo.
+- **Fluxo principal:**
+  1. O ator seleciona o evento e o professor.
+  2. O sistema verifica a elegibilidade do professor pelo escopo do evento.
+  3. O sistema registra a designação.
+- **Fluxos alternativos e de exceção:**
+  - E1. Professor não elegível pelo escopo do evento → `STUDENT_NOT_ELIGIBLE`.
+  - E2. Ator não é dono do escopo → `PERMISSION_DENIED`.
+  - E3. Professor já designado → a operação é idempotente.
+- **Regras de negócio:**
+  - RN1. Um evento admite mais de um orientador.
+  - RN2. O orientador do evento pode ver e atuar sobre todas as equipes e artigos do evento,
+    independentemente de ser o responsável direto por elas.
+  - RN3. A designação a uma equipe específica (`RF-EQP-005`) nomeia o responsável direto e não
+    restringe o alcance dos demais orientadores do evento.
+- **Permissões geradas:** `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`
+- **Escopo de titularidade:** restrito aos eventos de cujo escopo o ator é dono.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — Angélica registra três professores orientando conjuntamente; Marciele mantém a
+  planilha compartilhada justamente para que qualquer professor envolvido possa atender o aluno.
+- **Critério de aceitação:** designado ao evento, o professor enxerga todas as suas equipes;
+  professor não designado não enxerga nenhuma.
+- **Rastreio:** A-perfil; A-P1; M-P1; M-P3.
+
+#### RF-EVT-004 — Consultar eventos por escopo
+
+- **Descrição:** permite ao usuário localizar os eventos aos quais tem acesso, organizados por
+  escopo — instituição, curso e turma.
+- **Ator:** Usuário autenticado
+- **Pré-condições:** sessão ativa.
+- **Fluxo principal:**
+  1. O ator abre a consulta de eventos.
+  2. O sistema apresenta os eventos agrupados por escopo, restritos aos vínculos do ator.
+  3. O ator seleciona um evento e consulta o seu tema, cronograma e equipes.
+- **Fluxos alternativos e de exceção:**
+  - E1. Evento fora dos vínculos do ator → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. O aluno enxerga os eventos em que é elegível; o professor, aqueles em que é orientador ou
+    dono do escopo; o coordenador, os do seu curso; o administrador institucional, os da sua
+    instituição.
+  - RN2. Esta regra implementa a posição de acesso restrito e não a de abertura institucional
+    ampla — divergência registrada em §10, item 8.
+- **Permissões geradas:** `EVENT:READ`
+- **Escopo de titularidade:** restrito aos eventos alcançados pelos vínculos do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de `RF-EVT-001` e da decisão de apresentar os eventos organizados por
+  escopo.
+- **Critério de aceitação:** cada perfil vê exatamente os eventos alcançados pelos seus vínculos, e
+  nenhum outro.
+- **Rastreio:** `RF-EVT-001`; A-P8; M-P8.
+
+---
+
+### 7.6 EQP — Equipe
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-EQP-001 | Criar equipe no evento | E (proposta) | `ELI` |
+| RF-EQP-002 | Ingressar em equipe | E (proposta) | `ELI` |
+| RF-EQP-003 | Designar aluno a equipe | E (proposta) | `ELI` |
+| RF-EQP-004 | Convidar aluno para a equipe | I (proposta) | `DER` |
+| RF-EQP-005 | Designar orientador responsável pela equipe | E (proposta) | `ELI` |
+| RF-EQP-006 | Consultar alunos elegíveis sem equipe | I (proposta) | `ELI` |
+
+---
+
+#### RF-EQP-001 — Criar equipe no evento
+
+- **Descrição:** permite ao orientador criar equipes no evento, respeitando a quantidade máxima
+  definida para ele.
+- **Ator:** Professor orientador do evento
+- **Pré-condições:** evento ativo; ator designado como orientador do evento.
+- **Fluxo principal:**
+  1. O ator informa a identificação da equipe.
+  2. O sistema verifica o limite de equipes do evento.
+  3. O sistema cria a equipe e o seu artigo, no estado `STARTED`.
+- **Fluxos alternativos e de exceção:**
+  - E1. Limite de equipes do evento atingido → `EVENT_TEAM_LIMIT_REACHED`.
+  - E2. Ator não é orientador do evento → `ADVISOR_NOT_ASSIGNED_TO_EVENT`.
+  - E3. Evento cancelado → `VALIDATION_FAILED`.
+- **Regras de negócio:**
+  - RN1. A criação da equipe cria o seu artigo, na proporção de um para um (RE-05).
+  - RN2. A quantidade de equipes não excede o limite definido no evento.
+- **Permissões geradas:** `TEAM:CREATE`
+- **Escopo de titularidade:** restrito aos eventos em que o ator é orientador.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — ambas descrevem o trabalho realizado por equipes formadas dentro do período.
+- **Critério de aceitação:** criada a equipe, existe um artigo associado a ela em estado `STARTED`;
+  criação além do limite do evento é recusada.
+- **Rastreio:** A-P1; A-perfil; M-P1.
+
+#### RF-EQP-002 — Ingressar em equipe
+
+- **Descrição:** permite ao aluno elegível ingressar por conta própria em uma equipe do evento,
+  preservando a autonomia de escolha dos colegas que hoje existe no processo.
+- **Ator:** Aluno
+- **Pré-condições:** aluno elegível pelo escopo do evento; equipe com vaga.
+- **Fluxo principal:**
+  1. O ator consulta as equipes do evento e as suas vagas.
+  2. O ator solicita o ingresso em uma equipe.
+  3. O sistema registra o ator como integrante.
+- **Fluxos alternativos e de exceção:**
+  - E1. Aluno não elegível pelo escopo do evento → `STUDENT_NOT_ELIGIBLE`.
+  - E2. Aluno já integra outra equipe do mesmo evento → `STUDENT_ALREADY_IN_TEAM`.
+  - E3. Tamanho máximo da equipe atingido → `TEAM_SIZE_LIMIT_REACHED`.
+  - E4. Evento cancelado → `VALIDATION_FAILED`.
+- **Regras de negócio:**
+  - RN1. Um aluno pertence a no máximo uma equipe por evento (RE-04).
+  - RN2. A equipe pode reunir alunos de turmas e cursos distintos quando o escopo do evento o
+    permitir (RE-06).
+  - RN3. O tamanho máximo é o definido no evento.
+- **Permissões geradas:** `TEAM:JOIN`
+- **Escopo de titularidade:** restrito às equipes de eventos em que o ator é elegível.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — Angélica inicia o processo pedindo aos alunos que escolham o próprio grupo,
+  com limite de integrantes.
+- **Critério de aceitação:** aluno elegível ingressa em equipe com vaga; ingresso em segunda equipe
+  do mesmo evento é recusado.
+- **Rastreio:** A-P1.
+
+#### RF-EQP-003 — Designar aluno a equipe
+
+- **Descrição:** permite ao orientador designar um aluno elegível a uma equipe, ou removê-lo dela.
+- **Ator:** Professor orientador do evento
+- **Pré-condições:** evento ativo; ator designado como orientador do evento; aluno elegível.
+- **Fluxo principal:**
+  1. O ator seleciona a equipe e o aluno.
+  2. O sistema verifica elegibilidade, limite de tamanho e ausência de outra equipe no mesmo evento.
+  3. O sistema registra o aluno como integrante.
+- **Fluxos alternativos e de exceção:**
+  - E1. Aluno não elegível → `STUDENT_NOT_ELIGIBLE`.
+  - E2. Aluno já integra outra equipe do evento → `STUDENT_ALREADY_IN_TEAM`.
+  - E3. Tamanho máximo atingido → `TEAM_SIZE_LIMIT_REACHED`.
+- **Regras de negócio:**
+  - RN1. Aplicam-se as regras RN1 a RN3 de `RF-EQP-002`.
+  - RN2. A remoção de integrante não apaga a sua contribuição já registrada no artigo.
+- **Permissões geradas:** `TEAM:ASSIGN_MEMBER`, `TEAM:REMOVE_MEMBER`
+- **Escopo de titularidade:** restrito aos eventos em que o ator é orientador.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — ambas descrevem o professor conduzindo a organização dos grupos no início do
+  período.
+- **Critério de aceitação:** aluno designado passa a integrar a equipe; designação que viole limite
+  ou unicidade é recusada.
+- **Rastreio:** A-P1; M-P1.
+
+#### RF-EQP-004 — Convidar aluno para a equipe
+
+- **Descrição:** permite ao orientador convidar um aluno elegível para uma equipe, cabendo ao aluno
+  aceitar.
+- **Ator:** Professor orientador do evento
+- **Pré-condições:** evento ativo; ator designado como orientador do evento; aluno elegível.
+- **Fluxo principal:**
+  1. O ator seleciona a equipe e o aluno.
+  2. O sistema registra o convite e notifica o aluno.
+  3. O aluno aceita e passa a integrar a equipe.
+- **Fluxos alternativos e de exceção:**
+  - E1. Aluno recusa → o convite é encerrado sem efeito.
+  - E2. Convite expirado → `INVITATION_EXPIRED`.
+  - E3. Aluno já integra outra equipe do evento no momento do aceite → `STUDENT_ALREADY_IN_TEAM`.
+  - E4. Tamanho máximo atingido no momento do aceite → `TEAM_SIZE_LIMIT_REACHED`.
+- **Regras de negócio:**
+  - RN1. O convite possui prazo de validade.
+  - RN2. As validações de elegibilidade, unicidade e limite são reavaliadas no aceite, não apenas na
+    emissão.
+- **Permissões geradas:** `TEAM:INVITE_MEMBER`
+- **Escopo de titularidade:** restrito aos eventos em que o ator é orientador.
+- **Prioridade:** I (proposta)
+- **Origem:** `DER` — deriva de `RF-EQP-002` e `RF-EQP-003`, como alternativa que preserva a escolha
+  do aluno sem exigir designação direta.
+- **Critério de aceitação:** convite aceito insere o aluno na equipe; convite aceito após o
+  preenchimento das vagas é recusado.
+- **Rastreio:** `RF-EQP-002`; `RF-EQP-003`; A-P1.
+
+#### RF-EQP-005 — Designar orientador responsável pela equipe
+
+- **Descrição:** permite ao dono do escopo do evento nomear, entre os orientadores do evento, o
+  responsável direto por cada equipe, distribuindo a carga de orientação.
+- **Ator:** Professor, Coordenador ou Administrador Institucional, conforme o escopo
+- **Pré-condições:** evento ativo; ator é o dono do seu escopo; professor já designado como
+  orientador do evento.
+- **Fluxo principal:**
+  1. O ator seleciona a equipe e o orientador.
+  2. O sistema verifica que o orientador está designado ao evento.
+  3. O sistema registra a responsabilidade.
+- **Fluxos alternativos e de exceção:**
+  - E1. Professor não designado ao evento → `ADVISOR_NOT_ASSIGNED_TO_EVENT`.
+  - E2. Ator não é dono do escopo → `PERMISSION_DENIED`.
+- **Regras de negócio:**
+  - RN1. Em eventos de escopo amplo, cada orientador responde diretamente por um subconjunto das
+    equipes, sem que isso restrinja o alcance dos demais orientadores do evento (RN2 de
+    `RF-EVT-003`).
+  - RN2. A atribuição de nota cabe ao orientador responsável pela equipe (`RF-ART-002`,
+    `RF-ART-003`).
+  - RN3. Uma equipe possui no máximo um orientador responsável ativo por vez.
+- **Permissões geradas:** `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`
+- **Escopo de titularidade:** restrito aos eventos de cujo escopo o ator é dono.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — Angélica descreve três professores dividindo cerca de oitenta alunos em
+  equipes; Marciele registra a necessidade de qualquer professor envolvido poder atender o aluno.
+- **Critério de aceitação:** o orientador responsável consta na equipe e é quem atribui as notas;
+  professor não designado ao evento não pode ser nomeado responsável.
+- **Rastreio:** A-perfil; A-P1; M-P1; M-P3.
+
+#### RF-EQP-006 — Consultar alunos elegíveis sem equipe
+
+- **Descrição:** permite ao orientador identificar os alunos elegíveis ao evento que ainda não
+  integram nenhuma equipe, evitando que a ausência de participação seja percebida tardiamente.
+- **Ator:** Professor orientador do evento
+- **Pré-condições:** evento ativo; ator designado como orientador do evento.
+- **Fluxo principal:**
+  1. O ator abre a consulta de formação de equipes do evento.
+  2. O sistema lista os alunos elegíveis pelo escopo que não integram equipe alguma.
+- **Fluxos alternativos e de exceção:**
+  - E1. Ator não é orientador do evento → `ADVISOR_NOT_ASSIGNED_TO_EVENT`.
+- **Regras de negócio:**
+  - RN1. Participar do evento é integrar uma equipe dele (RE-03); o aluno elegível sem equipe não
+    participa e é o primeiro sinal de afastamento.
+- **Permissões geradas:** `TEAM:READ`
+- **Escopo de titularidade:** restrito aos eventos em que o ator é orientador.
+- **Prioridade:** I (proposta)
+- **Origem:** `ELI` — Marciele relata a percepção tardia de alunos travados ou atrasados, com
+  necessidade de força-tarefa próxima ao prazo final.
+- **Critério de aceitação:** a lista apresenta exatamente os alunos elegíveis sem equipe e se esvazia
+  quando todos ingressam.
+- **Rastreio:** M-P3.
+
+---
+
+### 7.7 ART — Artigo
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-ART-001 | Acompanhar a situação do artigo | E (proposta) | `ELI` |
+| RF-ART-002 | Avaliar o artigo | E (proposta) | `ELI` |
+| RF-ART-003 | Avaliar individualmente cada integrante | E (proposta) | `ELI` |
+| RF-ART-004 | Registrar publicação externa do artigo | I (proposta) | `ELI` |
+
+---
+
+#### RF-ART-001 — Acompanhar a situação do artigo
+
+- **Descrição:** permite consultar o artigo da equipe, o seu estado no ciclo de produção e a etapa
+  corrente do cronograma.
+- **Ator:** Aluno integrante, Professor orientador do evento, Coordenador do curso
+- **Pré-condições:** artigo existente; ator alcançado pelo vínculo correspondente.
+- **Fluxo principal:**
+  1. O ator seleciona a equipe.
+  2. O sistema apresenta o artigo, o seu estado e a etapa corrente.
+- **Fluxos alternativos e de exceção:**
+  - E1. Artigo fora dos vínculos do ator → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. Os estados do artigo são `STARTED`, `IN_PROGRESS`, `IN_REVIEW` e `FINISHED`.
+  - RN2. O artigo percorre `IN_PROGRESS` e `IN_REVIEW` uma vez por etapa do cronograma, em ciclo, até
+    a conclusão; as transições e o ciclo de correção que as governa serão especificados em versão
+    posterior desta URS.
+  - RN3. O aluno enxerga apenas o artigo da sua equipe; o orientador do evento, os de todas as
+    equipes do evento; o coordenador, os do seu curso.
+- **Permissões geradas:** `ARTICLE:READ`
+- **Escopo de titularidade:** restrito aos artigos alcançados pelos vínculos do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — ambas acompanham a evolução do trabalho ao longo das etapas de entrega.
+- **Critério de aceitação:** cada perfil vê exatamente os artigos alcançados pelos seus vínculos;
+  aluno de outra equipe não os vê.
+- **Rastreio:** M-P3; A-P3; M-P1.
+
+#### RF-ART-002 — Avaliar o artigo
+
+- **Descrição:** permite ao orientador responsável registrar a nota do artigo produzido pela equipe.
+- **Ator:** Professor orientador responsável pela equipe
+- **Pré-condições:** artigo existente; ator é o orientador responsável pela equipe.
+- **Fluxo principal:**
+  1. O ator informa a nota do artigo.
+  2. O sistema registra a nota e a autoria da avaliação.
+- **Fluxos alternativos e de exceção:**
+  - E1. Ator não é o orientador responsável pela equipe → `PERMISSION_DENIED`.
+  - E2. Nota fora da faixa admitida → `VALIDATION_FAILED`.
+- **Regras de negócio:**
+  - RN1. O artigo possui uma única nota, distinta das notas individuais dos integrantes.
+  - RN2. A nota do artigo não determina, por si só, a aprovação dos alunos.
+  - RN3. Toda alteração de nota preserva o registro anterior, com autor e instante.
+- **Permissões geradas:** `ARTICLE:GRADE`
+- **Escopo de titularidade:** restrito às equipes das quais o ator é orientador responsável.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — decorre da avaliação do trabalho descrita como atividade central da orientação.
+- **Critério de aceitação:** a nota registrada é apresentada no artigo e a alteração preserva o
+  histórico; orientador não responsável é recusado.
+- **Rastreio:** M-P2; M-P9; A-P4.
+
+#### RF-ART-003 — Avaliar individualmente cada integrante
+
+- **Descrição:** permite ao orientador responsável atribuir nota individual a cada integrante da
+  equipe, base do acompanhamento de aprovação prestado à coordenação.
+- **Ator:** Professor orientador responsável pela equipe
+- **Pré-condições:** equipe com integrantes; ator é o orientador responsável pela equipe.
+- **Fluxo principal:**
+  1. O ator seleciona a equipe.
+  2. O ator informa a nota de cada integrante.
+  3. O sistema registra as notas e a autoria da avaliação.
+- **Fluxos alternativos e de exceção:**
+  - E1. Ator não é o orientador responsável pela equipe → `PERMISSION_DENIED`.
+  - E2. Nota fora da faixa admitida → `VALIDATION_FAILED`.
+  - E3. Integrante removido da equipe após a avaliação → a nota é preservada com o registro histórico
+    da participação.
+- **Regras de negócio:**
+  - RN1. A avaliação é individual: integrantes da mesma equipe podem receber notas distintas.
+  - RN2. A aprovação do aluno decorre da sua nota individual, e é a informação principal solicitada
+    pela coordenação.
+  - RN3. Toda alteração de nota preserva o registro anterior, com autor e instante.
+- **Permissões geradas:** `ARTICLE:GRADE_MEMBER`
+- **Escopo de titularidade:** restrito às equipes das quais o ator é orientador responsável.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — Marciele identifica a aprovação dos alunos no projeto como o principal
+  acompanhamento prestado à coordenação.
+- **Critério de aceitação:** integrantes da mesma equipe recebem notas distintas e ambas são
+  registradas; orientador não responsável é recusado.
+- **Rastreio:** M-P9.
+
+#### RF-ART-004 — Registrar publicação externa do artigo
+
+- **Descrição:** permite registrar que o artigo foi publicado em evento científico ou periódico
+  externo, informando veículo, data e endereço, para que a produção não dependa de aviso informal do
+  aluno.
+- **Ator:** Professor orientador do evento, Aluno integrante
+- **Pré-condições:** artigo existente; ator alcançado pelo vínculo correspondente.
+- **Fluxo principal:**
+  1. O ator informa nome do veículo, tipo, data da publicação e endereço.
+  2. O sistema registra a publicação vinculada ao artigo.
+  3. O ator consulta, altera ou remove o registro quando necessário.
+- **Fluxos alternativos e de exceção:**
+  - E1. Endereço em formato inválido → `VALIDATION_FAILED`.
+  - E2. Artigo fora dos vínculos do ator → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. O registro é manual e descritivo. Nesta versão o sistema **não** mantém catálogo de eventos
+    e periódicos externos nem verifica prazos de submissão — ver §10, item 3.
+  - RN2. Publicação em evento interno do sistema não constitui publicação externa e não é contada
+    como tal.
+  - RN3. O registro alimenta a consolidação de publicações a ser especificada com os relatórios à
+    coordenação.
+- **Permissões geradas:** `PUBLICATION:CREATE`, `PUBLICATION:READ`, `PUBLICATION:UPDATE`,
+  `PUBLICATION:DELETE`
+- **Escopo de titularidade:** restrito aos artigos alcançados pelos vínculos do ator.
+- **Prioridade:** I (proposta)
+- **Origem:** `ELI` — Marciele relata depender de lembrar ou de o orientando avisar quando publica,
+  o que gera atraso e perda de registro de produção.
+- **Critério de aceitação:** publicação registrada consta no artigo e fica disponível para
+  consolidação; ausência de catálogo externo não impede o registro.
+- **Rastreio:** M-P9; M-P5.
+
+---
+
+### 7.8 INT — Internacionalização
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-INT-001 | Selecionar o idioma da interface | D (proposta) | `DER` |
+
+---
+
+#### RF-INT-001 — Selecionar o idioma da interface
+
+- **Descrição:** permite ao usuário escolher o idioma da interface, com data, número e fuso
+  apresentados conforme o idioma escolhido.
+- **Ator:** Usuário autenticado
+- **Pré-condições:** sessão ativa.
+- **Fluxo principal:**
+  1. O ator seleciona o idioma entre os disponíveis.
+  2. O sistema persiste a preferência no perfil e passa a apresentar a interface nesse idioma.
+- **Fluxos alternativos e de exceção:**
+  - E1. Idioma não suportado → `LANGUAGE_NOT_SUPPORTED`.
+  - E2. Texto sem tradução no idioma escolhido → o sistema recai no idioma padrão, sem erro.
+- **Regras de negócio:**
+  - RN1. O idioma padrão é o português do Brasil, único disponível no lançamento. A infraestrutura de
+    tradução é entregue pronta para receber outros idiomas.
+  - RN2. A tradução alcança exclusivamente a interface. Conteúdo produzido pelo usuário — tema,
+    artigo, apontamento, mensagem — permanece no idioma em que foi escrito.
+  - RN3. A tradução ocorre no cliente, a partir dos códigos devolvidos pela API; a API não devolve
+    texto destinado à exibição.
+- **Permissões geradas:** — (própria preferência)
+- **Escopo de titularidade:** restrito ao perfil do próprio ator.
+- **Prioridade:** D (proposta)
+- **Origem:** `DER` — nenhuma parte interessada solicitou idioma adicional; o requisito decorre da
+  decisão de produto de preparar o sistema para múltiplos idiomas. Pendente de validação
+  (`PAD-REQ-004`).
+- **Critério de aceitação:** a preferência persiste entre sessões; chave sem tradução recai no idioma
+  padrão sem erro visível.
+- **Rastreio:** §10, item 9; `ADR-0026` §3, §11, §25–§27; `PAD-REQ-008`; `ADR-0025` §20.
+
+---
+
+## 8. Catálogo de permissões
+
+Formato `RECURSO:ACAO`, recurso no singular, tudo em maiúsculas, sem curinga (`PAD-REQ-007`,
+`ADR-0014` §2, §3). Toda permissão possui requisito funcional de origem.
+
+| Permissão | Origem |
+| :--- | :--- |
+| `PERMISSION_GRANT:CREATE` | RF-ACS-006 |
+| `PERMISSION_GRANT:REVOKE` | RF-ACS-007 |
+| `PERMISSION_GRANT:READ` | RF-ACS-008 |
+| `INSTITUTION:CREATE` | RF-INS-001 |
+| `INSTITUTION:READ` | RF-INS-001 |
+| `INSTITUTION:UPDATE` | RF-INS-001 |
+| `INSTITUTION:DEACTIVATE` | RF-INS-001 |
+| `INSTITUTION:ASSIGN_ADMIN` | RF-INS-002 |
+| `INSTITUTION:REVOKE_ADMIN` | RF-INS-002 |
+| `COURSE:CREATE` | RF-CUR-001 |
+| `COURSE:READ` | RF-CUR-001 |
+| `COURSE:UPDATE` | RF-CUR-001 |
+| `COURSE:DEACTIVATE` | RF-CUR-001 |
+| `COURSE:ASSIGN_COORDINATOR` | RF-CUR-002 |
+| `COURSE:REVOKE_COORDINATOR` | RF-CUR-002 |
+| `COHORT:CREATE` | RF-TUR-001 |
+| `COHORT:READ` | RF-TUR-001 |
+| `COHORT:UPDATE` | RF-TUR-001 |
+| `COHORT:DEACTIVATE` | RF-TUR-001 |
+| `COHORT:ASSIGN_PROFESSOR` | RF-TUR-002 |
+| `COHORT:REVOKE_PROFESSOR` | RF-TUR-002 |
+| `ENROLLMENT:CREATE` | RF-TUR-003 |
+| `ENROLLMENT:READ` | RF-TUR-003 |
+| `INVITATION:CREATE` | RF-TUR-004 |
+| `INVITATION:READ` | RF-TUR-004 |
+| `INVITATION:REVOKE` | RF-TUR-004 |
+| `EVENT:CREATE` | RF-EVT-001 |
+| `EVENT:READ` | RF-EVT-001, RF-EVT-004 |
+| `EVENT:UPDATE` | RF-EVT-001 |
+| `EVENT:CANCEL` | RF-EVT-001 |
+| `MILESTONE:CREATE` | RF-EVT-002 |
+| `MILESTONE:READ` | RF-EVT-002 |
+| `MILESTONE:UPDATE` | RF-EVT-002 |
+| `MILESTONE:DELETE` | RF-EVT-002 |
+| `EVENT:ASSIGN_ADVISOR` | RF-EVT-003 |
+| `EVENT:REVOKE_ADVISOR` | RF-EVT-003 |
+| `TEAM:CREATE` | RF-EQP-001 |
+| `TEAM:READ` | RF-EQP-006 |
+| `TEAM:JOIN` | RF-EQP-002 |
+| `TEAM:ASSIGN_MEMBER` | RF-EQP-003 |
+| `TEAM:REMOVE_MEMBER` | RF-EQP-003 |
+| `TEAM:INVITE_MEMBER` | RF-EQP-004 |
+| `TEAM:ASSIGN_ADVISOR` | RF-EQP-005 |
+| `TEAM:REVOKE_ADVISOR` | RF-EQP-005 |
+| `ARTICLE:READ` | RF-ART-001 |
+| `ARTICLE:GRADE` | RF-ART-002 |
+| `ARTICLE:GRADE_MEMBER` | RF-ART-003 |
+| `PUBLICATION:CREATE` | RF-ART-004 |
+| `PUBLICATION:READ` | RF-ART-004 |
+| `PUBLICATION:UPDATE` | RF-ART-004 |
+| `PUBLICATION:DELETE` | RF-ART-004 |
+
+### 8.1 Composição dos papéis padrão
+
+Os papéis são criados pela carga inicial com a composição abaixo. O papel autoriza a ação; o alcance
+sobre registros específicos é resolvido pela titularidade declarada em cada requisito.
+
+| Papel | Permissões |
+| :--- | :--- |
+| `SYSTEM_ADMIN` | `INSTITUTION:CREATE`, `INSTITUTION:READ`, `INSTITUTION:UPDATE`, `INSTITUTION:DEACTIVATE`, `INSTITUTION:ASSIGN_ADMIN`, `INSTITUTION:REVOKE_ADMIN` |
+| `INSTITUTION_ADMIN` | `COURSE:CREATE/READ/UPDATE/DEACTIVATE`, `COURSE:ASSIGN_COORDINATOR`, `COURSE:REVOKE_COORDINATOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR` |
+| `COORDINATOR` | `COHORT:CREATE/READ/UPDATE/DEACTIVATE`, `COHORT:ASSIGN_PROFESSOR`, `COHORT:REVOKE_PROFESSOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `ARTICLE:READ`, `PUBLICATION:READ` |
+| `PROFESSOR` | `ENROLLMENT:CREATE`, `ENROLLMENT:READ`, `INVITATION:CREATE/READ/REVOKE`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:CREATE/READ`, `TEAM:ASSIGN_MEMBER`, `TEAM:REMOVE_MEMBER`, `TEAM:INVITE_MEMBER`, `ARTICLE:READ`, `ARTICLE:GRADE`, `ARTICLE:GRADE_MEMBER`, `PUBLICATION:CREATE/READ/UPDATE/DELETE`, `PERMISSION_GRANT:CREATE`, `PERMISSION_GRANT:REVOKE`, `PERMISSION_GRANT:READ`, `COHORT:READ`, `COURSE:READ` |
+| `STUDENT` | `EVENT:READ`, `MILESTONE:READ`, `TEAM:READ`, `TEAM:JOIN`, `ARTICLE:READ`, `PUBLICATION:CREATE/READ/UPDATE`, `COHORT:READ` |
+
+A notação `A/B/C` acima abrevia a leitura desta tabela e **não** existe no catálogo: as permissões
+efetivas são sempre enumeradas, sem curinga (`ADR-0014` §3).
+
+---
+
+## 9. Catálogo de códigos de resposta
+
+Em maiúsculas, sem acento, independentes de idioma (`PAD-REQ-008`, `ADR-0025` §20). A tradução para
+exibição ocorre no cliente, a partir do código.
+
+| Código | Origem |
+| :--- | :--- |
+| `AUTHENTICATION_FAILED` | RF-ACS-001 |
+| `INSTITUTION_INACTIVE` | RF-ACS-001, RF-INS-001, RF-INS-002 |
+| `VALIDATION_FAILED` | RF-ACS-004, RF-ACS-005, RF-INS-001, RF-CUR-001, RF-TUR-001, RF-TUR-004, RF-TUR-005, RF-EVT-001, RF-EVT-002, RF-EQP-001, RF-EQP-002, RF-ART-002, RF-ART-003, RF-ART-004 |
+| `PERMISSION_DENIED` | RF-ACS-005, RF-CUR-001, RF-CUR-002, RF-TUR-001, RF-TUR-002, RF-TUR-003, RF-TUR-004, RF-EVT-002, RF-EVT-003, RF-EQP-005, RF-ART-002, RF-ART-003 |
+| `RESOURCE_NOT_FOUND` | RF-ACS-006, RF-ACS-007, RF-ACS-008, RF-INS-002, RF-CUR-002, RF-EVT-001, RF-EVT-004, RF-ART-001, RF-ART-004 |
+| `EMAIL_ALREADY_REGISTERED` | RF-TUR-003, RF-TUR-005 |
+| `INVITATION_EXPIRED` | RF-ACS-003, RF-ACS-004, RF-TUR-005, RF-EQP-004 |
+| `INVITATION_REVOKED` | RF-TUR-005 |
+| `STUDENT_ALREADY_ENROLLED` | RF-TUR-003, RF-TUR-005 |
+| `COORDINATOR_ALREADY_ASSIGNED` | RF-CUR-002 |
+| `EVENT_SCOPE_NOT_ALLOWED` | RF-EVT-001 |
+| `EVENT_TEAM_LIMIT_REACHED` | RF-EQP-001 |
+| `TEAM_SIZE_LIMIT_REACHED` | RF-EQP-002, RF-EQP-003, RF-EQP-004 |
+| `STUDENT_ALREADY_IN_TEAM` | RF-EQP-002, RF-EQP-003, RF-EQP-004 |
+| `STUDENT_NOT_ELIGIBLE` | RF-EVT-003, RF-EQP-002, RF-EQP-003 |
+| `ADVISOR_NOT_ASSIGNED_TO_EVENT` | RF-EQP-001, RF-EQP-005, RF-EQP-006 |
+| `MILESTONE_DATE_CONFLICT` | RF-EVT-002 |
+| `GRANT_NOT_HELD_BY_GRANTER` | RF-ACS-006 |
+| `SELF_GRANT_NOT_ALLOWED` | RF-ACS-006 |
+| `LANGUAGE_NOT_SUPPORTED` | RF-INT-001 |
+
+---
+
+## 10. Pendências
+
+| # | Pendência | Efeito |
+| :--- | :--- | :--- |
+| 1 | **Prioridades não atribuídas por parte interessada.** Nenhum requisito desta versão teve prioridade atribuída pelas entrevistadas; os valores registrados são propostas da equipe. | Viola `PAD-REQ-003`. Por `PAD-REQ-006`, nenhum requisito desta versão deve ser encaminhado à implementação antes da ratificação. |
+| 2 | **Requisitos `DER` não validados.** Toda a hierarquia institucional, a autenticação e a cadeia de criação de usuários derivam da definição de produto, não de solicitação direta. | Por `PAD-REQ-004`, não são considerados acordados antes de validação com as partes interessadas. |
+| 3 | **Radar de eventos externos adiado.** Marciele nomeou, em P10, duas condições obrigatórias para a plataforma valer o tempo de aprendizado: apoio às correções e busca de eventos. A segunda foi adiada por decisão de escopo. Em P5 ela descreve o item como externo — "radar de eventos científicos, congressos e periódicos" com prazo, temática, requisitos e links, e o trabalho manual de "identificação de eventos e periódicos adequados à temática" e "repasse dessas oportunidades aos alunos". O congresso interno aparece separadamente, como template já conhecido. | Requisito elicitado, conhecido e não atendido. `RF-ART-004` o atende parcialmente ao permitir o registro manual da publicação externa. O módulo de correção passa a sustentar sozinho o caso de adoção dessa parte interessada. |
+| 4 | **Um usuário por instituição.** Quem atua em mais de uma instituição usa contas e e-mails distintos. | Decisão de escopo. Expansão prevista. |
+| 5 | **Elicitação faltante.** Nenhum aluno e nenhum coordenador foi entrevistado, embora ambos sejam atores desta URS. | A visão do aluno consta apenas em terceira pessoa. Recomenda-se nova rodada de elicitação. |
+| 6 | **Cobertura de área.** Ambas as entrevistadas são do curso de Administração. As normas registradas se limitam a ABNT e ao template do congresso interno. | Outras áreas podem exigir normas distintas, ainda sem evidência. |
+| 7 | **Coordenador único por curso.** Registrado como RN1 de `RF-CUR-002` sem evidência que o confirme. | Premissa a confirmar. |
+| 8 | **Divergência de visibilidade (P8).** Marciele defende que qualquer professor da instituição veja o trabalho em qualquer fase; Angélica restringe a orientadores e autores. Esta versão implementa a posição restritiva. | Se a posição ampla prevalecer, será necessária permissão de leitura em escopo institucional, hoje inexistente. |
+| 9 | **Idiomas.** Apenas português do Brasil no lançamento; nenhuma parte interessada solicitou idioma adicional. | `RF-INT-001` permanece `DER` até validação. A estratégia técnica está fixada em `ADR-0026` e nos padrões `PAD-NOM-001` a `PAD-NOM-014`; resta apenas a validação do requisito com as partes interessadas. |
+| 10 | **Ciclo de correção não especificado.** Submissão de versões, apontamentos, verificação de atendimento entre etapas, conformidade e relatórios. | É a próxima fatia desta URS e onde residem as dores principais das duas entrevistadas. |
+
+---
+
+## 11. Histórico de revisões
 
 | Versão | Data | Alteração |
 | :--- | :--- | :--- |
-| 0.1 | 2026-08-11 | Versão inicial. Requisitos não funcionais e restrições decorrentes de ADR-0000 a ADR-0009. Requisitos funcionais pendentes. |
-| 0.9 | 2026-08-12 | Topologia de repositórios declarada: `vince-back`, `vince-front` e `vince-docs` na organização `Biopark-G3S6`. Acrescentado RES-015. Decorrente da reescrita de ADR-0023 §13 e §14. |
-| 0.8 | 2026-08-12 | Definido o formato único de resposta da API, aplicável a sucesso e falha. Criada a seção 5.4 com o catálogo de códigos de resposta. Acrescentados RNF-EVO-009 a 012, RNF-ESC-017 e RNF-SEG-025. Decorrente de ADR-0025. |
-| 0.7 | 2026-08-12 | Definidas observabilidade, ambiente de desenvolvimento, verificação automatizada e estratégia de testes. Criada a seção 6.7 com RNF-VER-001 a 012. Acrescentados RNF-MOD-017 e 018, RNF-OBS-007 a 013, RNF-SEG-023 e 024, e RES-013 e 014. Decorrente de ADR-0022, ADR-0023 e ADR-0024, com reescrita de ADR-0003 §1 e acréscimos de ADR-0003 §14 e §15 e ADR-0008 §14. |
-| 0.6 | 2026-08-11 | Definidos o transporte de mensagens, o isolamento de filas por módulo e o outbox transacional com relay dedicado. Acrescentados RNF-MOD-015 e 016, RNF-CON-019 a 022, RNF-OBS-006 e RNF-SEG-021 e 022. Decorrente de ADR-0020 e ADR-0021, com reescrita de ADR-0008 §3 e acréscimo de ADR-0008 §13. |
-| 0.5 | 2026-08-11 | Definidas a organização física do banco de dados e a gestão de transações e conexões. Acrescentados RNF-CON-013 a 018, RNF-ESC-016 e RNF-EVO-008. Decorrente de ADR-0018 e ADR-0019. |
-| 0.4 | 2026-08-11 | Definidos arquitetura, stack e contrato de integração do frontend. Acrescentados RNF-MOD-011 a 014, RNF-EVO-006 e 007, RNF-ESC-014 e 015, RNF-SEG-019 e 020, e RES-009 a RES-012. Decorrente de ADR-0015, ADR-0016 e ADR-0017. |
-| 0.3 | 2026-08-11 | Autenticação revista de JWT para sessão opaca em servidor: reescritos RNF-EVO-005 e RNF-SEG-001 a RNF-SEG-006, acrescentados RNF-SEG-016 a RNF-SEG-018. Decorrente da reescrita do ADR-0013. |
-| 0.2 | 2026-08-11 | Definidos RNF-ESC-005, RNF-CON-007 e RNF-SEG-002, antes em aberto. Acrescentados RNF-MOD-010, RNF-EVO-005, RNF-ESC-006 a 013, RNF-CON-008 a 012, RNF-OBS-004 e 005, RNF-SEG-003 a 015, RES-007 e RES-008, decorrentes de ADR-0010 a ADR-0014. Incluída a estrutura obrigatória do requisito funcional (5.1) com os campos `Permissões geradas` e `Escopo de titularidade`, e o catálogo de permissões (5.3). |
+| 0.0 | 2026-08-13 | Documento zerado. Todo o conteúdo das versões 0.1 a 0.9.1 era decisão da própria equipe, não requisito de parte interessada, e foi movido para `Padroes/Padroes-de-Engenharia.md`. A URS recomeça vazia, a ser elaborada a partir da elicitação. O histórico anterior está no versionamento do repositório. |
+| 0.1 | 2026-08-19 | Registrada a fatia estrutural: 8 categorias, 32 requisitos funcionais, catálogo de 51 permissões e catálogo de 20 códigos de resposta, com rastreabilidade às entrevistas de Marciele e Angélica. Os catálogos de permissões e de códigos passam a existir, atendendo às pendências correspondentes de `Padroes-de-Engenharia.md` §6 no que se refere a esta fatia. Prioridades registradas como proposta, pendentes de atribuição por parte interessada. |
