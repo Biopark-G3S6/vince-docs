@@ -58,7 +58,7 @@ definir sua estrutura, sua entrega e o destino das linhas publicadas.
 | Remoção imediata da linha publicada | Mantém a tabela pequena, mas elimina o rastro necessário para investigar entrega duvidosa. |
 | Retenção permanente das linhas | Crescimento ilimitado de tabela situada em caminho crítico de escrita, com degradação progressiva de inserção e de índice. |
 | Barramento em processo, sem fila | Perde retentativa, isolamento de falha e dead-letter queue, e deixa de funcionar assim que um módulo for extraído. |
-| Publicação em fila única compartilhada pelos consumidores | Faz a falha de um consumidor bloquear os demais e contraria a propriedade de fila por módulo (RNF-MOD-009). |
+| Publicação em fila única compartilhada pelos consumidores | Faz a falha de um consumidor bloquear os demais e contraria a propriedade de fila por módulo (PAD-MOD-009). |
 
 ## Implicações
 

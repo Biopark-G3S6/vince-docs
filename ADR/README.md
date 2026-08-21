@@ -37,6 +37,7 @@ repositório de versionamento.
 | [0023](0023-ambiente-de-desenvolvimento-e-verificacao.md) | Ambiente de desenvolvimento e verificação automatizada | Aceito | 2026-08-12 |
 | [0024](0024-estrategia-de-testes.md) | Estratégia de testes | Aceito | 2026-08-12 |
 | [0025](0025-formato-de-resposta-da-api.md) | Formato de resposta da API | Aceito | 2026-08-12 |
+| [0026](0026-estrategia-de-internacionalizacao.md) | Estratégia de internacionalização | Aceito | 2026-08-19 |
 
 ## Decisões pendentes
 
@@ -45,8 +46,9 @@ repositório de versionamento.
 | Decomposição do sistema em módulos | Exige um ADR por módulo (ADR-0003 §12); depende dos requisitos funcionais. |
 | Carga de referência e capacidade | Necessária para revalidar as metas de ADR-0011. |
 | Infraestrutura de implantação | Automação de implantação, ambientes, segredos, coletor de log e servidor de métricas (ADR-0022 §6 e §34; ADR-0023 §19). |
-| Conformidade legal no tratamento de dados pessoais | URS RNF-SEG-015. |
-| Catálogo de códigos de resposta | Derivado dos requisitos funcionais (ADR-0025 §20); mantido na URS 5.4. |
+| Conformidade legal no tratamento de dados pessoais | Padrões de Engenharia, PAD-SEG-015. |
+| Catálogo de códigos de resposta | Derivado dos requisitos funcionais (ADR-0025 §20); mantido na URS §9. Parcialmente preenchido pela URS 0.1; a fatia de correção o ampliará. |
+| Catálogo de permissões | Derivado dos requisitos funcionais (ADR-0014 §8); mantido na URS §8. Parcialmente preenchido pela URS 0.1; a fatia de correção o ampliará. |
 
 ## Uso
 

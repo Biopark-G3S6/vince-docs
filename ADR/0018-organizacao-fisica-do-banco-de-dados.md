@@ -45,7 +45,7 @@ convenções a sustentam, em especial diante da proibição de chave estrangeira
 
 | Alternativa | Motivo da rejeição |
 | :--- | :--- |
-| Prefixo de tabela em schema único | Propriedade por convenção; a extração exige selecionar tabelas manualmente por padrão de nome, em tensão com RNF-EVO-002. |
+| Prefixo de tabela em schema único | Propriedade por convenção; a extração exige selecionar tabelas manualmente por padrão de nome, em tensão com PAD-EVO-002. |
 | Papel do PostgreSQL por módulo, com concessão por schema | Daria enforcement pelo próprio banco, mas exige uma conexão por módulo — incompatível com o cliente único de ADR-0010 §7 e com o orçamento de conexões de ADR-0019 §10. |
 | `bigint` identity como chave primária | Identificadores colidem entre módulos: como ADR-0006 §4 proíbe chave estrangeira entre eles, uma referência cruzada incorreta pode apontar para linha válida de outra tabela sem gerar erro. |
 | UUID versão 4 | Globalmente único, porém aleatório: fragmenta o índice B-tree e degrada a inserção sob volume. |

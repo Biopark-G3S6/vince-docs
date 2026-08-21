@@ -70,7 +70,7 @@ requisição de origem.
 | Gravação síncrona do erro dentro da requisição | Acopla o caminho de resposta à disponibilidade do banco e amplifica a carga durante o incidente. |
 | Uma linha persistida por ocorrência | Tempestade de exceções idênticas satura o banco no pior momento possível. |
 | Descarte das falhas esperadas | Elimina a análise de tendência: um pico de autorização negada ou de erro de validação deixa de ser visível. |
-| Retenção de contexto para falhas esperadas | Armazenaria aos milhares dados submetidos por usuários, contrariando RNF-SEG-022, sem ganho de diagnóstico. |
+| Retenção de contexto para falhas esperadas | Armazenaria aos milhares dados submetidos por usuários, contrariando PAD-SEG-022, sem ganho de diagnóstico. |
 | Lista de bloqueio para redação de campos sensíveis | Falha para o lado inseguro: todo campo novo é registrado até que alguém se lembre de bloqueá-lo. |
 | Assinatura derivada da mensagem sem normalização | Produz assinatura distinta por identificador presente na mensagem, anulando a agregação. |
 | Assinatura incluindo número de linha | Refatoração desloca linhas e zera os contadores; erro antigo reaparece como novo a cada release. |

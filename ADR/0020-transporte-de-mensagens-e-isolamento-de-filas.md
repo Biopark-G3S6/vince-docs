@@ -47,10 +47,10 @@ outro, contrariando a propriedade exigida por ADR-0006 §1.
 
 | Alternativa | Motivo da rejeição |
 | :--- | :--- |
-| RabbitMQ, NATS ou Kafka | Roteamento e retenção superiores, ao custo de componente de infraestrutura adicional não previsto em RES-005 e sem necessidade comprovada no estágio. |
+| RabbitMQ, NATS ou Kafka | Roteamento e retenção superiores, ao custo de componente de infraestrutura adicional não previsto em PAD-TEC-005 e sem necessidade comprovada no estágio. |
 | Publicação e assinatura nativas do Redis | Entrega sem persistência: mensagem publicada sem consumidor conectado é perdida, sem retentativa nem dead-letter queue. |
 | Redis Streams | Oferece histórico e grupos de consumo, porém fora da cobertura do BullMQ: exigiria implementar retentativa, backoff e dead-letter queue manualmente, duplicando o mecanismo de ADR-0012. |
-| Fila compartilhada entre módulos | Torna RNF-MOD-009 inverificável e acopla módulos pelo formato da mensagem. |
+| Fila compartilhada entre módulos | Torna PAD-MOD-009 inverificável e acopla módulos pelo formato da mensagem. |
 | Listas de controle de acesso do Redis por módulo | Daria isolamento pelo próprio servidor, mas exige uma conexão por módulo, incompatível com o orçamento de conexões de ADR-0019 §10. |
 | Consumidor executando com a autoridade do usuário de origem | Faria um trabalho já autorizado falhar por mudança posterior de papel, no meio de um fluxo iniciado. |
 
