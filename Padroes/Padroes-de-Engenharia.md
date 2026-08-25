@@ -1,9 +1,9 @@
 # Padrões de Engenharia
 
 **Projeto:** VinceArt
-**Versão:** 1.3
+**Versão:** 1.4
 **Status:** Vigente
-**Data:** 2026-08-21
+**Data:** 2026-08-25
 
 ---
 
@@ -293,8 +293,6 @@ Regem o idioma dos identificadores de software e a origem de todo texto exibido 
 correspondência. Como `PAD-REQ-002` torna imutável o identificador já publicado, a escolha registrada
 aqui não é preferência de estilo: é compromisso.
 
-**Em uso** — termos já presentes no catálogo de permissões de `Requisitos/URS.md` §8.
-
 | Português | Inglês | Motivo, quando a escolha não é óbvia |
 | :--- | :--- | :--- |
 | Instituição | `Institution` | — |
@@ -316,15 +314,22 @@ aqui não é preferência de estilo: é compromisso.
 | Coordenador | `Coordinator` | — |
 | Administrador institucional | `InstitutionAdmin` | — |
 | Administrador de sistema | `SystemAdmin` | — |
-
-**Reservados** — termos escolhidos para evitar colisão, ainda sem requisito que os empregue. Ficam
-registrados porque já condicionaram escolhas acima.
-
-| Português | Inglês | Motivo |
-| :--- | :--- | :--- |
 | Seção do artigo | `Section` | Introdução, metodologia, conclusão. É a colisão que impede `Section` de significar turma. |
-| Versão submetida | `Submission` | O que o aluno entrega em uma etapa. |
-| Apontamento | `Remark` | Item de correção com ciclo de vida próprio — aberto, atendido, dispensado. `Comment` seria ambíguo com comentário livre, que não exige atendimento. |
+| Template | `Template` | Semente do artigo, não contrato: define o documento inicial e não é verificado depois. Quem é verificada é a norma. |
+| Norma de formatação | `FormattingStandard` | A ABNT e as que vierem. Distinta de `Template`: a norma é regra verificável, o template é conteúdo inicial. |
+| Referência bibliográfica | `Reference` | Dado estruturado por campos, nunca texto livre. É o que permite gerar a lista e conferir as citações. |
+| Citação | `Citation` | Vínculo entre um ponto do texto e uma `Reference`, não texto copiado. |
+| Entrega da etapa | `Submission` | O que a equipe entrega em uma etapa. Imutável, e é a âncora de `Remark` e a unidade de comparação. |
+| Ponto do histórico | `Revision` | Estado preservado do artigo entre entregas. Distinto de `Submission`: toda `Submission` é um ponto do histórico, o inverso não. |
+| Apontamento | `Remark` | Item de correção com ciclo de vida próprio — `OPEN`, `ADDRESSED`, `RESOLVED`, `DISMISSED`. `Comment` seria ambíguo com a mensagem livre da discussão, que não exige atendimento. |
+| Discussão | `Discussion` | Fio único e contínuo por artigo, entre a equipe e o seu orientador responsável. |
+| Mensagem | `Message` | O que se publica na `Discussion`. Um único nível de resposta. |
+| Notificação | `Notification` | Aviso endereçado a um usuário. Distinta de `Message`: não é conversa e não tem resposta. |
+| Resumo de alterações | `AiSummary` | Nomeado pela origem, e não pelo conteúdo, porque é a única capacidade que submete o artigo a serviço externo e a única que o consentimento institucional desliga. |
+| Verificação de conformidade | `ComplianceCheck` | Confronto do artigo com a `FormattingStandard`. |
+| Verificação de similaridade | `SimilarityCheck` | Confronto do artigo com o acervo. `PlagiarismCheck` afirmaria o que a verificação não apura: plágio é conclusão do orientador, não saída do sistema. |
+| Indício de autoria | `AuthorshipSignal` | Fato registrado sobre como o texto foi produzido. `AiDetection` nomearia um juízo que o sistema NÃO DEVE emitir. |
+| Consentimento de uso de IA | `AiConsent` | Decisão da instituição, não do orientador nem da equipe. |
 
 ---
 
@@ -417,6 +422,7 @@ tradução é derivado deles e do texto de interface, e nasce vazio enquanto nã
 
 | Versão | Data | Alteração |
 | :--- | :--- | :--- |
+| 1.4 | 2026-08-25 | Glossário 3.9.1 estendido com os conceitos da fatia de produção e correção do artigo registrada na URS 0.2. `Section`, `Submission` e `Remark` deixam de ser reservados e passam a estar em uso; a tabela de reservados é suprimida por ter ficado vazia. Registradas as três escolhas de nomeação que carregam decisão de produto: `SimilarityCheck` em vez de `PlagiarismCheck`, `AuthorshipSignal` em vez de `AiDetection` e `Revision` distinta de `Submission`. |
 | 1.3 | 2026-08-21 | Acrescentados `PAD-NOM-015` e a seção 3.9.1, com o glossário de nomeação: a correspondência português–inglês dos conceitos do domínio e o motivo de cada escolha não óbvia. Registrados também os termos reservados que já condicionaram escolhas em uso, em especial a colisão entre seção do artigo e turma. |
 | 1.2 | 2026-08-19 | Acrescentada a categoria `NOM` e a seção 3.9, com os padrões de nomeação e internacionalização decorrentes de `ADR-0026`: idioma dos identificadores de software, origem do texto exibido, fronteira de tradução entre servidor e cliente, mensagens fora da interface, formatação por `Intl` e seleção de idioma. Acrescentada a restrição `PAD-TEC-016`. Atualizada a matriz de rastreabilidade e as pendências dos catálogos, agora parcialmente atendidas pela URS 0.1. |
 | 1.1 | 2026-08-13 | Acrescentada a categoria `REQ` e a seção 3.8, com os padrões de especificação de requisitos que restavam na URS: convenção de identificação, escala de prioridade, códigos de origem, rastreabilidade até a evidência, estrutura obrigatória do requisito funcional e os catálogos de permissões e de códigos de resposta. Acrescentada a origem `PRO`, para padrão sem ADR. A URS foi zerada: nenhuma decisão da equipe permanece nela. |

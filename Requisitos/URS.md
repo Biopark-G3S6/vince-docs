@@ -1,9 +1,10 @@
 # URS — Especificação de Requisitos do Usuário
 
 **Projeto:** VinceArt
-**Versão:** 0.1
-**Status:** Em elaboração — fatia estrutural registrada; fatia de correção pendente
-**Data:** 2026-08-19
+**Versão:** 0.2
+**Status:** Em elaboração — fatias estrutural e de produção do artigo registradas; acompanhamento e
+relatórios pendentes
+**Data:** 2026-08-25
 
 ---
 
@@ -26,12 +27,15 @@ O material bruto de elicitação está em [`Coleta de Requisitos/`](Coleta%20de%
 
 ## 2. Escopo desta versão
 
-Esta versão registra a **fatia estrutural** do sistema: identidade e acesso, hierarquia
-institucional, evento acadêmico, formação de equipes e o artigo como entidade.
+Esta versão registra duas fatias:
 
-**Não está nesta versão**, e será registrado a seguir: o ciclo de correção — submissão de versões,
-apontamentos, verificação de atendimento entre etapas, conformidade a normas e template,
-acompanhamento de progresso e relatórios à coordenação.
+- **Estrutural** — identidade e acesso, hierarquia institucional, evento acadêmico, formação de
+  equipes e o artigo como entidade.
+- **Produção e correção do artigo** — edição do artigo dentro do sistema, template, norma, entrega
+  por etapa, apontamento ancorado, devolução, discussão, notificação e verificações automatizadas.
+
+**Não está nesta versão**, e será registrado a seguir: o acompanhamento de progresso das equipes e
+os relatórios à coordenação.
 
 **Fora do escopo do produto nesta fase**, por decisão registrada em §10: eventos científicos
 externos e periódicos (radar de oportunidades), participação de um usuário em mais de uma
@@ -54,6 +58,11 @@ instituição e matrícula em mais de uma turma.
 | `EVT` | Evento |
 | `EQP` | Equipe |
 | `ART` | Artigo |
+| `TPL` | Template |
+| `EDT` | Edição do artigo |
+| `REV` | Ciclo de correção |
+| `DSC` | Discussão e notificações |
+| `IAA` | Assistência automatizada |
 | `INT` | Internacionalização |
 
 Os códigos de categoria acompanham a convenção em português já adotada pelos identificadores
@@ -132,17 +141,23 @@ Não existe papel escopado.
 
 ```
 Instituição
-├── Curso                              INSTITUTION_ADMIN cria; designa COORDINATOR
-│   └── Turma                          COORDINATOR cria; período letivo, data de início;
-│       │                              designa PROFESSOR
-│       └── Matrícula ── Aluno         PROFESSOR cadastra ou aluno ingressa por convite
-└── Evento                             escopo: INSTITUICAO | CURSO | TURMA
+├── Template                            semente do artigo; PODE ser restrito a um curso
+├── Curso                               INSTITUTION_ADMIN cria; designa COORDINATOR
+│   └── Turma                           COORDINATOR cria; período letivo, data de início;
+│       │                               designa PROFESSOR
+│       └── Matrícula ── Aluno          PROFESSOR cadastra ou aluno ingressa por convite
+└── Evento                              escopo: INSTITUICAO | CURSO | TURMA
     ├── tema, problema, objetivos       definidos pelo dono do escopo
+    ├── template selecionado            versão congelada na criação, ou "em branco"
     ├── limites de equipe               quantidade de equipes e tamanho máximo
     ├── cronograma de etapas            3 a 4 entregas com prazo, fixadas no início do período
     ├── orientadores do evento          podem ver e atuar sobre todas as equipes do evento
     └── Equipe ──1:1── Artigo           STARTED → IN_PROGRESS → IN_REVIEW → FINISHED
-        └── orientador responsável      subconjunto dos orientadores do evento
+        ├── orientador responsável      subconjunto dos orientadores do evento
+        ├── Referência ── Citação       dado estruturado; gera a lista pela norma
+        ├── Discussão ── Mensagem       equipe + orientador responsável; contínua
+        └── Entrega (por etapa)         versão imutável; congela o artigo
+            └── Apontamento             OPEN → ADDRESSED → RESOLVED | DISMISSED
 ```
 
 ### 6.1 Regras estruturais transversais
@@ -158,6 +173,14 @@ Instituição
 | RE-07 | Um evento possui exatamente um tema nesta versão. Múltiplos temas por evento estão previstos como expansão. |
 | RE-08 | O orientador possui dois vínculos de natureza distinta: com a **turma**, que autoriza cadastrar alunos e emitir convites; e com o **evento**, que autoriza orientar e avaliar. A designação a uma **equipe** nomeia o responsável direto por ela. |
 | RE-09 | A nota é individual por aluno e existe também uma nota do artigo. |
+| RE-10 | O texto do artigo é dado estruturado do sistema, não arquivo. Toda a fatia de produção e correção depende disso. |
+| RE-11 | O artigo alterna entre `IN_PROGRESS` e `IN_REVIEW` uma vez por etapa: a entrega o congela, a devolução o libera. `FINISHED` é declarado pelo orientador, não decorre da última devolução. |
+| RE-12 | Durante `IN_REVIEW` a equipe não altera o texto. A discussão permanece aberta em todos os estados. |
+| RE-13 | O apontamento nasce e é encerrado apenas em `IN_REVIEW`; é atendido pela equipe apenas em `IN_PROGRESS`. |
+| RE-14 | Apontamento não encerrado pelo orientador acompanha o artigo para a etapa seguinte, esteja em `OPEN` ou em `ADDRESSED`. |
+| RE-15 | Quem corrige o texto é a equipe. O orientador aponta, valida, reabre e dispensa; NÃO DEVE alterar o texto do artigo. |
+| RE-16 | O template é semente e a norma é contrato: o template fornece o documento inicial e não é verificado depois; a norma é verificada ao longo de todo o ciclo. |
+| RE-17 | Toda saída de verificação automática é subsídio. Nenhuma decisão do ciclo de correção é tomada pelo sistema. |
 
 ---
 
@@ -729,8 +752,8 @@ Instituição
   - RN1. O cronograma pertence ao evento, o que padroniza os prazos de todas as suas equipes desde o
     início do período.
   - RN2. As datas devem crescer estritamente conforme a ordem das etapas.
-  - RN3. A etapa é a unidade à qual se prendem as versões e os apontamentos do ciclo de correção,
-    especificado em versão posterior desta URS.
+  - RN3. A etapa é a unidade à qual se prendem as entregas (`RF-REV-001`) e os apontamentos
+    (`RF-REV-004`) do ciclo de correção, especificado em §7.10.
 - **Permissões geradas:** `MILESTONE:CREATE`, `MILESTONE:READ`, `MILESTONE:UPDATE`,
   `MILESTONE:DELETE`
 - **Escopo de titularidade:** restrito aos eventos de cujo escopo o ator é dono.
@@ -998,9 +1021,8 @@ Instituição
   - E1. Artigo fora dos vínculos do ator → `RESOURCE_NOT_FOUND`.
 - **Regras de negócio:**
   - RN1. Os estados do artigo são `STARTED`, `IN_PROGRESS`, `IN_REVIEW` e `FINISHED`.
-  - RN2. O artigo percorre `IN_PROGRESS` e `IN_REVIEW` uma vez por etapa do cronograma, em ciclo, até
-    a conclusão; as transições e o ciclo de correção que as governa serão especificados em versão
-    posterior desta URS.
+  - RN2. O artigo percorre `IN_PROGRESS` e `IN_REVIEW` uma vez por etapa do cronograma, em ciclo,
+    até a conclusão. As transições e o ciclo que as governa estão em §7.10 (RE-11).
   - RN3. O aluno enxerga apenas o artigo da sua equipe; o orientador do evento, os de todas as
     equipes do evento; o coordenador, os do seu curso.
 - **Permissões geradas:** `ARTICLE:READ`
@@ -1096,7 +1118,1076 @@ Instituição
 
 ---
 
-### 7.8 INT — Internacionalização
+### 7.8 TPL — Template
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-TPL-001 | Manter template de artigo | I (proposta) | `ELI` |
+| RF-TPL-002 | Selecionar o template do evento | I (proposta) | `ELI` |
+
+---
+
+#### RF-TPL-001 — Manter template de artigo
+
+- **Descrição:** permite criar, consultar, alterar e desativar um template de artigo — documento
+  inicial com estrutura de seções e cabeçalhos já redigidos e formatados — para servir de ponto de
+  partida aos artigos de um evento.
+- **Ator:** Administrador Institucional, Coordenador
+- **Pré-condições:** ator vinculado à instituição; para template restrito a curso, ator vinculado ao
+  curso.
+- **Fluxo principal:**
+  1. O ator informa nome, descrição e, opcionalmente, o curso ao qual o template fica restrito.
+  2. O ator compõe o conteúdo inicial do template no mesmo editor do artigo (`RF-EDT-001`).
+  3. O sistema registra o template como versão nova, preservando as anteriores.
+  4. O ator consulta, altera ou desativa o template.
+- **Fluxos alternativos e de exceção:**
+  - E1. Nome ausente → `VALIDATION_FAILED`.
+  - E2. Coordenador informando curso do qual não é coordenador → `PERMISSION_DENIED`.
+  - E3. Desativação de template já selecionado por evento em andamento → a operação sucede; o evento
+    permanece na versão que congelou (RN4).
+- **Regras de negócio:**
+  - RN1. O template pertence sempre a uma instituição e PODE ser restrito a um curso dela. Restrito,
+    só pode ser selecionado por evento daquele curso ou de turma dele.
+  - RN2. O `INSTITUTION_ADMIN` mantém os templates da sua instituição; o `COORDINATOR`, apenas os
+    restritos ao seu curso. O `PROFESSOR` não mantém templates — apenas seleciona, ao criar evento
+    de escopo de turma (`RF-TPL-002`).
+  - RN3. O template é **semente**: define o conteúdo inicial do artigo e não impõe verificação
+    posterior. O que se verifica ao longo do ciclo é a conformidade à **norma** (`RF-IAA-002`), não
+    ao template (RE-16).
+  - RN4. Alterar um template gera versão nova. Evento já criado permanece na versão que selecionou.
+- **Permissões geradas:** `TEMPLATE:CREATE`, `TEMPLATE:READ`, `TEMPLATE:UPDATE`,
+  `TEMPLATE:DEACTIVATE`
+- **Escopo de titularidade:** restrito aos templates da instituição do ator; para o Coordenador,
+  restrito adicionalmente aos do seu curso.
+- **Prioridade:** I (proposta)
+- **Origem:** `ELI` — Marciele registra o template do congresso interno como documento já conhecido
+  e reutilizado a cada edição.
+- **Critério de aceitação:** coordenador cria template restrito ao seu curso e é recusado ao tentar
+  restringi-lo a outro; alterar o template não altera o artigo de evento já criado.
+- **Rastreio:** M-P5.
+
+#### RF-TPL-002 — Selecionar o template do evento
+
+- **Descrição:** permite ao criador do evento escolher, no momento da criação, o template que servirá
+  de ponto de partida aos artigos das suas equipes, ou optar por documento em branco.
+- **Ator:** Professor, Coordenador ou Administrador Institucional, conforme o escopo
+- **Pré-condições:** evento em criação; ator é o dono do seu escopo (RE-01).
+- **Fluxo principal:**
+  1. O sistema apresenta os templates disponíveis ao escopo do evento e a opção "em branco".
+  2. O ator seleciona uma delas.
+  3. O sistema registra no evento a referência à versão corrente do template selecionado.
+  4. Cada artigo criado no evento nasce com o conteúdo dessa versão.
+- **Fluxos alternativos e de exceção:**
+  - E1. Template indisponível ao escopo do evento → `RESOURCE_NOT_FOUND`.
+  - E2. Troca do template após a criação do evento → `TEMPLATE_ALREADY_FIXED`.
+- **Regras de negócio:**
+  - RN1. A seleção ocorre apenas na criação do evento e é imutável a partir dela.
+  - RN2. "Em branco" é opção legítima. O artigo nasce vazio e segue a mesma norma (`RF-EDT-005` RN1).
+  - RN3. O evento congela a versão do template; alteração posterior não o alcança.
+  - RN4. O professor seleciona template ao criar evento de escopo de turma, ainda que não possa
+    mantê-lo (`RF-TPL-001` RN2).
+- **Permissões geradas:** `TEMPLATE:READ` — o ato de selecionar integra `EVENT:CREATE`.
+- **Escopo de titularidade:** restrito aos templates alcançados pelo escopo do evento.
+- **Prioridade:** I (proposta)
+- **Origem:** `ELI` — o template do congresso interno é reutilizado a cada edição, o que pressupõe
+  vinculá-lo ao evento que o adota.
+- **Critério de aceitação:** evento de turma de um curso não enxerga template restrito a outro curso;
+  criado o evento, a troca de template é recusada.
+- **Rastreio:** M-P5.
+
+---
+
+### 7.9 EDT — Edição do artigo
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-EDT-001 | Editar o texto do artigo | E (proposta) | `DER` |
+| RF-EDT-002 | Editar simultaneamente com os demais integrantes | E (proposta) | `DER` |
+| RF-EDT-003 | Manter as referências bibliográficas do artigo | E (proposta) | `DER` |
+| RF-EDT-004 | Citar referência no texto | E (proposta) | `DER` |
+| RF-EDT-005 | Aplicar a formatação da norma | E (proposta) | `ELI` |
+| RF-EDT-006 | Importar documento externo para o artigo | I (proposta) | `DER` |
+| RF-EDT-007 | Exportar o artigo | E (proposta) | `DER` |
+| RF-EDT-008 | Consultar o histórico de versões do artigo | I (proposta) | `DER` |
+
+---
+
+#### RF-EDT-001 — Editar o texto do artigo
+
+- **Descrição:** permite ao integrante da equipe redigir e formatar o artigo dentro do sistema,
+  dispensando editor de texto externo. As capacidades exigidas do editor estão em §7.9.1.
+- **Ator:** Aluno integrante da equipe
+- **Pré-condições:** artigo em `STARTED` ou `IN_PROGRESS`; ator integrante da equipe.
+- **Fluxo principal:**
+  1. O ator abre o artigo da sua equipe.
+  2. O sistema apresenta o editor com o conteúdo corrente.
+  3. O ator redige e formata, conforme §7.9.1.
+  4. O sistema preserva as alterações continuamente, sem ação explícita de salvar.
+- **Fluxos alternativos e de exceção:**
+  - E1. Artigo em `IN_REVIEW` → `ARTICLE_LOCKED_FOR_REVIEW`; o editor abre em modo de leitura.
+  - E2. Artigo em `FINISHED` → `ARTICLE_ALREADY_FINISHED`; o editor abre em modo de leitura.
+  - E3. Ator sem vínculo com a equipe → `RESOURCE_NOT_FOUND`.
+  - E4. Perda de conexão durante a edição → o sistema retém as alterações e as reconcilia ao
+    restabelecer, sem descarte silencioso.
+- **Regras de negócio:**
+  - RN1. Só integrante da equipe edita. O orientador **NÃO DEVE** alterar o texto do artigo; a sua
+    intervenção se dá por apontamento (`RF-REV-004`) e por mensagem (`RF-DSC-001`) — RE-15.
+  - RN2. O artigo é editável apenas em `STARTED` e `IN_PROGRESS`.
+  - RN3. A perda de trabalho por falha de conexão ou de navegador é inaceitável. O sistema preserva o
+    que foi digitado sem ação explícita do autor.
+  - RN4. O conteúdo do artigo é dado estruturado do sistema, não arquivo (RE-10). É o que torna
+    possíveis a formatação por norma (`RF-EDT-005`), a âncora do apontamento (`RF-REV-004`) e a
+    comparação de versões (`RF-REV-010`).
+  - RN5. A formatação direta sobre o estilo é permitida. O desvio em relação à norma é reportado por
+    `RF-IAA-002`, nunca bloqueado.
+- **Permissões geradas:** `ARTICLE:EDIT`
+- **Escopo de titularidade:** restrito ao artigo da equipe do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto. Deriva de M-P4, em que a correção ocorre sobre o arquivo
+  enviado pelo aluno em ambiente externo: trazer o texto para dentro do sistema é a condição de todo
+  o restante desta fatia.
+- **Critério de aceitação:** o aluno redige e formata o artigo sem usar editor externo; ao recarregar
+  a página, o que foi digitado está preservado; o orientador abre o mesmo artigo e não consegue
+  alterar o texto.
+- **Rastreio:** M-P4; A-P5.
+
+##### 7.9.1 Capacidades exigidas do editor
+
+O editor DEVE cobrir integralmente o que a produção de um artigo acadêmico exige. As capacidades
+abaixo são requisito de `RF-EDT-001`.
+
+| Grupo | Capacidades |
+| :--- | :--- |
+| Caractere | Fonte e tamanho; negrito, itálico, sublinhado, tachado; sobrescrito e subscrito; cor da fonte e realce; versalete e caixa alta; espaçamento entre caracteres; limpar formatação; idioma do trecho |
+| Parágrafo | Alinhamento à esquerda, centralizado, à direita e justificado; recuo de primeira linha, esquerdo e direito; entrelinhas; espaçamento antes e depois; controle de linhas órfãs e viúvas; manter com o próximo e manter linhas juntas; quebra de página antes; tabulações com preenchimento; bordas e sombreamento |
+| Estilos | Estilos de parágrafo nomeados; hierarquia de títulos; estilos de caractere; redefinir estilo a partir da seleção; formatação direta sobreposta ao estilo |
+| Página e seção | Margens, tamanho e orientação do papel; quebra de página e de linha; seções com formatação própria; cabeçalho e rodapé; primeira página e páginas pares/ímpares distintas; numeração de páginas com reinício e algarismos romanos nos pré-textuais; colunas |
+| Listas | Marcadores e numeração; lista multinível; reiniciar e continuar numeração; alíneas com recuo normalizado |
+| Tabelas | Inserir e redimensionar; inserir e excluir linha e coluna; mesclar e dividir células; repetir linha de cabeçalho entre páginas; bordas, sombreamento e estilos |
+| Objetos | Imagem com posicionamento e quebra de texto; legenda numerada automaticamente; indicação de fonte da figura ou tabela; equações |
+| Referências no texto | Sumário automático a partir dos títulos; listas de figuras, tabelas, quadros e abreviaturas; notas de rodapé e de fim; referência cruzada a figura, tabela e seção |
+| Revisão | Comentário ancorado a trecho, com resposta e resolução (§7.10); comparação entre versões (`RF-REV-010`); histórico com restauração (`RF-EDT-008`); ortografia e gramática; contagem de palavras, caracteres e páginas; restrição de edição por região |
+| Colaboração | Edição simultânea com cursores visíveis (`RF-EDT-002`); presença dos demais integrantes; menção a participante |
+| Navegação | Painel de navegação por títulos; localizar e substituir; desfazer e refazer; colar mantendo ou removendo formatação; pincel de formatação; atalhos de teclado; autocorreção ao digitar; zoom, modo de leitura e régua |
+| Entrada e saída | Importar `.docx` (`RF-EDT-006`); exportar `.docx` e PDF (`RF-EDT-007`); imprimir; metadados do documento |
+
+**Não exigido:** mala direta, macros e linguagem de automação, suplementos, esquema XML
+customizado, comparação de três ou mais documentos simultâneos, assinatura digital, marca d'água,
+gráficos gerados no editor, formas e caixas de texto, dicionário de sinônimos, hifenização
+automática.
+
+#### RF-EDT-002 — Editar simultaneamente com os demais integrantes
+
+- **Descrição:** permite que mais de um integrante da equipe edite o mesmo artigo ao mesmo tempo,
+  cada um vendo o que os demais escrevem e onde estão trabalhando.
+- **Ator:** Aluno integrante da equipe
+- **Pré-condições:** artigo editável; dois ou mais integrantes com o artigo aberto.
+- **Fluxo principal:**
+  1. Dois ou mais integrantes abrem o mesmo artigo.
+  2. O sistema apresenta a cada um a presença e a posição do cursor dos demais.
+  3. Cada alteração aparece aos demais sem ação explícita de atualizar.
+  4. O sistema registra a autoria de cada trecho no histórico (`RF-EDT-008`).
+- **Fluxos alternativos e de exceção:**
+  - E1. Perda de conexão de um dos editores → as alterações locais são reconciliadas ao
+    restabelecer, sem descarte silencioso.
+  - E2. Edições concorrentes sobre o mesmo trecho → o sistema as combina sem perda e sem exigir
+    escolha manual do autor.
+- **Regras de negócio:**
+  - RN1. Não existe bloqueio de trecho nem edição de um por vez. A equipe escreve junta.
+  - RN2. Nenhuma alteração aceita pelo sistema pode ser descartada por conflito.
+  - RN3. A autoria de cada trecho é registrada e é insumo da avaliação individual (`RF-ART-003`,
+    RE-09) e dos indícios de autoria (`RF-IAA-004`).
+  - RN4. A técnica de reconciliação é decisão de engenharia e **NÃO É** objeto desta URS.
+- **Permissões geradas:** `ARTICLE:EDIT` — a mesma de `RF-EDT-001`
+- **Escopo de titularidade:** restrito ao artigo da equipe do ator.
+- **Prioridade:** E (proposta) — declarada indispensável à primeira versão.
+- **Origem:** `DER` — definição de produto. Não há evidência de elicitação; ver §10, item 11.
+- **Critério de aceitação:** dois alunos digitam em parágrafos distintos ao mesmo tempo e cada um vê
+  o texto do outro surgir; digitam no mesmo parágrafo e nenhum dos dois perde texto.
+- **Rastreio:** §10, item 11.
+
+#### RF-EDT-003 — Manter as referências bibliográficas do artigo
+
+- **Descrição:** permite à equipe registrar as referências do artigo como dado estruturado — tipo,
+  autores, título, ano, veículo, edição, local, editora, páginas, DOI e URL —, de modo que o sistema
+  gere a lista de referências no formato da norma.
+- **Ator:** Aluno integrante da equipe
+- **Pré-condições:** artigo editável.
+- **Fluxo principal:**
+  1. O ator escolhe o tipo da referência.
+  2. O ator preenche os campos do tipo, ou informa o DOI, ou cola a referência para interpretação.
+  3. O sistema registra a referência e passa a apresentá-la na lista, formatada e ordenada pela
+     norma do evento.
+  4. O ator altera ou remove referências.
+- **Fluxos alternativos e de exceção:**
+  - E1. Campo obrigatório do tipo ausente → `VALIDATION_FAILED`.
+  - E2. Interpretação de DOI ou de texto colado incompleta → o sistema registra o que reconheceu e
+    assinala os campos faltantes; não recusa o registro.
+  - E3. Remoção de referência citada no texto → `REFERENCE_IN_USE`.
+- **Regras de negócio:**
+  - RN1. A referência é dado estruturado. Texto livre digitado como se fosse referência não é
+    referência para o sistema e não entra na lista gerada.
+  - RN2. A lista de referências é gerada, formatada e ordenada pelo sistema; não é redigida pela
+    equipe.
+  - RN3. É a estrutura da referência que permite a verificação cruzada de `RF-IAA-002` — citado e
+    não referenciado, referenciado e não citado.
+- **Permissões geradas:** `REFERENCE:CREATE`, `REFERENCE:READ`, `REFERENCE:UPDATE`,
+  `REFERENCE:DELETE`
+- **Escopo de titularidade:** restrito às referências do artigo da equipe do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de A-P5, que exige verificação automática de conformidade à ABNT: a
+  formatação e a conferência de referências, núcleo da norma, só são possíveis sobre dado
+  estruturado.
+- **Critério de aceitação:** referência registrada por campos aparece na lista no formato da norma,
+  na posição correta da ordenação; remover referência citada é recusado.
+- **Rastreio:** A-P5.
+
+#### RF-EDT-004 — Citar referência no texto
+
+- **Descrição:** permite inserir no corpo do texto a citação de uma referência registrada, mantendo o
+  vínculo entre a citação e o registro.
+- **Ator:** Aluno integrante da equipe
+- **Pré-condições:** artigo editável; referência registrada (`RF-EDT-003`).
+- **Fluxo principal:**
+  1. O ator posiciona o cursor e escolhe a referência.
+  2. O ator informa a página, quando houver.
+  3. O sistema insere a citação no formato da norma, vinculada ao registro.
+- **Fluxos alternativos e de exceção:**
+  - E1. Referência inexistente ou removida → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. A citação é vínculo, não texto. Alterar a referência atualiza todas as suas citações.
+  - RN2. A indicação de página é opcional na citação indireta e exigida na direta.
+  - RN3. O vínculo sustenta a verificação cruzada de `RF-IAA-002`.
+- **Permissões geradas:** `REFERENCE:CITE`
+- **Escopo de titularidade:** restrito ao artigo da equipe do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — mesma derivação de `RF-EDT-003`.
+- **Critério de aceitação:** corrigir o ano de uma referência altera todas as citações dela no texto,
+  sem intervenção do autor.
+- **Rastreio:** A-P5.
+
+#### RF-EDT-005 — Aplicar a formatação da norma
+
+- **Descrição:** permite aplicar, por ação explícita, a formatação da norma vigente no evento —
+  margens, fonte, entrelinhas, recuos, alinhamento, títulos, citações longas, legendas e paginação —
+  ao documento inteiro ou apenas ao trecho selecionado.
+- **Ator:** Aluno integrante da equipe
+- **Pré-condições:** artigo editável.
+- **Fluxo principal:**
+  1. O ator aciona a formatação, com ou sem trecho selecionado.
+  2. O sistema aplica a norma ao alvo: o trecho, se houver seleção; o documento inteiro, se não.
+  3. O sistema informa o que foi alterado.
+- **Fluxos alternativos e de exceção:**
+  - E1. Nenhuma divergência encontrada → o sistema informa e nada altera.
+- **Regras de negócio:**
+  - RN1. A norma desta versão é a **ABNT**, e vale para todo artigo — o iniciado em branco e o
+    iniciado a partir de template.
+  - RN2. O template não substitui nem altera a norma. Ele fornece o documento inicial, já em
+    conformidade com ela (RE-16).
+  - RN3. A formatação é ato explícito do autor. O sistema **NÃO DEVE** reformatar durante a
+    digitação.
+  - RN4. A verificação permanente de conformidade é `RF-IAA-002`. Este requisito corrige; aquele
+    aponta.
+  - RN5. Outras normas são expansão prevista — §10, item 14.
+- **Permissões geradas:** `ARTICLE:FORMAT`
+- **Escopo de titularidade:** restrito ao artigo da equipe do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — Angélica descreve a adequação às normas ABNT como verificação que deveria ser
+  automática; Marciele registra o template do congresso interno como referência de formatação.
+- **Critério de aceitação:** artigo com entrelinha e margens fora da ABNT é corrigido por uma ação;
+  com um parágrafo selecionado, só ele é alterado.
+- **Rastreio:** A-P5; M-P5.
+
+#### RF-EDT-006 — Importar documento externo para o artigo
+
+- **Descrição:** permite carregar um documento `.docx` existente como conteúdo do artigo, para a
+  equipe que começou a escrever fora do sistema.
+- **Ator:** Aluno integrante da equipe
+- **Pré-condições:** artigo editável.
+- **Fluxo principal:**
+  1. O ator seleciona o arquivo.
+  2. O sistema converte o que reconhece — títulos, parágrafos, listas, tabelas, imagens e notas.
+  3. O sistema apresenta o resultado e relata o que não pôde converter.
+  4. O ator confirma ou descarta a importação.
+- **Fluxos alternativos e de exceção:**
+  - E1. Formato não suportado → `FILE_FORMAT_NOT_SUPPORTED`.
+  - E2. Arquivo acima do limite → `FILE_TOO_LARGE`.
+  - E3. Importação sobre artigo que já tem conteúdo → o sistema exige confirmação, pois substitui.
+- **Regras de negócio:**
+  - RN1. A importação **substitui** o conteúdo do artigo; não o mescla.
+  - RN2. A conversão é de melhor esforço. O relato do que não converteu é parte do resultado, não
+    exceção.
+  - RN3. Os metadados do arquivo importado são preservados e são insumo de `RF-IAA-004`.
+  - RN4. A importação só é possível enquanto o artigo é editável.
+- **Permissões geradas:** `ARTICLE:IMPORT`
+- **Escopo de titularidade:** restrito ao artigo da equipe do ator.
+- **Prioridade:** I (proposta)
+- **Origem:** `DER` — definição de produto; condição de migração do trabalho já iniciado fora do
+  sistema.
+- **Critério de aceitação:** `.docx` com títulos, tabela e nota de rodapé é importado preservando os
+  três; o que não converteu é listado ao autor.
+- **Rastreio:** M-P4.
+
+#### RF-EDT-007 — Exportar o artigo
+
+- **Descrição:** permite obter o artigo como `.docx` ou PDF, formatado pela norma, para submissão a
+  congresso ou periódico e para arquivo pessoal.
+- **Ator:** Aluno integrante, Professor orientador do evento, Coordenador do curso
+- **Pré-condições:** artigo existente; ator alcançado pelo vínculo correspondente.
+- **Fluxo principal:**
+  1. O ator escolhe o formato.
+  2. O sistema gera o documento com a formatação da norma e o entrega ao ator.
+- **Fluxos alternativos e de exceção:**
+  - E1. Artigo fora dos vínculos do ator → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. A exportação preserva a formatação da norma e a lista de referências gerada.
+  - RN2. Está disponível em qualquer estado do artigo, inclusive `IN_REVIEW` e `FINISHED`.
+  - RN3. Sustenta `RF-ART-004`: nenhum destino externo aceita referência à plataforma.
+- **Permissões geradas:** `ARTICLE:EXPORT`
+- **Escopo de titularidade:** restrito aos artigos alcançados pelos vínculos do ator, como em
+  `RF-ART-001`.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva de `RF-ART-004` e da submissão ao congresso interno descrita em M-P5.
+- **Critério de aceitação:** o `.docx` exportado abre em editor externo com margens, entrelinha e
+  lista de referências conforme a norma.
+- **Rastreio:** M-P5; M-P9.
+
+#### RF-EDT-008 — Consultar o histórico de versões do artigo
+
+- **Descrição:** permite consultar a sucessão de estados do artigo, ver quem escreveu cada trecho e
+  restaurar um estado anterior.
+- **Ator:** Aluno integrante da equipe
+- **Pré-condições:** artigo existente; ator integrante da equipe.
+- **Fluxo principal:**
+  1. O ator abre o histórico.
+  2. O sistema apresenta as entregas e os pontos intermediários preservados, em ordem cronológica,
+     com a autoria de cada trecho.
+  3. O ator visualiza um estado anterior e, se quiser, o restaura.
+- **Fluxos alternativos e de exceção:**
+  - E1. Restauração com o artigo em `IN_REVIEW` → `ARTICLE_LOCKED_FOR_REVIEW`.
+- **Regras de negócio:**
+  - RN1. O histórico contém as entregas (`RF-REV-001`) e os pontos intermediários preservados pelo
+    sistema.
+  - RN2. A entrega é imutável e **NÃO DEVE** ser removida do histórico.
+  - RN3. A restauração cria estado novo; não apaga o histórico.
+  - RN4. O histórico registra a autoria por trecho (`RF-EDT-002` RN3) e é a fonte principal de
+    `RF-IAA-004`.
+- **Permissões geradas:** `ARTICLE:READ_HISTORY`, `ARTICLE:RESTORE_VERSION`
+- **Escopo de titularidade:** restrito ao artigo da equipe do ator.
+- **Prioridade:** I (proposta)
+- **Origem:** `DER` — definição de produto; decorre da edição contínua sem ação de salvar
+  (`RF-EDT-001` RN3) e da edição simultânea (`RF-EDT-002`).
+- **Critério de aceitação:** estado anterior à entrega é recuperável; a entrega permanece no
+  histórico após a restauração.
+- **Rastreio:** §10, item 11.
+
+---
+
+### 7.10 REV — Ciclo de correção
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-REV-001 | Entregar a versão da etapa | E (proposta) | `ELI` |
+| RF-REV-002 | Desfazer a entrega | I (proposta) | `DER` |
+| RF-REV-003 | Encerrar a entrega no vencimento do prazo | E (proposta) | `DER` |
+| RF-REV-004 | Registrar apontamento no texto entregue | E (proposta) | `ELI` |
+| RF-REV-005 | Alterar ou complementar apontamento | I (proposta) | `DER` |
+| RF-REV-006 | Devolver o artigo à equipe | E (proposta) | `ELI` |
+| RF-REV-007 | Marcar apontamento como corrigido | E (proposta) | `DER` |
+| RF-REV-008 | Validar, reabrir ou dispensar apontamento | E (proposta) | `DER` |
+| RF-REV-009 | Consultar o apontamento na origem e no estado atual | E (proposta) | `DER` |
+| RF-REV-010 | Comparar a versão entregue com a anterior | E (proposta) | `DER` |
+| RF-REV-011 | Concluir o artigo | E (proposta) | `DER` |
+
+---
+
+#### RF-REV-001 — Entregar a versão da etapa
+
+- **Descrição:** permite a qualquer integrante marcar o artigo como entregue na etapa corrente, o que
+  congela o texto e o submete à correção do orientador responsável.
+- **Ator:** Aluno integrante da equipe
+- **Pré-condições:** artigo em `IN_PROGRESS`; etapa corrente do cronograma aberta.
+- **Fluxo principal:**
+  1. O ator aciona a entrega da etapa corrente.
+  2. O sistema registra a entrega — autor, data e conteúdo integral do artigo naquele instante —
+     como versão imutável.
+  3. O sistema transiciona o artigo para `IN_REVIEW` e o torna somente leitura para a equipe.
+  4. O sistema notifica o orientador responsável (`RF-DSC-005`).
+- **Fluxos alternativos e de exceção:**
+  - E1. Artigo já entregue nesta etapa → `SUBMISSION_ALREADY_MADE`.
+  - E2. Artigo em `IN_REVIEW` → `ARTICLE_LOCKED_FOR_REVIEW`.
+  - E3. Artigo em `FINISHED` → `ARTICLE_ALREADY_FINISHED`.
+  - E4. Nenhuma etapa aberta no cronograma → `MILESTONE_NOT_OPEN`.
+- **Regras de negócio:**
+  - RN1. Qualquer integrante entrega, e o sistema registra quem entregou. Não existe responsável pela
+    equipe nesta versão.
+  - RN2. A entrega congela o artigo: durante `IN_REVIEW` a equipe não altera o texto. A discussão
+    (§7.11) permanece aberta (RE-12).
+  - RN3. A versão entregue é imutável e é a unidade sobre a qual se ancoram os apontamentos
+    (`RF-REV-004`) e as comparações (`RF-REV-010`).
+  - RN4. A entrega vale para a etapa corrente do cronograma do evento (`RF-EVT-002`).
+- **Permissões geradas:** `SUBMISSION:CREATE`, `SUBMISSION:READ`
+- **Escopo de titularidade:** restrito ao artigo da equipe do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — ambas descrevem o trabalho organizado em entregas por etapa, com correção
+  entre elas.
+- **Critério de aceitação:** feita a entrega, nenhum integrante consegue alterar o texto e o
+  orientador recebe o aviso; o conteúdo entregue permanece idêntico ao do instante da entrega.
+- **Rastreio:** M-P1; M-P2; A-P1; A-P3.
+
+#### RF-REV-002 — Desfazer a entrega
+
+- **Descrição:** permite à equipe reverter a entrega enquanto o prazo da etapa não venceu e o
+  orientador não iniciou a correção, devolvendo o artigo à edição.
+- **Ator:** Aluno integrante da equipe
+- **Pré-condições:** artigo em `IN_REVIEW` por entrega espontânea; prazo da etapa não vencido.
+- **Fluxo principal:**
+  1. O ator aciona o desfazimento da entrega.
+  2. O sistema verifica o prazo e a ausência de apontamento na entrega.
+  3. O sistema descarta a entrega e transiciona o artigo de volta para `IN_PROGRESS`.
+- **Fluxos alternativos e de exceção:**
+  - E1. Prazo da etapa vencido → `MILESTONE_DEADLINE_PASSED`.
+  - E2. Correção já iniciada — existe apontamento na entrega → `REVIEW_ALREADY_STARTED`.
+  - E3. Artigo não entregue → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. Só é possível antes do vencimento do prazo e antes do primeiro apontamento do orientador.
+  - RN2. A entrega desfeita é descartada e não permanece no histórico como entrega.
+  - RN3. A equipe pode entregar novamente; vale sempre a última entrega da etapa.
+- **Permissões geradas:** `SUBMISSION:REVOKE`
+- **Escopo de titularidade:** restrito ao artigo da equipe do ator.
+- **Prioridade:** I (proposta)
+- **Origem:** `DER` — definição de produto. Sem ele, a equipe que entrega antes do prazo fica
+  impedida de trabalhar até a devolução.
+- **Critério de aceitação:** entrega feita dois dias antes do prazo é desfeita e o artigo volta a ser
+  editável; após o primeiro apontamento, o desfazimento é recusado.
+- **Rastreio:** §10, item 11.
+
+#### RF-REV-003 — Encerrar a entrega no vencimento do prazo
+
+- **Descrição:** no vencimento do prazo da etapa, o sistema entrega automaticamente o estado corrente
+  do artigo das equipes que não entregaram, e assinala a omissão.
+- **Ator:** Sistema
+- **Pré-condições:** etapa do cronograma com prazo vencido; equipes do evento sem entrega na etapa.
+- **Fluxo principal:**
+  1. Vence o prazo da etapa.
+  2. O sistema registra entrega para toda equipe do evento sem entrega na etapa.
+  3. O sistema assinala a entrega como não espontânea.
+  4. O sistema transiciona os artigos para `IN_REVIEW` e notifica a equipe e o orientador
+     responsável.
+- **Fluxos alternativos e de exceção:**
+  - E1. Artigo vazio → a entrega é registrada assim mesmo, vazia e assinalada. O orientador precisa
+    do sinal.
+- **Regras de negócio:**
+  - RN1. Nenhuma etapa fica sem entrega. O cronograma não trava por omissão de uma equipe.
+  - RN2. A entrega automática é distinguível da espontânea e é sinal de acompanhamento da equipe.
+  - RN3. Não existe prorrogação individual de prazo nesta versão — §10, item 15.
+- **Permissões geradas:** nenhuma — ação do sistema, sem ator humano.
+- **Escopo de titularidade:** não se aplica.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto. Deriva do volume de orientandos declarado no perfil de
+  ambas e da necessidade de o ciclo não depender da iniciativa da equipe.
+- **Critério de aceitação:** vencido o prazo, equipe sem entrega tem o artigo congelado e assinalado
+  como entrega não espontânea; o orientador vê a distinção.
+- **Rastreio:** M-perfil; A-perfil; A-P3.
+
+#### RF-REV-004 — Registrar apontamento no texto entregue
+
+- **Descrição:** permite ao orientador responsável ancorar um apontamento a um trecho do texto
+  entregue, indicando o que deve ser corrigido.
+- **Ator:** Professor orientador responsável pela equipe
+- **Pré-condições:** artigo em `IN_REVIEW`; ator designado orientador responsável (`RF-EQP-005`).
+- **Fluxo principal:**
+  1. O ator seleciona um trecho da versão entregue.
+  2. O ator escreve o apontamento.
+  3. O sistema o registra ancorado ao trecho, na versão entregue, no estado `OPEN`.
+- **Fluxos alternativos e de exceção:**
+  - E1. Artigo fora de `IN_REVIEW` → `ARTICLE_NOT_IN_REVIEW`.
+  - E2. Ator não é o orientador responsável pela equipe → `PERMISSION_DENIED`.
+- **Regras de negócio:**
+  - RN1. O apontamento só nasce em `IN_REVIEW` (RE-13). Fora dele o orientador se manifesta pela
+    discussão (`RF-DSC-001`), que permanece aberta o tempo todo.
+  - RN2. A âncora é a versão entregue, imutável. O apontamento permanece legível ainda que o trecho
+    mude depois (`RF-REV-009`).
+  - RN3. O apontamento registrado permanece **invisível à equipe** até a devolução (`RF-REV-006`).
+  - RN4. O orientador **NÃO DEVE** alterar o texto do artigo. Quem corrige é a equipe (RE-15).
+  - RN5. Estados do apontamento: `OPEN`, `ADDRESSED`, `RESOLVED`, `DISMISSED`.
+- **Permissões geradas:** `REMARK:CREATE`, `REMARK:READ`
+- **Escopo de titularidade:** restrito às equipes de que o ator é orientador responsável.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — Marciele descreve a correção feita por comentários, destaques e apontamentos no
+  próprio documento do aluno.
+- **Critério de aceitação:** apontamento criado antes da devolução não aparece ao aluno; orientador
+  de outra equipe do mesmo evento não consegue apontar nesta.
+- **Rastreio:** M-P4.
+
+#### RF-REV-005 — Alterar ou complementar apontamento
+
+- **Descrição:** permite ao orientador editar o texto de um apontamento seu, inclusive depois da
+  devolução, para esclarecer, reforçar ou acrescentar exigência.
+- **Ator:** Professor orientador responsável pela equipe
+- **Pré-condições:** apontamento existente, de autoria do ator.
+- **Fluxo principal:**
+  1. O ator abre o apontamento e altera o seu texto.
+  2. O sistema registra a alteração e preserva o texto anterior no histórico do apontamento.
+  3. Se o apontamento já houver sido devolvido, o sistema notifica a equipe (`RF-DSC-005`).
+- **Fluxos alternativos e de exceção:**
+  - E1. Ator não é o autor do apontamento → `PERMISSION_DENIED`.
+  - E2. Apontamento em `RESOLVED` ou `DISMISSED` → `REMARK_ALREADY_CLOSED`.
+- **Regras de negócio:**
+  - RN1. Só o autor altera o apontamento.
+  - RN2. A alteração após a devolução é visível à equipe e a notifica.
+  - RN3. O texto anterior é preservado; a alteração não apaga o que foi pedido antes.
+  - RN4. Alterar o texto **não** altera o estado do apontamento.
+- **Permissões geradas:** `REMARK:UPDATE`
+- **Escopo de titularidade:** restrito aos apontamentos de autoria do ator.
+- **Prioridade:** I (proposta)
+- **Origem:** `DER` — definição de produto. O orientador precisa poder frisar ou reforçar exigência
+  já feita, sem abrir apontamento novo sobre o mesmo trecho.
+- **Critério de aceitação:** complemento a apontamento já devolvido chega à equipe como notificação e
+  o texto original continua consultável.
+- **Rastreio:** M-P4.
+
+#### RF-REV-006 — Devolver o artigo à equipe
+
+- **Descrição:** permite ao orientador encerrar a correção da etapa em ato único, publicando à equipe
+  todos os apontamentos e devolvendo o artigo à edição.
+- **Ator:** Professor orientador responsável pela equipe
+- **Pré-condições:** artigo em `IN_REVIEW`.
+- **Fluxo principal:**
+  1. O ator conclui os apontamentos da etapa e decide sobre os pendentes (`RF-REV-008`).
+  2. O ator aciona a devolução.
+  3. O sistema publica à equipe todos os apontamentos da etapa, transiciona o artigo para
+     `IN_PROGRESS` e o torna editável.
+  4. O sistema notifica a equipe (`RF-DSC-005`).
+- **Fluxos alternativos e de exceção:**
+  - E1. Artigo fora de `IN_REVIEW` → `ARTICLE_NOT_IN_REVIEW`.
+  - E2. Devolução sem nenhum apontamento → permitida; significa etapa aceita sem exigências.
+  - E3. Ator não é o orientador responsável → `PERMISSION_DENIED`.
+- **Regras de negócio:**
+  - RN1. A devolução é **ato único**. Não existe devolução parcial: ou a etapa está corrigida, ou
+    não está.
+  - RN2. Antes dela, nenhum apontamento da etapa é visível à equipe.
+  - RN3. Devolvida a etapa, o artigo volta a `IN_PROGRESS` até a entrega seguinte (RE-11).
+  - RN4. Apontamentos em `OPEN` e em `ADDRESSED` permanecem ativos e acompanham o artigo para a
+    etapa seguinte, até que o orientador os encerre (RE-14, `RF-REV-008`).
+- **Permissões geradas:** `ARTICLE:RETURN`
+- **Escopo de titularidade:** restrito às equipes de que o ator é orientador responsável.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — o ciclo entrega → correção → devolução é o que ambas descrevem como rotina da
+  orientação ao longo do período.
+- **Critério de aceitação:** feita a devolução, a equipe passa a ver de uma só vez todos os
+  apontamentos e volta a poder editar; apontamento não encerrado continua listado na etapa seguinte.
+- **Rastreio:** M-P2; M-P4; A-P3.
+
+#### RF-REV-007 — Marcar apontamento como corrigido
+
+- **Descrição:** permite ao integrante da equipe declarar que atendeu a um apontamento, submetendo-o
+  à validação do orientador.
+- **Ator:** Aluno integrante da equipe
+- **Pré-condições:** artigo em `IN_PROGRESS`; apontamento devolvido e em `OPEN`.
+- **Fluxo principal:**
+  1. O ator consulta o apontamento e o trecho a que se refere (`RF-REV-009`).
+  2. O ator corrige o texto.
+  3. O ator marca o apontamento como corrigido.
+  4. O sistema o move para `ADDRESSED` e o mantém aguardando validação.
+- **Fluxos alternativos e de exceção:**
+  - E1. Apontamento em `RESOLVED` ou `DISMISSED` → `REMARK_ALREADY_CLOSED`.
+  - E2. Artigo em `IN_REVIEW` → `ARTICLE_LOCKED_FOR_REVIEW`.
+- **Regras de negócio:**
+  - RN1. Marcar como corrigido **não encerra** o apontamento. Quem o encerra é o orientador
+    (`RF-REV-008`).
+  - RN2. O ator pode desmarcar enquanto o artigo estiver editável, devolvendo o apontamento a `OPEN`.
+  - RN3. O apontamento em `ADDRESSED` acompanha o artigo para a etapa seguinte junto com os em
+    `OPEN`, até decisão do orientador (RE-14).
+  - RN4. O atendimento só ocorre em `IN_PROGRESS` (RE-13).
+- **Permissões geradas:** `REMARK:ADDRESS`
+- **Escopo de titularidade:** restrito aos apontamentos do artigo da equipe do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto. Corresponde à verificação de atendimento entre etapas que
+  ambas descrevem fazer manualmente.
+- **Critério de aceitação:** apontamento marcado como corrigido continua pendente até a correção
+  seguinte; o aluno consegue desmarcá-lo antes da entrega.
+- **Rastreio:** M-P4; A-P3.
+
+#### RF-REV-008 — Validar, reabrir ou dispensar apontamento
+
+- **Descrição:** permite ao orientador, durante a correção de uma etapa, encerrar cada apontamento
+  pendente das etapas anteriores — validando a correção, reabrindo-a por insuficiência ou
+  dispensando a exigência.
+- **Ator:** Professor orientador responsável pela equipe
+- **Pré-condições:** artigo em `IN_REVIEW`; apontamento em `OPEN` ou `ADDRESSED`.
+- **Fluxo principal:**
+  1. O sistema apresenta ao ator os apontamentos pendentes, acompanhados do resumo de `RF-IAA-001`.
+  2. Para cada um, o ator valida (`RESOLVED`), reabre (`OPEN`) ou dispensa (`DISMISSED`).
+  3. O sistema registra a decisão, o autor e a data.
+- **Fluxos alternativos e de exceção:**
+  - E1. Artigo fora de `IN_REVIEW` → `ARTICLE_NOT_IN_REVIEW`.
+  - E2. Apontamento já encerrado → `REMARK_ALREADY_CLOSED`.
+  - E3. Ator não é o orientador responsável → `PERMISSION_DENIED`.
+- **Regras de negócio:**
+  - RN1. A validação ocorre **apenas durante a correção de uma etapa**, nunca enquanto a equipe
+    edita (RE-13).
+  - RN2. `RESOLVED` e `DISMISSED` encerram o apontamento. Reaberto, ele volta a `OPEN` e acompanha o
+    artigo para a etapa seguinte.
+  - RN3. `DISMISSED` significa que o orientador retirou a exigência — tipicamente após o argumento da
+    equipe na discussão —, sem que tenha havido correção.
+  - RN4. A decisão é sempre do orientador. Nenhum apontamento é encerrado pelo sistema nem por saída
+    de análise automática (RE-17, `RF-IAA-001` RN2).
+- **Permissões geradas:** `REMARK:RESOLVE`, `REMARK:REOPEN`, `REMARK:DISMISS`
+- **Escopo de titularidade:** restrito às equipes de que o ator é orientador responsável.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto, sobre a prática de conferir entre etapas se o que foi
+  pedido foi atendido.
+- **Critério de aceitação:** apontamento reaberto aparece na etapa seguinte; apontamento dispensado
+  não reaparece e fica registrado como dispensado, com autor e data.
+- **Rastreio:** M-P4; A-P3.
+
+#### RF-REV-009 — Consultar o apontamento na origem e no estado atual
+
+- **Descrição:** permite ver, ao abrir um apontamento, o trecho tal como estava quando ele foi feito e
+  o trecho tal como está agora, confrontados.
+- **Ator:** Aluno integrante, Professor orientador responsável
+- **Pré-condições:** apontamento existente e visível ao ator.
+- **Fluxo principal:**
+  1. O ator abre o apontamento.
+  2. O sistema apresenta o trecho ancorado na versão de origem, assinalado como estado anterior, e o
+     trecho correspondente na versão corrente, assinalado como estado atual.
+  3. Ao fechar o apontamento, o texto volta à apresentação normal.
+- **Fluxos alternativos e de exceção:**
+  - E1. Trecho de origem removido por inteiro → o sistema apresenta o trecho original e assinala a
+    remoção no estado atual. O apontamento permanece válido.
+- **Regras de negócio:**
+  - RN1. O confronto aparece **apenas com o apontamento aberto**. Ele **NÃO DEVE** poluir a leitura
+    corrente do documento.
+  - RN2. A convenção de apresentação é vermelho para o estado anterior e verde para o atual.
+  - RN3. A âncora não se perde quando o texto muda. Nenhum apontamento é descartado por alteração ou
+    remoção do trecho a que se refere.
+- **Permissões geradas:** `REMARK:READ`
+- **Escopo de titularidade:** restrito aos apontamentos do artigo alcançado pelo vínculo do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto. Sem o confronto, o apontamento ancorado a uma versão
+  anterior fica ilegível assim que o texto muda.
+- **Critério de aceitação:** apontamento cujo parágrafo foi reescrito continua legível, mostrando o
+  texto de origem e o texto atual; fechado o apontamento, nenhuma marcação permanece no documento.
+- **Rastreio:** M-P4.
+
+#### RF-REV-010 — Comparar a versão entregue com a anterior
+
+- **Descrição:** permite ver, lado a lado, a versão entregue na etapa e a entregue na etapa anterior,
+  com as diferenças assinaladas.
+- **Ator:** Professor orientador responsável, Aluno integrante
+- **Pré-condições:** existirem duas entregas do mesmo artigo.
+- **Fluxo principal:**
+  1. O ator seleciona a entrega.
+  2. O sistema apresenta as duas versões lado a lado.
+  3. O sistema assinala inserção, remoção e alteração no nível da palavra.
+  4. O ator navega de diferença em diferença.
+- **Fluxos alternativos e de exceção:**
+  - E1. Primeira entrega, sem anterior → o sistema apresenta a versão isolada e informa a ausência de
+    termo de comparação.
+- **Regras de negócio:**
+  - RN1. A comparação é sempre entre versões entregues, imutáveis.
+  - RN2. A granularidade é de palavra dentro do parágrafo.
+  - RN3. É o insumo do resumo de `RF-IAA-001`.
+- **Permissões geradas:** `SUBMISSION:COMPARE`
+- **Escopo de titularidade:** restrito aos artigos alcançados pelo vínculo do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto. Deriva do volume de orientandos declarado por ambas:
+  reler o artigo inteiro a cada etapa é o que consome o tempo do orientador.
+- **Critério de aceitação:** parágrafo alterado entre duas entregas aparece assinalado nas duas
+  colunas, com as palavras alteradas destacadas.
+- **Rastreio:** M-perfil; A-perfil; M-P4.
+
+#### RF-REV-011 — Concluir o artigo
+
+- **Descrição:** permite ao orientador declarar o artigo concluído, encerrando o ciclo de correção e
+  habilitando a avaliação.
+- **Ator:** Professor orientador responsável pela equipe
+- **Pré-condições:** artigo em `IN_REVIEW`; última etapa do cronograma em correção.
+- **Fluxo principal:**
+  1. O ator aciona a conclusão.
+  2. O sistema verifica que todos os apontamentos foram encerrados.
+  3. O sistema transiciona o artigo para `FINISHED` e o torna somente leitura para todos.
+  4. O sistema habilita `RF-ART-002` e `RF-ART-003` e notifica a equipe.
+- **Fluxos alternativos e de exceção:**
+  - E1. Etapas do cronograma ainda pendentes → `MILESTONE_PENDING`.
+  - E2. Apontamentos pendentes sem decisão → `REMARK_PENDING`.
+  - E3. Ator não é o orientador responsável → `PERMISSION_DENIED`.
+- **Regras de negócio:**
+  - RN1. A conclusão é **ato explícito do orientador**, não decorrência automática da última
+    devolução (RE-11).
+  - RN2. Em `FINISHED` o artigo é somente leitura para todos. A exportação (`RF-EDT-007`) e o
+    registro de publicação externa (`RF-ART-004`) permanecem disponíveis.
+  - RN3. A avaliação (`RF-ART-002`, `RF-ART-003`) ocorre sobre o artigo concluído.
+- **Permissões geradas:** `ARTICLE:CONCLUDE`
+- **Escopo de titularidade:** restrito às equipes de que o ator é orientador responsável.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto. Deriva de `RF-ART-002` e `RF-ART-003`, que pressupõem um
+  artigo encerrado para serem avaliados.
+- **Critério de aceitação:** conclusão com apontamento pendente é recusada; concluído, o artigo não
+  aceita mais edição e a avaliação fica disponível.
+- **Rastreio:** M-P3; A-P3.
+
+---
+
+### 7.11 DSC — Discussão e notificações
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-DSC-001 | Publicar mensagem na discussão da equipe | E (proposta) | `DER` |
+| RF-DSC-002 | Responder a mensagem da discussão | E (proposta) | `DER` |
+| RF-DSC-003 | Responder a apontamento | E (proposta) | `DER` |
+| RF-DSC-004 | Acompanhar a discussão em tempo real | I (proposta) | `DER` |
+| RF-DSC-005 | Receber notificação | E (proposta) | `DER` |
+| RF-DSC-006 | Consultar e marcar notificações | I (proposta) | `DER` |
+
+---
+
+#### RF-DSC-001 — Publicar mensagem na discussão da equipe
+
+- **Descrição:** permite aos integrantes da equipe e ao seu orientador responsável trocarem mensagens
+  em uma discussão contínua vinculada ao artigo.
+- **Ator:** Aluno integrante, Professor orientador responsável pela equipe
+- **Pré-condições:** equipe formada; ator integrante dela ou seu orientador responsável.
+- **Fluxo principal:**
+  1. O ator abre a discussão da equipe.
+  2. O ator escreve e publica a mensagem.
+  3. O sistema registra autor e data, entrega a mensagem aos participantes conectados
+     (`RF-DSC-004`) e notifica os demais (`RF-DSC-005`).
+- **Fluxos alternativos e de exceção:**
+  - E1. Ator sem vínculo com a equipe → `RESOURCE_NOT_FOUND`.
+  - E2. Mensagem vazia → `VALIDATION_FAILED`.
+- **Regras de negócio:**
+  - RN1. A discussão é **única por artigo** e contínua ao longo de todas as etapas. Não há discussão
+    por etapa.
+  - RN2. Participam os integrantes da equipe e o orientador responsável por ela. Os demais
+    orientadores do evento e o coordenador do curso **não** participam.
+  - RN3. A discussão permanece aberta em todos os estados do artigo, inclusive durante `IN_REVIEW`
+    (RE-12). É o canal do orientador fora do ciclo de apontamentos.
+  - RN4. Toda mensagem é visível a todos os participantes. Não existe mensagem privada entre
+    professores nesta versão — §10, item 13.
+  - RN5. O autor pode excluir a própria mensagem; o registro de que houve exclusão permanece.
+- **Permissões geradas:** `MESSAGE:CREATE`, `MESSAGE:READ`, `MESSAGE:DELETE`
+- **Escopo de titularidade:** restrito à discussão da equipe a que o ator está vinculado.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto; ver §10, item 11.
+- **Critério de aceitação:** aluno de outra equipe do mesmo evento não alcança a discussão; o
+  orientador responsável publica e a equipe recebe.
+- **Rastreio:** §10, item 11.
+
+#### RF-DSC-002 — Responder a mensagem da discussão
+
+- **Descrição:** permite responder a uma mensagem específica da discussão, mantendo a resposta
+  agrupada sob a mensagem que a originou.
+- **Ator:** Aluno integrante, Professor orientador responsável pela equipe
+- **Pré-condições:** mensagem existente na discussão da equipe do ator.
+- **Fluxo principal:**
+  1. O ator escolhe a mensagem e aciona a resposta.
+  2. O ator escreve e publica.
+  3. O sistema agrupa a resposta sob a mensagem raiz e notifica os participantes.
+- **Fluxos alternativos e de exceção:**
+  - E1. Mensagem raiz excluída → a resposta permanece, indicando que a mensagem original foi
+    excluída.
+- **Regras de negócio:**
+  - RN1. Existe **um único nível de resposta**. A resposta a uma resposta se prende à mesma mensagem
+    raiz.
+  - RN2. As respostas são apresentadas em ordem cronológica sob a raiz.
+- **Permissões geradas:** `MESSAGE:REPLY`
+- **Escopo de titularidade:** restrito à discussão da equipe a que o ator está vinculado.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto.
+- **Critério de aceitação:** responder a uma resposta agrupa a nova mensagem sob a mesma raiz, sem
+  criar terceiro nível.
+- **Rastreio:** §10, item 11.
+
+#### RF-DSC-003 — Responder a apontamento
+
+- **Descrição:** permite ao integrante responder a um apontamento; a resposta é publicada na discussão
+  da equipe, com referência ao apontamento que a originou.
+- **Ator:** Aluno integrante da equipe
+- **Pré-condições:** apontamento devolvido à equipe (`RF-REV-006`).
+- **Fluxo principal:**
+  1. O ator abre o apontamento e aciona a resposta.
+  2. O ator escreve.
+  3. O sistema publica a mensagem na discussão da equipe, referenciando o apontamento, e notifica o
+     orientador responsável.
+- **Fluxos alternativos e de exceção:**
+  - E1. Apontamento ainda não devolvido → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. A resposta **não fica dentro do apontamento**. É mensagem da discussão com referência a ele.
+    Isso mantém toda a conversa em um lugar só.
+  - RN2. A referência é navegável nos dois sentidos: do apontamento para a mensagem e da mensagem
+    para o apontamento.
+  - RN3. Responder **não altera** o estado do apontamento. Quem o move é `RF-REV-007` e `RF-REV-008`.
+- **Permissões geradas:** `MESSAGE:CREATE` — a mesma de `RF-DSC-001`
+- **Escopo de titularidade:** restrito aos apontamentos do artigo da equipe do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto.
+- **Critério de aceitação:** a resposta aparece na discussão como mensagem comum, com o apontamento
+  referenciado e navegável; o estado do apontamento permanece inalterado.
+- **Rastreio:** §10, item 11.
+
+#### RF-DSC-004 — Acompanhar a discussão em tempo real
+
+- **Descrição:** permite que a mensagem publicada por um participante apareça aos demais que estejam
+  com a discussão aberta, sem que precisem recarregar a página.
+- **Ator:** Aluno integrante, Professor orientador responsável pela equipe
+- **Pré-condições:** ator com a discussão aberta.
+- **Fluxo principal:**
+  1. Um participante publica.
+  2. A mensagem aparece aos demais participantes conectados, sem ação deles.
+- **Fluxos alternativos e de exceção:**
+  - E1. Conexão interrompida → restabelecida a conexão, o participante recebe o que perdeu, sem
+    lacuna e sem duplicidade.
+- **Regras de negócio:**
+  - RN1. O participante com a discussão aberta recebe a mensagem sem ação sua.
+  - RN2. O meio técnico é decisão de engenharia e **NÃO É** objeto desta URS.
+- **Permissões geradas:** `MESSAGE:READ` — a mesma de `RF-DSC-001`
+- **Escopo de titularidade:** restrito à discussão da equipe a que o ator está vinculado.
+- **Prioridade:** I (proposta)
+- **Origem:** `DER` — definição de produto.
+- **Critério de aceitação:** dois participantes com a discussão aberta veem a mensagem do outro
+  aparecer sem recarregar; após queda de conexão, nada se perde.
+- **Rastreio:** §10, item 11.
+
+#### RF-DSC-005 — Receber notificação
+
+- **Descrição:** permite que o usuário seja avisado dos fatos que exigem ação ou atenção sua, na
+  interface e, quando ele assim configurar, por e-mail.
+- **Ator:** Aluno integrante, Professor orientador responsável pela equipe
+- **Pré-condições:** usuário ativo, alcançado pelo fato.
+- **Fluxo principal:**
+  1. Ocorre o fato.
+  2. O sistema identifica os destinatários pelo vínculo.
+  3. O sistema registra a notificação e a entrega na interface.
+  4. O sistema envia por e-mail as notificações que o destinatário assim configurou.
+- **Fluxos alternativos e de exceção:**
+  - E1. Falha no envio de e-mail → a notificação na interface permanece registrada; o envio é
+    retentado.
+- **Regras de negócio:**
+  - RN1. Geram notificação: entrega da etapa, ao orientador responsável; entrega automática por
+    vencimento de prazo, à equipe e ao orientador; devolução do artigo, à equipe; nova mensagem na
+    discussão, aos demais participantes; alteração de apontamento já devolvido, à equipe; validação,
+    reabertura ou dispensa de apontamento, à equipe; conclusão do artigo, à equipe; proximidade do
+    prazo da etapa, à equipe.
+  - RN2. O usuário não é notificado do que ele mesmo fez.
+  - RN3. O e-mail é redigido no idioma do **destinatário**, nunca no de quem originou o fato
+    (`ADR-0026` §18).
+  - RN4. O usuário escolhe quais notificações recebe por e-mail. A notificação na interface não é
+    desligável.
+- **Permissões geradas:** `NOTIFICATION:READ`
+- **Escopo de titularidade:** restrito às notificações endereçadas ao próprio ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto; decorre do ciclo de correção, em que cada transição exige
+  ação da outra parte.
+- **Critério de aceitação:** quem entregou não recebe a notificação da própria entrega; o orientador
+  recebe; o e-mail sai no idioma do destinatário.
+- **Rastreio:** §10, item 11; `ADR-0026` §18.
+
+#### RF-DSC-006 — Consultar e marcar notificações
+
+- **Descrição:** permite ao usuário consultar as suas notificações, distinguir as não lidas e
+  marcá-las como lidas.
+- **Ator:** Qualquer usuário autenticado
+- **Pré-condições:** sessão ativa.
+- **Fluxo principal:**
+  1. O ator abre as suas notificações.
+  2. O sistema apresenta as notificações em ordem cronológica inversa, com as não lidas destacadas.
+  3. O ator marca uma ou todas como lidas, ou navega até o objeto da notificação.
+- **Fluxos alternativos e de exceção:**
+  - E1. Objeto da notificação removido ou fora do alcance do ator → `RESOURCE_NOT_FOUND`.
+- **Regras de negócio:**
+  - RN1. O usuário só alcança as notificações endereçadas a ele.
+  - RN2. Navegar até o objeto marca a notificação como lida.
+- **Permissões geradas:** `NOTIFICATION:MARK_READ`
+- **Escopo de titularidade:** restrito às notificações do próprio ator.
+- **Prioridade:** I (proposta)
+- **Origem:** `DER` — definição de produto.
+- **Critério de aceitação:** notificação de outro usuário não é alcançável; abrir o objeto marca a
+  notificação como lida.
+- **Rastreio:** §10, item 11.
+
+---
+
+### 7.12 IAA — Assistência automatizada
+
+Reúne as verificações que o sistema executa sobre o artigo. Destas, **apenas `RF-IAA-001` submete o
+conteúdo do artigo a serviço externo de inteligência artificial** e depende do consentimento de
+`RF-IAA-005`. As demais operam sobre dados do próprio sistema.
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-IAA-001 | Resumir as alterações da entrega | E (proposta) | `DER` |
+| RF-IAA-002 | Verificar a conformidade do artigo à norma | E (proposta) | `ELI` |
+| RF-IAA-003 | Verificar a similaridade do artigo com o acervo | I (proposta) | `ELI` |
+| RF-IAA-004 | Consultar indícios sobre a autoria do texto | I (proposta) | `ELI` |
+| RF-IAA-005 | Consentir com o uso de inteligência artificial | E (proposta) | `DER` |
+
+---
+
+#### RF-IAA-001 — Resumir as alterações da entrega
+
+- **Descrição:** apresenta ao orientador, no início da correção de uma etapa, um resumo do que mudou
+  desde a entrega anterior, indicando os apontamentos pendentes cujo trecho não sofreu alteração e
+  aqueles cuja alteração aparenta não atender ao que foi pedido.
+- **Ator:** Professor orientador responsável pela equipe
+- **Pré-condições:** artigo em `IN_REVIEW`; existir entrega anterior; consentimento institucional
+  vigente (`RF-IAA-005`).
+- **Fluxo principal:**
+  1. O ator abre a correção da etapa.
+  2. O sistema submete a comparação (`RF-REV-010`) e os apontamentos pendentes à análise.
+  3. O sistema apresenta o resumo das alterações, a lista de apontamentos cujo trecho não mudou e a
+     lista de apontamentos cuja alteração aparenta não atender.
+  4. O ator decide sobre cada apontamento (`RF-REV-008`).
+- **Fluxos alternativos e de exceção:**
+  - E1. Consentimento institucional ausente ou revogado → `AI_CONSENT_REQUIRED`; a correção prossegue
+    sem o resumo.
+  - E2. Serviço indisponível → o sistema informa e a correção prossegue sem o resumo.
+- **Regras de negócio:**
+  - RN1. O resumo é **subsídio ao orientador**. Não é registrado como apontamento nem apresentado à
+    equipe.
+  - RN2. O sistema **NÃO DEVE** validar, reabrir, dispensar ou encerrar apontamento a partir da saída
+    da análise. A decisão é sempre de `RF-REV-008` (RE-17).
+  - RN3. A indisponibilidade da análise **NÃO DEVE** impedir a correção.
+  - RN4. A análise recai sobre a diferença entre entregas e sobre os apontamentos pendentes, nunca
+    sobre a avaliação do aluno nem sobre a atribuição de nota.
+- **Permissões geradas:** `AI_SUMMARY:READ`
+- **Escopo de titularidade:** restrito às equipes de que o ator é orientador responsável.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto. Deriva do volume de orientandos declarado por ambas e da
+  verificação manual de atendimento entre etapas.
+- **Critério de aceitação:** apontamento cujo trecho não mudou entre duas entregas aparece na lista
+  de não atendidos; com o serviço fora do ar, o orientador ainda corrige e devolve normalmente.
+- **Rastreio:** M-perfil; A-perfil; M-P4; A-P3.
+
+#### RF-IAA-002 — Verificar a conformidade do artigo à norma
+
+- **Descrição:** permite verificar em que o artigo diverge da norma vigente — formatação, estrutura e
+  referências —, apresentando cada divergência ligada ao ponto do texto em que ocorre.
+- **Ator:** Aluno integrante, Professor orientador do evento
+- **Pré-condições:** artigo existente; ator alcançado pelo vínculo correspondente.
+- **Fluxo principal:**
+  1. O ator aciona a verificação.
+  2. O sistema confronta o artigo com a norma.
+  3. O sistema apresenta as divergências, cada uma ligada ao ponto do texto.
+  4. O ator corrige — por `RF-EDT-005`, quando for divergência de formatação.
+- **Fluxos alternativos e de exceção:**
+  - E1. Nenhuma divergência → o sistema informa a conformidade.
+- **Regras de negócio:**
+  - RN1. A verificação abrange: **formatação** — margem, fonte, entrelinha, recuo, alinhamento,
+    paginação, títulos, legendas e citação longa; **estrutura** — seções esperadas do artigo;
+    **referências** — formato conforme a norma, citado e não referenciado, referenciado e não citado.
+  - RN2. A verificação **aponta**. Não corrige e não bloqueia a entrega.
+  - RN3. A verificação cruzada de citações só alcança citações e referências estruturadas
+    (`RF-EDT-003`, `RF-EDT-004`).
+  - RN4. A norma desta versão é a ABNT.
+  - RN5. O template **não** é objeto de verificação: ele é semente, não contrato (RE-16,
+    `RF-TPL-001` RN3).
+  - RN6. Esta verificação não submete o artigo a serviço externo de inteligência artificial.
+- **Permissões geradas:** `COMPLIANCE_CHECK:REQUEST`, `COMPLIANCE_CHECK:READ`
+- **Escopo de titularidade:** restrito aos artigos alcançados pelo vínculo do ator.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — Angélica declara que a verificação automática de adequação às normas da ABNT é
+  condição para a plataforma compensar o tempo de adoção.
+- **Critério de aceitação:** obra citada no texto e ausente da lista de referências é apontada, com o
+  ponto do texto em que a citação ocorre.
+- **Rastreio:** A-P5; M-P5.
+
+#### RF-IAA-003 — Verificar a similaridade do artigo com o acervo
+
+- **Descrição:** permite verificar a similaridade do texto com os artigos já produzidos na
+  plataforma, apresentando os trechos coincidentes e a sua origem.
+- **Ator:** Aluno integrante, Professor orientador responsável pela equipe
+- **Pré-condições:** artigo com conteúdo.
+- **Fluxo principal:**
+  1. O ator aciona a verificação.
+  2. O sistema confronta o texto com o acervo.
+  3. O sistema apresenta os trechos coincidentes, a proporção do texto que representam e o artigo de
+     origem de cada um.
+- **Fluxos alternativos e de exceção:**
+  - E1. Acervo vazio ou insuficiente → o sistema informa e nada afirma.
+- **Regras de negócio:**
+  - RN1. O acervo desta versão é **interno**: os artigos já produzidos na própria plataforma. Serviço
+    externo de detecção é expansão prevista — §10, item 16.
+  - RN2. A verificação aponta; não acusa. A decisão sobre o que constitui plágio é do orientador.
+  - RN3. Citação corretamente referenciada **NÃO DEVE** ser contada como similaridade indevida.
+  - RN4. A equipe pode verificar antes de entregar.
+  - RN5. O trecho coincidente e a sua origem são apresentados ao orientador; ao aluno é apresentada a
+    coincidência no seu próprio texto, sem a identificação da equipe de origem.
+- **Permissões geradas:** `SIMILARITY_CHECK:REQUEST`, `SIMILARITY_CHECK:READ`
+- **Escopo de titularidade:** restrito aos artigos alcançados pelo vínculo do ator.
+- **Prioridade:** I (proposta)
+- **Origem:** `ELI` — Angélica inclui a verificação de plágio entre as verificações automáticas
+  desejadas.
+- **Critério de aceitação:** trecho copiado de artigo anterior da plataforma é assinalado com a
+  origem ao orientador; citação direta devidamente referenciada não é assinalada.
+- **Rastreio:** A-P5.
+
+#### RF-IAA-004 — Consultar indícios sobre a autoria do texto
+
+- **Descrição:** apresenta ao orientador os indícios objetivos sobre como o texto foi produzido —
+  histórico de edição no sistema e metadados do documento importado —, para subsidiar a conversa com
+  a equipe sobre autoria.
+- **Ator:** Professor orientador responsável pela equipe
+- **Pré-condições:** artigo com histórico de edição.
+- **Fluxo principal:**
+  1. O ator abre os indícios de autoria do artigo.
+  2. O sistema apresenta: inserções de grande volume em ato único, com data e autor; linha do tempo
+     das sessões de edição; proporção de texto revisado após a primeira escrita; autoria por
+     integrante; e, havendo importação, os metadados do arquivo — tempo total de edição, número de
+     revisões, aplicativo de origem e autor declarado.
+- **Fluxos alternativos e de exceção:**
+  - E1. Histórico insuficiente → o sistema informa e nada afirma.
+- **Regras de negócio:**
+  - RN1. O sistema apresenta **fatos registrados**, não julgamento. **NÃO DEVE** afirmar nem estimar
+    que um texto foi gerado por inteligência artificial.
+  - RN2. Nenhum indício, isolado ou combinado, constitui prova de autoria. A saída é subsídio à
+    conversa com a equipe.
+  - RN3. Os indícios **NÃO DEVEM** ser apresentados à equipe nem gerar sanção automática.
+  - RN4. O histórico de edição do próprio sistema (`RF-EDT-008`) é a fonte principal. Os metadados de
+    arquivo só existem para o conteúdo importado (`RF-EDT-006`).
+  - RN5. Esta verificação não submete o artigo a serviço externo de inteligência artificial.
+- **Permissões geradas:** `AUTHORSHIP_SIGNAL:READ`
+- **Escopo de titularidade:** restrito às equipes de que o ator é orientador responsável.
+- **Prioridade:** I (proposta)
+- **Origem:** `ELI` — Angélica inclui a detecção de texto gerado por inteligência artificial entre as
+  verificações desejadas. A forma aqui registrada restringe-se a evidência objetiva, por decisão
+  expressa de não submeter a questão a julgamento de modelo.
+- **Critério de aceitação:** inserção de vinte mil caracteres em ato único aparece na linha do tempo,
+  com data e autor; o sistema em nenhum ponto afirma que o texto foi gerado por IA.
+- **Rastreio:** A-P5.
+
+#### RF-IAA-005 — Consentir com o uso de inteligência artificial
+
+- **Descrição:** permite ao administrador institucional registrar o consentimento da instituição com
+  o processamento do conteúdo dos artigos por serviço externo de inteligência artificial, e revogá-lo.
+- **Ator:** Administrador Institucional
+- **Pré-condições:** instituição ativa; ator designado a ela.
+- **Fluxo principal:**
+  1. O sistema apresenta o que é enviado, com que finalidade e a que serviço.
+  2. O ator registra ou revoga o consentimento.
+  3. O sistema registra a decisão, o autor e a data.
+- **Fluxos alternativos e de exceção:**
+  - E1. Instituição inativa → `INSTITUTION_INACTIVE`.
+- **Regras de negócio:**
+  - RN1. Sem consentimento vigente, o conteúdo do artigo **NÃO DEVE** ser submetido a serviço externo
+    de inteligência artificial. `RF-IAA-001` fica indisponível; as demais funções do sistema seguem
+    íntegras.
+  - RN2. O consentimento é por instituição e alcança todos os seus artigos.
+  - RN3. A revogação vale a partir do registro e não desfaz o que já foi processado.
+  - RN4. O registro é auditável: quem consentiu, quando, e o que estava declarado no momento.
+- **Permissões geradas:** `INSTITUTION:CONSENT_AI`
+- **Escopo de titularidade:** restrito à instituição a que o ator está designado.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — definição de produto. O envio do artigo a terceiro é decisão da instituição,
+  não da equipe nem do orientador.
+- **Critério de aceitação:** sem consentimento, o orientador corrige e devolve normalmente e o resumo
+  não é oferecido; revogado o consentimento, o resumo deixa de ser gerado a partir daquele instante.
+- **Rastreio:** §10, item 12.
+
+---
+
+### 7.13 INT — Internacionalização
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -1193,6 +2284,47 @@ Formato `RECURSO:ACAO`, recurso no singular, tudo em maiúsculas, sem curinga (`
 | `PUBLICATION:READ` | RF-ART-004 |
 | `PUBLICATION:UPDATE` | RF-ART-004 |
 | `PUBLICATION:DELETE` | RF-ART-004 |
+| `TEMPLATE:CREATE` | RF-TPL-001 |
+| `TEMPLATE:READ` | RF-TPL-001, RF-TPL-002 |
+| `TEMPLATE:UPDATE` | RF-TPL-001 |
+| `TEMPLATE:DEACTIVATE` | RF-TPL-001 |
+| `ARTICLE:EDIT` | RF-EDT-001, RF-EDT-002 |
+| `ARTICLE:FORMAT` | RF-EDT-005 |
+| `ARTICLE:IMPORT` | RF-EDT-006 |
+| `ARTICLE:EXPORT` | RF-EDT-007 |
+| `ARTICLE:READ_HISTORY` | RF-EDT-008 |
+| `ARTICLE:RESTORE_VERSION` | RF-EDT-008 |
+| `ARTICLE:RETURN` | RF-REV-006 |
+| `ARTICLE:CONCLUDE` | RF-REV-011 |
+| `REFERENCE:CREATE` | RF-EDT-003 |
+| `REFERENCE:READ` | RF-EDT-003 |
+| `REFERENCE:UPDATE` | RF-EDT-003 |
+| `REFERENCE:DELETE` | RF-EDT-003 |
+| `REFERENCE:CITE` | RF-EDT-004 |
+| `SUBMISSION:CREATE` | RF-REV-001 |
+| `SUBMISSION:READ` | RF-REV-001 |
+| `SUBMISSION:REVOKE` | RF-REV-002 |
+| `SUBMISSION:COMPARE` | RF-REV-010 |
+| `REMARK:CREATE` | RF-REV-004 |
+| `REMARK:READ` | RF-REV-004, RF-REV-009 |
+| `REMARK:UPDATE` | RF-REV-005 |
+| `REMARK:ADDRESS` | RF-REV-007 |
+| `REMARK:RESOLVE` | RF-REV-008 |
+| `REMARK:REOPEN` | RF-REV-008 |
+| `REMARK:DISMISS` | RF-REV-008 |
+| `MESSAGE:CREATE` | RF-DSC-001, RF-DSC-003 |
+| `MESSAGE:READ` | RF-DSC-001, RF-DSC-004 |
+| `MESSAGE:REPLY` | RF-DSC-002 |
+| `MESSAGE:DELETE` | RF-DSC-001 |
+| `NOTIFICATION:READ` | RF-DSC-005 |
+| `NOTIFICATION:MARK_READ` | RF-DSC-006 |
+| `AI_SUMMARY:READ` | RF-IAA-001 |
+| `COMPLIANCE_CHECK:REQUEST` | RF-IAA-002 |
+| `COMPLIANCE_CHECK:READ` | RF-IAA-002 |
+| `SIMILARITY_CHECK:REQUEST` | RF-IAA-003 |
+| `SIMILARITY_CHECK:READ` | RF-IAA-003 |
+| `AUTHORSHIP_SIGNAL:READ` | RF-IAA-004 |
+| `INSTITUTION:CONSENT_AI` | RF-IAA-005 |
 
 ### 8.1 Composição dos papéis padrão
 
@@ -1202,10 +2334,10 @@ sobre registros específicos é resolvido pela titularidade declarada em cada re
 | Papel | Permissões |
 | :--- | :--- |
 | `SYSTEM_ADMIN` | `INSTITUTION:CREATE`, `INSTITUTION:READ`, `INSTITUTION:UPDATE`, `INSTITUTION:DEACTIVATE`, `INSTITUTION:ASSIGN_ADMIN`, `INSTITUTION:REVOKE_ADMIN` |
-| `INSTITUTION_ADMIN` | `COURSE:CREATE/READ/UPDATE/DEACTIVATE`, `COURSE:ASSIGN_COORDINATOR`, `COURSE:REVOKE_COORDINATOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR` |
-| `COORDINATOR` | `COHORT:CREATE/READ/UPDATE/DEACTIVATE`, `COHORT:ASSIGN_PROFESSOR`, `COHORT:REVOKE_PROFESSOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `ARTICLE:READ`, `PUBLICATION:READ` |
-| `PROFESSOR` | `ENROLLMENT:CREATE`, `ENROLLMENT:READ`, `INVITATION:CREATE/READ/REVOKE`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:CREATE/READ`, `TEAM:ASSIGN_MEMBER`, `TEAM:REMOVE_MEMBER`, `TEAM:INVITE_MEMBER`, `ARTICLE:READ`, `ARTICLE:GRADE`, `ARTICLE:GRADE_MEMBER`, `PUBLICATION:CREATE/READ/UPDATE/DELETE`, `PERMISSION_GRANT:CREATE`, `PERMISSION_GRANT:REVOKE`, `PERMISSION_GRANT:READ`, `COHORT:READ`, `COURSE:READ` |
-| `STUDENT` | `EVENT:READ`, `MILESTONE:READ`, `TEAM:READ`, `TEAM:JOIN`, `ARTICLE:READ`, `PUBLICATION:CREATE/READ/UPDATE`, `COHORT:READ` |
+| `INSTITUTION_ADMIN` | `COURSE:CREATE/READ/UPDATE/DEACTIVATE`, `COURSE:ASSIGN_COORDINATOR`, `COURSE:REVOKE_COORDINATOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `INSTITUTION:CONSENT_AI` |
+| `COORDINATOR` | `COHORT:CREATE/READ/UPDATE/DEACTIVATE`, `COHORT:ASSIGN_PROFESSOR`, `COHORT:REVOKE_PROFESSOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `ARTICLE:READ`, `ARTICLE:EXPORT`, `PUBLICATION:READ`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `SUBMISSION:READ` |
+| `PROFESSOR` | `ENROLLMENT:CREATE`, `ENROLLMENT:READ`, `INVITATION:CREATE/READ/REVOKE`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:CREATE/READ`, `TEAM:ASSIGN_MEMBER`, `TEAM:REMOVE_MEMBER`, `TEAM:INVITE_MEMBER`, `ARTICLE:READ`, `ARTICLE:GRADE`, `ARTICLE:GRADE_MEMBER`, `PUBLICATION:CREATE/READ/UPDATE/DELETE`, `PERMISSION_GRANT:CREATE`, `PERMISSION_GRANT:REVOKE`, `PERMISSION_GRANT:READ`, `COHORT:READ`, `COURSE:READ`, `TEMPLATE:READ`, `ARTICLE:EXPORT`, `ARTICLE:RETURN`, `ARTICLE:CONCLUDE`, `SUBMISSION:READ`, `SUBMISSION:COMPARE`, `REMARK:CREATE/READ/UPDATE/RESOLVE/REOPEN/DISMISS`, `MESSAGE:CREATE/READ/REPLY/DELETE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ`, `AI_SUMMARY:READ`, `COMPLIANCE_CHECK:REQUEST/READ`, `SIMILARITY_CHECK:REQUEST/READ`, `AUTHORSHIP_SIGNAL:READ` |
+| `STUDENT` | `EVENT:READ`, `MILESTONE:READ`, `TEAM:READ`, `TEAM:JOIN`, `ARTICLE:READ`, `PUBLICATION:CREATE/READ/UPDATE`, `COHORT:READ`, `ARTICLE:EDIT`, `ARTICLE:FORMAT`, `ARTICLE:IMPORT`, `ARTICLE:EXPORT`, `ARTICLE:READ_HISTORY`, `ARTICLE:RESTORE_VERSION`, `REFERENCE:CREATE/READ/UPDATE/DELETE`, `REFERENCE:CITE`, `SUBMISSION:CREATE/READ/REVOKE/COMPARE`, `REMARK:READ`, `REMARK:ADDRESS`, `MESSAGE:CREATE/READ/REPLY/DELETE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ`, `COMPLIANCE_CHECK:REQUEST/READ`, `SIMILARITY_CHECK:REQUEST/READ` |
 
 A notação `A/B/C` acima abrevia a leitura desta tabela e **não** existe no catálogo: as permissões
 efetivas são sempre enumeradas, sem curinga (`ADR-0014` §3).
@@ -1220,10 +2352,10 @@ exibição ocorre no cliente, a partir do código.
 | Código | Origem |
 | :--- | :--- |
 | `AUTHENTICATION_FAILED` | RF-ACS-001 |
-| `INSTITUTION_INACTIVE` | RF-ACS-001, RF-INS-001, RF-INS-002 |
-| `VALIDATION_FAILED` | RF-ACS-004, RF-ACS-005, RF-INS-001, RF-CUR-001, RF-TUR-001, RF-TUR-004, RF-TUR-005, RF-EVT-001, RF-EVT-002, RF-EQP-001, RF-EQP-002, RF-ART-002, RF-ART-003, RF-ART-004 |
-| `PERMISSION_DENIED` | RF-ACS-005, RF-CUR-001, RF-CUR-002, RF-TUR-001, RF-TUR-002, RF-TUR-003, RF-TUR-004, RF-EVT-002, RF-EVT-003, RF-EQP-005, RF-ART-002, RF-ART-003 |
-| `RESOURCE_NOT_FOUND` | RF-ACS-006, RF-ACS-007, RF-ACS-008, RF-INS-002, RF-CUR-002, RF-EVT-001, RF-EVT-004, RF-ART-001, RF-ART-004 |
+| `INSTITUTION_INACTIVE` | RF-ACS-001, RF-INS-001, RF-INS-002, RF-IAA-005 |
+| `VALIDATION_FAILED` | RF-ACS-004, RF-ACS-005, RF-INS-001, RF-CUR-001, RF-TUR-001, RF-TUR-004, RF-TUR-005, RF-EVT-001, RF-EVT-002, RF-EQP-001, RF-EQP-002, RF-ART-002, RF-ART-003, RF-ART-004, RF-TPL-001, RF-EDT-003, RF-DSC-001 |
+| `PERMISSION_DENIED` | RF-ACS-005, RF-CUR-001, RF-CUR-002, RF-TUR-001, RF-TUR-002, RF-TUR-003, RF-TUR-004, RF-EVT-002, RF-EVT-003, RF-EQP-005, RF-ART-002, RF-ART-003, RF-TPL-001, RF-REV-004, RF-REV-005, RF-REV-006, RF-REV-008, RF-REV-011 |
+| `RESOURCE_NOT_FOUND` | RF-ACS-006, RF-ACS-007, RF-ACS-008, RF-INS-002, RF-CUR-002, RF-EVT-001, RF-EVT-004, RF-ART-001, RF-ART-004, RF-TPL-002, RF-EDT-001, RF-EDT-004, RF-EDT-007, RF-REV-002, RF-DSC-001, RF-DSC-003, RF-DSC-006 |
 | `EMAIL_ALREADY_REGISTERED` | RF-TUR-003, RF-TUR-005 |
 | `INVITATION_EXPIRED` | RF-ACS-003, RF-ACS-004, RF-TUR-005, RF-EQP-004 |
 | `INVITATION_REVOKED` | RF-TUR-005 |
@@ -1239,6 +2371,21 @@ exibição ocorre no cliente, a partir do código.
 | `GRANT_NOT_HELD_BY_GRANTER` | RF-ACS-006 |
 | `SELF_GRANT_NOT_ALLOWED` | RF-ACS-006 |
 | `LANGUAGE_NOT_SUPPORTED` | RF-INT-001 |
+| `TEMPLATE_ALREADY_FIXED` | RF-TPL-002 |
+| `ARTICLE_LOCKED_FOR_REVIEW` | RF-EDT-001, RF-EDT-008, RF-REV-001, RF-REV-007 |
+| `ARTICLE_ALREADY_FINISHED` | RF-EDT-001, RF-REV-001 |
+| `ARTICLE_NOT_IN_REVIEW` | RF-REV-004, RF-REV-006, RF-REV-008 |
+| `REFERENCE_IN_USE` | RF-EDT-003 |
+| `FILE_FORMAT_NOT_SUPPORTED` | RF-EDT-006 |
+| `FILE_TOO_LARGE` | RF-EDT-006 |
+| `SUBMISSION_ALREADY_MADE` | RF-REV-001 |
+| `MILESTONE_NOT_OPEN` | RF-REV-001 |
+| `MILESTONE_DEADLINE_PASSED` | RF-REV-002 |
+| `MILESTONE_PENDING` | RF-REV-011 |
+| `REVIEW_ALREADY_STARTED` | RF-REV-002 |
+| `REMARK_ALREADY_CLOSED` | RF-REV-005, RF-REV-007, RF-REV-008 |
+| `REMARK_PENDING` | RF-REV-011 |
+| `AI_CONSENT_REQUIRED` | RF-IAA-001 |
 
 ---
 
@@ -1247,7 +2394,7 @@ exibição ocorre no cliente, a partir do código.
 | # | Pendência | Efeito |
 | :--- | :--- | :--- |
 | 1 | **Prioridades não atribuídas por parte interessada.** Nenhum requisito desta versão teve prioridade atribuída pelas entrevistadas; os valores registrados são propostas da equipe. | Viola `PAD-REQ-003`. Por `PAD-REQ-006`, nenhum requisito desta versão deve ser encaminhado à implementação antes da ratificação. |
-| 2 | **Requisitos `DER` não validados.** Toda a hierarquia institucional, a autenticação e a cadeia de criação de usuários derivam da definição de produto, não de solicitação direta. | Por `PAD-REQ-004`, não são considerados acordados antes de validação com as partes interessadas. |
+| 2 | **Requisitos `DER` não validados.** A hierarquia institucional, a autenticação, a cadeia de criação de usuários e boa parte da fatia de produção do artigo derivam da definição de produto, não de solicitação direta — ver item 11. | Por `PAD-REQ-004`, não são considerados acordados antes de validação com as partes interessadas. |
 | 3 | **Radar de eventos externos adiado.** Marciele nomeou, em P10, duas condições obrigatórias para a plataforma valer o tempo de aprendizado: apoio às correções e busca de eventos. A segunda foi adiada por decisão de escopo. Em P5 ela descreve o item como externo — "radar de eventos científicos, congressos e periódicos" com prazo, temática, requisitos e links, e o trabalho manual de "identificação de eventos e periódicos adequados à temática" e "repasse dessas oportunidades aos alunos". O congresso interno aparece separadamente, como template já conhecido. | Requisito elicitado, conhecido e não atendido. `RF-ART-004` o atende parcialmente ao permitir o registro manual da publicação externa. O módulo de correção passa a sustentar sozinho o caso de adoção dessa parte interessada. |
 | 4 | **Um usuário por instituição.** Quem atua em mais de uma instituição usa contas e e-mails distintos. | Decisão de escopo. Expansão prevista. |
 | 5 | **Elicitação faltante.** Nenhum aluno e nenhum coordenador foi entrevistado, embora ambos sejam atores desta URS. | A visão do aluno consta apenas em terceira pessoa. Recomenda-se nova rodada de elicitação. |
@@ -1255,7 +2402,14 @@ exibição ocorre no cliente, a partir do código.
 | 7 | **Coordenador único por curso.** Registrado como RN1 de `RF-CUR-002` sem evidência que o confirme. | Premissa a confirmar. |
 | 8 | **Divergência de visibilidade (P8).** Marciele defende que qualquer professor da instituição veja o trabalho em qualquer fase; Angélica restringe a orientadores e autores. Esta versão implementa a posição restritiva. | Se a posição ampla prevalecer, será necessária permissão de leitura em escopo institucional, hoje inexistente. |
 | 9 | **Idiomas.** Apenas português do Brasil no lançamento; nenhuma parte interessada solicitou idioma adicional. | `RF-INT-001` permanece `DER` até validação. A estratégia técnica está fixada em `ADR-0026` e nos padrões `PAD-NOM-001` a `PAD-NOM-014`; resta apenas a validação do requisito com as partes interessadas. |
-| 10 | **Ciclo de correção não especificado.** Submissão de versões, apontamentos, verificação de atendimento entre etapas, conformidade e relatórios. | É a próxima fatia desta URS e onde residem as dores principais das duas entrevistadas. |
+| 10 | **Acompanhamento e relatórios não especificados.** Painel de progresso das equipes, sinalização de equipe parada ou atrasada e relatórios à coordenação. | É a próxima fatia desta URS. O coordenador, destinatário desses relatórios, permanece não entrevistado — item 5. |
+| 11 | **Fatia de produção sem elicitação direta.** A edição do artigo no sistema, a edição simultânea, a discussão, as notificações, a comparação de versões e o resumo automático são definição de produto. O que a elicitação sustenta diretamente é o apontamento no texto (M-P4), a verificação de conformidade e de plágio (A-P5) e o template do congresso (M-P5). | Por `PAD-REQ-004`, esses requisitos não são considerados acordados antes de validação. É a maior concentração de `DER` da URS. |
+| 12 | **Envio de conteúdo a terceiro.** `RF-IAA-001` submete o texto do artigo a serviço externo de inteligência artificial. `RF-IAA-005` exige consentimento institucional, mas o teor do consentimento, a base legal e o serviço a contratar não estão definidos. | Bloqueia `RF-IAA-001` em produção até que sejam. Nenhum outro requisito depende disso. |
+| 13 | **Sem canal privado entre professores.** Toda mensagem da discussão é visível à equipe (`RF-DSC-001` RN4). | Decisão de escopo. Expansão prevista, a nascer junto do modelo de discussão caso seja adotada. |
+| 14 | **Norma única.** Só a ABNT é verificada e aplicada. O template é semente e não é verificado (RE-16), de modo que exigência própria do congresso interno divergente da ABNT não é conferida por ninguém. | Consequência conhecida da decisão de tratar template como semente. Ver também item 6. |
+| 15 | **Sem prorrogação individual de prazo.** `RF-REV-003` congela toda equipe sem entrega no vencimento, sem exceção. | Decisão de escopo. |
+| 16 | **Acervo de similaridade interno.** `RF-IAA-003` confronta o artigo apenas com os já produzidos na plataforma. Nas primeiras turmas o acervo é pequeno e a verificação vale pouco. | Efeito conhecido e aceito. Serviço externo é expansão prevista. |
+| 17 | **Coedição simultânea — risco de viabilidade.** `RF-EDT-002` exige reconciliar edições concorrentes sem perda e sem escolha manual. É o maior item de engenharia desta URS e não tem paralelo no restante do sistema. | Risco declarado, decisão tomada com o custo à vista. Exige ADR próprio antes da implementação. |
 
 ---
 
@@ -1264,4 +2418,5 @@ exibição ocorre no cliente, a partir do código.
 | Versão | Data | Alteração |
 | :--- | :--- | :--- |
 | 0.0 | 2026-08-13 | Documento zerado. Todo o conteúdo das versões 0.1 a 0.9.1 era decisão da própria equipe, não requisito de parte interessada, e foi movido para `Padroes/Padroes-de-Engenharia.md`. A URS recomeça vazia, a ser elaborada a partir da elicitação. O histórico anterior está no versionamento do repositório. |
+| 0.2 | 2026-08-25 | Registrada a fatia de produção e correção do artigo: 5 categorias novas — `TPL`, `EDT`, `REV`, `DSC`, `IAA` —, 32 requisitos funcionais, 8 regras estruturais (RE-10 a RE-17), 41 permissões e 15 códigos de resposta. O modelo de domínio passa a incluir Template, Referência, Citação, Discussão, Mensagem, Entrega e Apontamento. `INT` passa de §7.8 a §7.13. Pendências 11 a 17 acrescentadas; a pendência 10 passa a designar a fatia de acompanhamento e relatórios. |
 | 0.1 | 2026-08-19 | Registrada a fatia estrutural: 8 categorias, 32 requisitos funcionais, catálogo de 51 permissões e catálogo de 20 códigos de resposta, com rastreabilidade às entrevistas de Marciele e Angélica. Os catálogos de permissões e de códigos passam a existir, atendendo às pendências correspondentes de `Padroes-de-Engenharia.md` §6 no que se refere a esta fatia. Prioridades registradas como proposta, pendentes de atribuição por parte interessada. |
