@@ -1,14 +1,17 @@
 # URS — Especificação de Requisitos do Usuário
 
+**Disciplina:** Arquitetura e Requisitos
+**Professor:** «a preencher»
+**Acadêmicos:** Grupo 03 — Camilly Azevedo, Gustavo Ferreira, Matheus Akio, Vitor Fernandes
 **Projeto:** VinceArt
-**Versão:** 0.3
-**Status:** Em elaboração — escopo funcional completo; pendente de ratificação pelas partes
-interessadas
+**Cliente:** Marciele R. Siveres e Angélica P. S. Meurer — curso de Administração
+**Versão:** 0.4
+**Status:** Em elaboração — pendente de ratificação pelas partes interessadas
 **Data:** 2026-08-26
 
 ---
 
-## 1. Objetivo
+## 1. Objetivo do Documento
 
 Este documento especifica **o que as partes interessadas do VinceArt precisam que o sistema faça**.
 
@@ -21,11 +24,18 @@ As regras de redação desta URS — identificação, prioridade, origem, rastre
 requisito funcional — estão em `PAD-REQ-001` a `PAD-REQ-008`. Elas dizem **como** escrever um
 requisito, nunca **qual** requisito escrever.
 
+Os requisitos são classificados em:
+
+- **Requisitos Funcionais (RF)** — o que o sistema deve fazer: comportamento, regra de negócio,
+  interface e relatório. Estão em 2.1, um quadro por requisito.
+- **Requisitos Não Funcionais (RNF)** — o que não é funcionalidade: aspectos técnicos, gerenciais,
+  premissas e restrições. Neste projeto eles não são registrados aqui, pelo motivo exposto em 2.2.
+
 O material bruto de elicitação está em [`Coleta de Requisitos/`](Coleta%20de%20Requisitos/).
 
 ---
 
-## 2. Escopo desta versão
+### 1.1 Escopo desta versão
 
 Esta versão registra duas fatias:
 
@@ -38,17 +48,17 @@ Esta versão registra duas fatias:
 
 Com esta versão o escopo funcional está coberto. O que resta é ratificação, não elicitação: nenhum
 requisito teve prioridade atribuída por parte interessada e nenhum requisito `DER` foi validado —
-§10, itens 1, 2 e 11.
+§3, itens 1, 2 e 11.
 
-**Fora do escopo do produto nesta fase**, por decisão registrada em §10: eventos científicos
+**Fora do escopo do produto nesta fase**, por decisão registrada em §3: eventos científicos
 externos e periódicos (radar de oportunidades), participação de um usuário em mais de uma
 instituição e matrícula em mais de uma turma.
 
 ---
 
-## 3. Convenções
+### 1.2 Convenções
 
-### 3.1 Identificação
+#### 1.2.1 Identificação
 
 `RF-<CATEGORIA>-<NNN>`, numeração sequencial e imutável dentro da categoria (`PAD-REQ-002`).
 
@@ -74,16 +84,16 @@ Os códigos de categoria acompanham a convenção em português já adotada pelo
 software** — código, tabela, coluna, rota, papel, permissão e código de resposta —, não os
 identificadores de documento.
 
-### 3.2 Prioridade
+#### 1.2.2 Prioridade
 
 Escala `E` (essencial), `I` (importante), `D` (desejável).
 
 Por `PAD-REQ-003`, a prioridade DEVE ser atribuída pela parte interessada. **Nenhuma prioridade
 desta versão foi atribuída por parte interessada.** Os valores aqui registrados aparecem com o
 sufixo **`(proposta)`** e são sugestão da equipe, sem valor de acordo, pendentes de ratificação —
-ver §10, item 1.
+ver §3, item 1.
 
-### 3.3 Origem
+#### 1.2.3 Origem
 
 | Código | Significado |
 | :--- | :--- |
@@ -91,7 +101,7 @@ ver §10, item 1.
 | `STK` | Imposto por parte interessada fora da elicitação |
 | `DER` | Derivado; indica o item de origem e NÃO É considerado acordado antes de validação (`PAD-REQ-004`) |
 
-### 3.4 Rastreio
+#### 1.2.4 Rastreio
 
 | Sigla | Evidência |
 | :--- | :--- |
@@ -102,21 +112,21 @@ ver §10, item 1.
 
 ---
 
-## 4. Partes interessadas
+### 1.3 Partes interessadas
 
 | Parte interessada | Papel na elicitação | Estado |
 | :--- | :--- | :--- |
 | Marciele R. Siveres | Orientadora, Administração, 5 anos, ~35 orientandos simultâneos | Entrevistada |
 | Angélica P. S. Meurer | Orientadora, Administração, 12 anos, 50+ orientandos por semestre | Entrevistada |
-| Aluno orientando | Ator de grande parte dos requisitos | **Não entrevistado** — §10, item 5 |
-| Coordenador de curso | Destinatário dos relatórios | **Não será entrevistado** — decisão registrada em §10, item 5 |
+| Aluno orientando | Ator de grande parte dos requisitos | **Não entrevistado** — §3, item 5 |
+| Coordenador de curso | Destinatário dos relatórios | **Não será entrevistado** — decisão registrada em §3, item 5 |
 
 Ambas as entrevistadas pertencem ao curso de Administração. Não há evidência de outras áreas, o que
-limita a generalização das normas exigidas — ver §10, item 6.
+limita a generalização das normas exigidas — ver §3, item 6.
 
 ---
 
-## 5. Atores e papéis
+### 1.4 Atores e papéis
 
 Os papéis são **globais e pré-criados por carga inicial**. O papel autoriza a ação; **o escopo vem
 do vínculo**, verificado como titularidade dentro do caso de uso, conforme `ADR-0014` §12 e §13.
@@ -130,18 +140,18 @@ Não existe papel escopado.
 | Professor | `PROFESSOR` | Designação a turmas e a eventos/equipes |
 | Aluno | `STUDENT` | Matrícula em uma turma |
 
-### 5.1 Premissas de identidade
+#### 1.4.1 Premissas de identidade
 
 1. O primeiro usuário `SYSTEM_ADMIN` é criado por script de carga inicial. Não existe autocadastro
    para esse papel nem para nenhum outro papel administrativo.
 2. O e-mail é identificador único global do usuário. Quem atua em mais de uma instituição usa
-   e-mails distintos, um por conta — consequência da decisão de §10, item 4.
+   e-mails distintos, um por conta — consequência da decisão de §3, item 4.
 3. O `SYSTEM_ADMIN` administra instituições e configurações gerais de suporte. **Não** acessa
    conteúdo acadêmico: artigo, apontamento, nota ou avaliação.
 
 ---
 
-## 6. Modelo de domínio
+### 1.5 Modelo de domínio
 
 ```
 Instituição
@@ -164,7 +174,7 @@ Instituição
             └── Apontamento             OPEN → ADDRESSED → RESOLVED | DISMISSED
 ```
 
-### 6.1 Regras estruturais transversais
+#### 1.5.1 Regras estruturais transversais
 
 | ID | Regra |
 | :--- | :--- |
@@ -188,9 +198,17 @@ Instituição
 
 ---
 
-## 7. Requisitos funcionais
+## 2. Lista de Requisitos
 
-### 7.1 ACS — Acesso e identidade
+Os requisitos funcionais estão em 2.1, um quadro por requisito, na estrutura fixada por
+`PAD-REQ-008`. Os requisitos não funcionais estão em 2.2. Os catálogos de 2.3 e 2.4 são derivados
+dos requisitos funcionais e não acrescentam exigência: consolidam o que os quadros já declaram.
+
+---
+
+### 2.1 Requisitos Funcionais
+
+#### 2.1.1 ACS — Acesso e identidade
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -205,7 +223,7 @@ Instituição
 
 ---
 
-#### RF-ACS-001 — Autenticar-se no sistema
+##### RF-ACS-001 — Autenticar-se no sistema
 
 - **Descrição:** permite ao usuário estabelecer sessão autenticada mediante e-mail e senha, para
   acessar as funcionalidades correspondentes aos seus papéis e vínculos.
@@ -237,7 +255,7 @@ Instituição
   efetivas; credencial inválida e conta inexistente produzem resposta indistinguível.
 - **Rastreio:** A-P8; M-P8; `ADR-0013`.
 
-#### RF-ACS-002 — Encerrar a sessão
+##### RF-ACS-002 — Encerrar a sessão
 
 - **Descrição:** permite ao usuário encerrar a própria sessão, tornando a credencial inválida
   imediatamente.
@@ -257,7 +275,7 @@ Instituição
 - **Critério de aceitação:** após o encerramento, requisição com a credencial anterior é recusada.
 - **Rastreio:** `RF-ACS-001`; `ADR-0013`.
 
-#### RF-ACS-003 — Recuperar o acesso
+##### RF-ACS-003 — Recuperar o acesso
 
 - **Descrição:** permite ao usuário que perdeu a senha solicitar, pelo próprio e-mail, um meio de
   redefini-la.
@@ -282,7 +300,7 @@ Instituição
   produz resposta indistinguível da de sucesso.
 - **Rastreio:** `RF-ACS-001`.
 
-#### RF-ACS-004 — Definir ou alterar a própria senha
+##### RF-ACS-004 — Definir ou alterar a própria senha
 
 - **Descrição:** permite ao usuário definir a senha na primeira entrada ou alterá-la posteriormente.
 - **Ator:** Usuário
@@ -307,7 +325,7 @@ Instituição
   anteriores deixam de ser aceitas.
 - **Rastreio:** `RF-ACS-001`; `RF-ACS-003`.
 
-#### RF-ACS-005 — Manter o próprio perfil
+##### RF-ACS-005 — Manter o próprio perfil
 
 - **Descrição:** permite ao usuário consultar e atualizar os próprios dados de identificação e a
   área de atuação ou pesquisa.
@@ -332,7 +350,7 @@ Instituição
   de alterar e-mail ou papéis é recusada.
 - **Rastreio:** M-perfil; A-perfil.
 
-#### RF-ACS-006 — Conceder permissão a outro usuário
+##### RF-ACS-006 — Conceder permissão a outro usuário
 
 - **Descrição:** permite a um usuário conceder a outro uma permissão que ele próprio possui, para
   que um professor assuma temporariamente atribuições de outro em período de sobrecarga.
@@ -362,7 +380,7 @@ Instituição
   tentativa de conceder permissão não possuída é recusada.
 - **Rastreio:** M-P3; M-P1 (acesso compartilhado entre orientadores); `ADR-0014` §15–§19.
 
-#### RF-ACS-007 — Revogar concessão de permissão
+##### RF-ACS-007 — Revogar concessão de permissão
 
 - **Descrição:** permite revogar, a qualquer momento, uma concessão direta ativa, independentemente
   de quem a concedeu.
@@ -386,7 +404,7 @@ Instituição
   dela é recusada.
 - **Rastreio:** `RF-ACS-006`; `ADR-0014` §21.
 
-#### RF-ACS-008 — Consultar concessões diretas ativas
+##### RF-ACS-008 — Consultar concessões diretas ativas
 
 - **Descrição:** permite listar as concessões diretas ativas de um usuário, com concedente e data,
   para revisão periódica de privilégios.
@@ -409,7 +427,7 @@ Instituição
 
 ---
 
-### 7.2 INS — Instituição
+#### 2.1.2 INS — Instituição
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -418,7 +436,7 @@ Instituição
 
 ---
 
-#### RF-INS-001 — Manter instituição
+##### RF-INS-001 — Manter instituição
 
 - **Descrição:** permite ao administrador de sistema cadastrar, consultar, alterar e desativar
   instituições, além de manter as suas configurações gerais de suporte.
@@ -445,9 +463,9 @@ Instituição
   congresso interno e coordenação própria.
 - **Critério de aceitação:** instituição cadastrada passa a admitir cursos; instituição desativada
   impede a autenticação dos seus usuários.
-- **Rastreio:** M-P5; M-P9; A-P1; decisão de escopo de §10, item 4.
+- **Rastreio:** M-P5; M-P9; A-P1; decisão de escopo de §3, item 4.
 
-#### RF-INS-002 — Designar administrador institucional
+##### RF-INS-002 — Designar administrador institucional
 
 - **Descrição:** permite ao administrador de sistema atribuir a um usuário o papel de administrador
   de uma instituição, e revogar essa atribuição.
@@ -472,11 +490,11 @@ Instituição
   produto.
 - **Critério de aceitação:** designado, o usuário passa a criar cursos naquela instituição e em
   nenhuma outra.
-- **Rastreio:** `RF-INS-001`; §10, item 2.
+- **Rastreio:** `RF-INS-001`; §3, item 2.
 
 ---
 
-### 7.3 CUR — Curso
+#### 2.1.3 CUR — Curso
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -485,7 +503,7 @@ Instituição
 
 ---
 
-#### RF-CUR-001 — Manter curso
+##### RF-CUR-001 — Manter curso
 
 - **Descrição:** permite ao administrador institucional cadastrar, consultar, alterar e desativar os
   cursos da sua instituição.
@@ -510,7 +528,7 @@ Instituição
   enxerga.
 - **Rastreio:** M-perfil; A-perfil; M-P9.
 
-#### RF-CUR-002 — Designar coordenador do curso
+##### RF-CUR-002 — Designar coordenador do curso
 
 - **Descrição:** permite ao administrador institucional atribuir a um usuário o papel de coordenador
   de um curso, e revogar essa atribuição.
@@ -525,7 +543,7 @@ Instituição
   - E2. Curso de outra instituição → `PERMISSION_DENIED`.
   - E3. Usuário inexistente → `RESOURCE_NOT_FOUND`.
 - **Regras de negócio:**
-  - RN1. O curso possui no máximo um coordenador ativo por vez — premissa a confirmar, §10, item 7.
+  - RN1. O curso possui no máximo um coordenador ativo por vez — premissa a confirmar, §3, item 7.
   - RN2. O coordenador do curso é o destinatário dos relatórios de pesquisa; não existe papel
     separado de coordenador de pesquisa.
   - RN3. A revogação do vínculo não revoga as concessões diretas realizadas pelo coordenador.
@@ -539,7 +557,7 @@ Instituição
 
 ---
 
-### 7.4 TUR — Turma
+#### 2.1.4 TUR — Turma
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -551,7 +569,7 @@ Instituição
 
 ---
 
-#### RF-TUR-001 — Manter turma
+##### RF-TUR-001 — Manter turma
 
 - **Descrição:** permite ao coordenador cadastrar, consultar, alterar e desativar turmas do seu
   curso, delimitando o período letivo em que a orientação ocorre.
@@ -578,7 +596,7 @@ Instituição
   de outro curso não a enxerga.
 - **Rastreio:** A-P1; A-P3; M-P1; M-P9.
 
-#### RF-TUR-002 — Designar professor à turma
+##### RF-TUR-002 — Designar professor à turma
 
 - **Descrição:** permite ao coordenador designar professores a uma turma do seu curso, e revogar a
   designação.
@@ -603,7 +621,7 @@ Instituição
 - **Critério de aceitação:** designado, o professor cadastra alunos naquela turma e em nenhuma outra.
 - **Rastreio:** A-perfil; A-P1; M-P1.
 
-#### RF-TUR-003 — Cadastrar aluno na turma
+##### RF-TUR-003 — Cadastrar aluno na turma
 
 - **Descrição:** permite ao professor registrar um aluno e matriculá-lo na turma, criando a conta
   quando o e-mail ainda não existir no sistema.
@@ -633,9 +651,9 @@ Instituição
   do semestre pelo professor.
 - **Critério de aceitação:** professor designado cadastra aluno inexistente e ele passa a constar na
   turma com matrícula ativa; professor não designado é recusado.
-- **Rastreio:** A-P1; M-P1; §10, item 4.
+- **Rastreio:** A-P1; M-P1; §3, item 4.
 
-#### RF-TUR-004 — Emitir convite de ingresso na turma
+##### RF-TUR-004 — Emitir convite de ingresso na turma
 
 - **Descrição:** permite ao professor gerar um convite de ingresso na turma, para que os alunos criem
   a própria conta em vez de serem cadastrados um a um.
@@ -662,7 +680,7 @@ Instituição
   recusado.
 - **Rastreio:** A-perfil; A-P2; M-perfil; M-P2.
 
-#### RF-TUR-005 — Ingressar na turma por convite
+##### RF-TUR-005 — Ingressar na turma por convite
 
 - **Descrição:** permite ao aluno criar a própria conta e matricular-se na turma a partir do convite
   recebido.
@@ -692,7 +710,7 @@ Instituição
 
 ---
 
-### 7.5 EVT — Evento
+#### 2.1.5 EVT — Evento
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -703,7 +721,7 @@ Instituição
 
 ---
 
-#### RF-EVT-001 — Manter evento
+##### RF-EVT-001 — Manter evento
 
 - **Descrição:** permite ao dono do escopo criar, consultar, alterar e cancelar um evento acadêmico,
   definindo o tema, o problema de pesquisa, os objetivos e os limites de formação de equipes. O
@@ -738,7 +756,7 @@ Instituição
 - **Rastreio:** A-P1 (tema, problema e objetivos definidos pelo professor); M-P1; M-P5 (template do
   congresso interno).
 
-#### RF-EVT-002 — Definir o cronograma de etapas do evento
+##### RF-EVT-002 — Definir o cronograma de etapas do evento
 
 - **Descrição:** permite ao dono do escopo definir as etapas de entrega do evento, com nome, ordem e
   prazo, fixando o calendário no início do período.
@@ -757,7 +775,7 @@ Instituição
     início do período.
   - RN2. As datas devem crescer estritamente conforme a ordem das etapas.
   - RN3. A etapa é a unidade à qual se prendem as entregas (`RF-REV-001`) e os apontamentos
-    (`RF-REV-004`) do ciclo de correção, especificado em §7.10.
+    (`RF-REV-004`) do ciclo de correção, especificado em §2.1.10.
 - **Permissões geradas:** `MILESTONE:CREATE`, `MILESTONE:READ`, `MILESTONE:UPDATE`,
   `MILESTONE:DELETE`
 - **Escopo de titularidade:** restrito aos eventos de cujo escopo o ator é dono.
@@ -768,7 +786,7 @@ Instituição
   anterior à da etapa precedente é recusada.
 - **Rastreio:** A-P1; A-P3; M-P1; M-P2.
 
-#### RF-EVT-003 — Designar orientadores ao evento
+##### RF-EVT-003 — Designar orientadores ao evento
 
 - **Descrição:** permite ao dono do escopo designar os professores que orientarão no evento, e
   revogar a designação.
@@ -797,7 +815,7 @@ Instituição
   professor não designado não enxerga nenhuma.
 - **Rastreio:** A-perfil; A-P1; M-P1; M-P3.
 
-#### RF-EVT-004 — Consultar eventos por escopo
+##### RF-EVT-004 — Consultar eventos por escopo
 
 - **Descrição:** permite ao usuário localizar os eventos aos quais tem acesso, organizados por
   escopo — instituição, curso e turma.
@@ -814,7 +832,7 @@ Instituição
     dono do escopo; o coordenador, os do seu curso; o administrador institucional, os da sua
     instituição.
   - RN2. Esta regra implementa a posição de acesso restrito e não a de abertura institucional
-    ampla — divergência registrada em §10, item 8.
+    ampla — divergência registrada em §3, item 8.
 - **Permissões geradas:** `EVENT:READ`
 - **Escopo de titularidade:** restrito aos eventos alcançados pelos vínculos do ator.
 - **Prioridade:** E (proposta)
@@ -826,7 +844,7 @@ Instituição
 
 ---
 
-### 7.6 EQP — Equipe
+#### 2.1.6 EQP — Equipe
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -839,7 +857,7 @@ Instituição
 
 ---
 
-#### RF-EQP-001 — Criar equipe no evento
+##### RF-EQP-001 — Criar equipe no evento
 
 - **Descrição:** permite ao orientador criar equipes no evento, respeitando a quantidade máxima
   definida para ele.
@@ -864,7 +882,7 @@ Instituição
   criação além do limite do evento é recusada.
 - **Rastreio:** A-P1; A-perfil; M-P1.
 
-#### RF-EQP-002 — Ingressar em equipe
+##### RF-EQP-002 — Ingressar em equipe
 
 - **Descrição:** permite ao aluno elegível ingressar por conta própria em uma equipe do evento,
   preservando a autonomia de escolha dos colegas que hoje existe no processo.
@@ -893,7 +911,7 @@ Instituição
   do mesmo evento é recusado.
 - **Rastreio:** A-P1.
 
-#### RF-EQP-003 — Designar aluno a equipe
+##### RF-EQP-003 — Designar aluno a equipe
 
 - **Descrição:** permite ao orientador designar um aluno elegível a uma equipe, ou removê-lo dela.
 - **Ator:** Professor orientador do evento
@@ -918,7 +936,7 @@ Instituição
   ou unicidade é recusada.
 - **Rastreio:** A-P1; M-P1.
 
-#### RF-EQP-004 — Convidar aluno para a equipe
+##### RF-EQP-004 — Convidar aluno para a equipe
 
 - **Descrição:** permite ao orientador convidar um aluno elegível para uma equipe, cabendo ao aluno
   aceitar.
@@ -946,7 +964,7 @@ Instituição
   preenchimento das vagas é recusado.
 - **Rastreio:** `RF-EQP-002`; `RF-EQP-003`; A-P1.
 
-#### RF-EQP-005 — Designar orientador responsável pela equipe
+##### RF-EQP-005 — Designar orientador responsável pela equipe
 
 - **Descrição:** permite ao dono do escopo do evento nomear, entre os orientadores do evento, o
   responsável direto por cada equipe, distribuindo a carga de orientação.
@@ -976,7 +994,7 @@ Instituição
   professor não designado ao evento não pode ser nomeado responsável.
 - **Rastreio:** A-perfil; A-P1; M-P1; M-P3.
 
-#### RF-EQP-006 — Consultar alunos elegíveis sem equipe
+##### RF-EQP-006 — Consultar alunos elegíveis sem equipe
 
 - **Descrição:** permite ao orientador identificar os alunos elegíveis ao evento que ainda não
   integram nenhuma equipe, evitando que a ausência de participação seja percebida tardiamente.
@@ -1001,7 +1019,7 @@ Instituição
 
 ---
 
-### 7.7 ART — Artigo
+#### 2.1.7 ART — Artigo
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -1012,7 +1030,7 @@ Instituição
 
 ---
 
-#### RF-ART-001 — Acompanhar a situação do artigo
+##### RF-ART-001 — Acompanhar a situação do artigo
 
 - **Descrição:** permite consultar o artigo da equipe, o seu estado no ciclo de produção e a etapa
   corrente do cronograma.
@@ -1026,7 +1044,7 @@ Instituição
 - **Regras de negócio:**
   - RN1. Os estados do artigo são `STARTED`, `IN_PROGRESS`, `IN_REVIEW` e `FINISHED`.
   - RN2. O artigo percorre `IN_PROGRESS` e `IN_REVIEW` uma vez por etapa do cronograma, em ciclo,
-    até a conclusão. As transições e o ciclo que as governa estão em §7.10 (RE-11).
+    até a conclusão. As transições e o ciclo que as governa estão em §2.1.10 (RE-11).
   - RN3. O aluno enxerga apenas o artigo da sua equipe; o orientador do evento, os de todas as
     equipes do evento; o coordenador, os do seu curso.
 - **Permissões geradas:** `ARTICLE:READ`
@@ -1037,7 +1055,7 @@ Instituição
   aluno de outra equipe não os vê.
 - **Rastreio:** M-P3; A-P3; M-P1.
 
-#### RF-ART-002 — Avaliar o artigo
+##### RF-ART-002 — Avaliar o artigo
 
 - **Descrição:** permite ao orientador responsável registrar a nota do artigo produzido pela equipe.
 - **Ator:** Professor orientador responsável pela equipe
@@ -1060,7 +1078,7 @@ Instituição
   histórico; orientador não responsável é recusado.
 - **Rastreio:** M-P2; M-P9; A-P4.
 
-#### RF-ART-003 — Avaliar individualmente cada integrante
+##### RF-ART-003 — Avaliar individualmente cada integrante
 
 - **Descrição:** permite ao orientador responsável atribuir nota individual a cada integrante da
   equipe, base do acompanhamento de aprovação prestado à coordenação.
@@ -1089,7 +1107,7 @@ Instituição
   registradas; orientador não responsável é recusado.
 - **Rastreio:** M-P9.
 
-#### RF-ART-004 — Registrar publicação externa do artigo
+##### RF-ART-004 — Registrar publicação externa do artigo
 
 - **Descrição:** permite registrar que o artigo foi publicado em evento científico ou periódico
   externo, informando veículo, data e endereço, para que a produção não dependa de aviso informal do
@@ -1105,7 +1123,7 @@ Instituição
   - E2. Artigo fora dos vínculos do ator → `RESOURCE_NOT_FOUND`.
 - **Regras de negócio:**
   - RN1. O registro é manual e descritivo. Nesta versão o sistema **não** mantém catálogo de eventos
-    e periódicos externos nem verifica prazos de submissão — ver §10, item 3.
+    e periódicos externos nem verifica prazos de submissão — ver §3, item 3.
   - RN2. Publicação em evento interno do sistema não constitui publicação externa e não é contada
     como tal.
   - RN3. O registro alimenta a consolidação de publicações do relatório de produção do curso
@@ -1122,7 +1140,7 @@ Instituição
 
 ---
 
-### 7.8 TPL — Template
+#### 2.1.8 TPL — Template
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -1131,7 +1149,7 @@ Instituição
 
 ---
 
-#### RF-TPL-001 — Manter template de artigo
+##### RF-TPL-001 — Manter template de artigo
 
 - **Descrição:** permite criar, consultar, alterar e desativar um template de artigo — documento
   inicial com estrutura de seções e cabeçalhos já redigidos e formatados — para servir de ponto de
@@ -1170,7 +1188,7 @@ Instituição
   restringi-lo a outro; alterar o template não altera o artigo de evento já criado.
 - **Rastreio:** M-P5.
 
-#### RF-TPL-002 — Selecionar o template do evento
+##### RF-TPL-002 — Selecionar o template do evento
 
 - **Descrição:** permite ao criador do evento escolher, no momento da criação, o template que servirá
   de ponto de partida aos artigos das suas equipes, ou optar por documento em branco.
@@ -1201,7 +1219,7 @@ Instituição
 
 ---
 
-### 7.9 EDT — Edição do artigo
+#### 2.1.9 EDT — Edição do artigo
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -1216,16 +1234,16 @@ Instituição
 
 ---
 
-#### RF-EDT-001 — Editar o texto do artigo
+##### RF-EDT-001 — Editar o texto do artigo
 
 - **Descrição:** permite ao integrante da equipe redigir e formatar o artigo dentro do sistema,
-  dispensando editor de texto externo. As capacidades exigidas do editor estão em §7.9.1.
+  dispensando editor de texto externo. As capacidades exigidas do editor estão em §2.1.9.1.
 - **Ator:** Aluno integrante da equipe
 - **Pré-condições:** artigo em `STARTED` ou `IN_PROGRESS`; ator integrante da equipe.
 - **Fluxo principal:**
   1. O ator abre o artigo da sua equipe.
   2. O sistema apresenta o editor com o conteúdo corrente.
-  3. O ator redige e formata, conforme §7.9.1.
+  3. O ator redige e formata, conforme §2.1.9.1.
   4. O sistema preserva as alterações continuamente, sem ação explícita de salvar.
 - **Fluxos alternativos e de exceção:**
   - E1. Artigo em `IN_REVIEW` → `ARTICLE_LOCKED_FOR_REVIEW`; o editor abre em modo de leitura.
@@ -1255,7 +1273,7 @@ Instituição
   alterar o texto.
 - **Rastreio:** M-P4; A-P5.
 
-##### 7.9.1 Capacidades exigidas do editor
+###### 2.1.9.1 Capacidades exigidas do editor
 
 O editor DEVE cobrir integralmente o que a produção de um artigo acadêmico exige. As capacidades
 abaixo são requisito de `RF-EDT-001`.
@@ -1270,7 +1288,7 @@ abaixo são requisito de `RF-EDT-001`.
 | Tabelas | Inserir e redimensionar; inserir e excluir linha e coluna; mesclar e dividir células; repetir linha de cabeçalho entre páginas; bordas, sombreamento e estilos |
 | Objetos | Imagem com posicionamento e quebra de texto; legenda numerada automaticamente; indicação de fonte da figura ou tabela; equações |
 | Referências no texto | Sumário automático a partir dos títulos; listas de figuras, tabelas, quadros e abreviaturas; notas de rodapé e de fim; referência cruzada a figura, tabela e seção |
-| Revisão | Comentário ancorado a trecho, com resposta e resolução (§7.10); comparação entre versões (`RF-REV-010`); histórico com restauração (`RF-EDT-008`); ortografia e gramática; contagem de palavras, caracteres e páginas; restrição de edição por região |
+| Revisão | Comentário ancorado a trecho, com resposta e resolução (§2.1.10); comparação entre versões (`RF-REV-010`); histórico com restauração (`RF-EDT-008`); ortografia e gramática; contagem de palavras, caracteres e páginas; restrição de edição por região |
 | Colaboração | Edição simultânea com cursores visíveis (`RF-EDT-002`); presença dos demais integrantes; menção a participante |
 | Navegação | Painel de navegação por títulos; localizar e substituir; desfazer e refazer; colar mantendo ou removendo formatação; pincel de formatação; atalhos de teclado; autocorreção ao digitar; zoom, modo de leitura e régua |
 | Entrada e saída | Importar `.docx` (`RF-EDT-006`); exportar `.docx` e PDF (`RF-EDT-007`); imprimir; metadados do documento |
@@ -1280,7 +1298,7 @@ customizado, comparação de três ou mais documentos simultâneos, assinatura d
 gráficos gerados no editor, formas e caixas de texto, dicionário de sinônimos, hifenização
 automática.
 
-#### RF-EDT-002 — Editar simultaneamente com os demais integrantes
+##### RF-EDT-002 — Editar simultaneamente com os demais integrantes
 
 - **Descrição:** permite que mais de um integrante da equipe edite o mesmo artigo ao mesmo tempo,
   cada um vendo o que os demais escrevem e onde estão trabalhando.
@@ -1305,12 +1323,12 @@ automática.
 - **Permissões geradas:** `ARTICLE:EDIT` — a mesma de `RF-EDT-001`
 - **Escopo de titularidade:** restrito ao artigo da equipe do ator.
 - **Prioridade:** E (proposta) — declarada indispensável à primeira versão.
-- **Origem:** `DER` — definição de produto. Não há evidência de elicitação; ver §10, item 11.
+- **Origem:** `DER` — definição de produto. Não há evidência de elicitação; ver §3, item 11.
 - **Critério de aceitação:** dois alunos digitam em parágrafos distintos ao mesmo tempo e cada um vê
   o texto do outro surgir; digitam no mesmo parágrafo e nenhum dos dois perde texto.
-- **Rastreio:** §10, item 11.
+- **Rastreio:** §3, item 11.
 
-#### RF-EDT-003 — Manter as referências bibliográficas do artigo
+##### RF-EDT-003 — Manter as referências bibliográficas do artigo
 
 - **Descrição:** permite à equipe registrar as referências do artigo como dado estruturado — tipo,
   autores, título, ano, veículo, edição, local, editora, páginas, DOI e URL —, de modo que o sistema
@@ -1346,7 +1364,7 @@ automática.
   na posição correta da ordenação; remover referência citada é recusado.
 - **Rastreio:** A-P5.
 
-#### RF-EDT-004 — Citar referência no texto
+##### RF-EDT-004 — Citar referência no texto
 
 - **Descrição:** permite inserir no corpo do texto a citação de uma referência registrada, mantendo o
   vínculo entre a citação e o registro.
@@ -1370,7 +1388,7 @@ automática.
   sem intervenção do autor.
 - **Rastreio:** A-P5.
 
-#### RF-EDT-005 — Aplicar a formatação da norma
+##### RF-EDT-005 — Aplicar a formatação da norma
 
 - **Descrição:** permite aplicar, por ação explícita, a formatação da norma vigente no evento —
   margens, fonte, entrelinhas, recuos, alinhamento, títulos, citações longas, legendas e paginação —
@@ -1392,7 +1410,7 @@ automática.
     digitação.
   - RN4. A verificação permanente de conformidade é `RF-IAA-002`. Este requisito corrige; aquele
     aponta.
-  - RN5. Outras normas são expansão prevista — §10, item 14.
+  - RN5. Outras normas são expansão prevista — §3, item 14.
 - **Permissões geradas:** `ARTICLE:FORMAT`
 - **Escopo de titularidade:** restrito ao artigo da equipe do ator.
 - **Prioridade:** E (proposta)
@@ -1402,7 +1420,7 @@ automática.
   com um parágrafo selecionado, só ele é alterado.
 - **Rastreio:** A-P5; M-P5.
 
-#### RF-EDT-006 — Importar documento externo para o artigo
+##### RF-EDT-006 — Importar documento externo para o artigo
 
 - **Descrição:** permite carregar um documento `.docx` existente como conteúdo do artigo, para a
   equipe que começou a escrever fora do sistema.
@@ -1432,7 +1450,7 @@ automática.
   três; o que não converteu é listado ao autor.
 - **Rastreio:** M-P4.
 
-#### RF-EDT-007 — Exportar o artigo
+##### RF-EDT-007 — Exportar o artigo
 
 - **Descrição:** permite obter o artigo como `.docx` ou PDF, formatado pela norma, para submissão a
   congresso ou periódico e para arquivo pessoal.
@@ -1456,7 +1474,7 @@ automática.
   lista de referências conforme a norma.
 - **Rastreio:** M-P5; M-P9.
 
-#### RF-EDT-008 — Consultar o histórico de versões do artigo
+##### RF-EDT-008 — Consultar o histórico de versões do artigo
 
 - **Descrição:** permite consultar a sucessão de estados do artigo, ver quem escreveu cada trecho e
   restaurar um estado anterior.
@@ -1483,11 +1501,11 @@ automática.
   (`RF-EDT-001` RN3) e da edição simultânea (`RF-EDT-002`).
 - **Critério de aceitação:** estado anterior à entrega é recuperável; a entrega permanece no
   histórico após a restauração.
-- **Rastreio:** §10, item 11.
+- **Rastreio:** §3, item 11.
 
 ---
 
-### 7.10 REV — Ciclo de correção
+#### 2.1.10 REV — Ciclo de correção
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -1505,7 +1523,7 @@ automática.
 
 ---
 
-#### RF-REV-001 — Entregar a versão da etapa
+##### RF-REV-001 — Entregar a versão da etapa
 
 - **Descrição:** permite a qualquer integrante marcar o artigo como entregue na etapa corrente, o que
   congela o texto e o submete à correção do orientador responsável.
@@ -1526,7 +1544,7 @@ automática.
   - RN1. Qualquer integrante entrega, e o sistema registra quem entregou. Não existe responsável pela
     equipe nesta versão.
   - RN2. A entrega congela o artigo: durante `IN_REVIEW` a equipe não altera o texto. A discussão
-    (§7.11) permanece aberta (RE-12).
+    (§2.1.11) permanece aberta (RE-12).
   - RN3. A versão entregue é imutável e é a unidade sobre a qual se ancoram os apontamentos
     (`RF-REV-004`) e as comparações (`RF-REV-010`).
   - RN4. A entrega vale para a etapa corrente do cronograma do evento (`RF-EVT-002`).
@@ -1539,7 +1557,7 @@ automática.
   orientador recebe o aviso; o conteúdo entregue permanece idêntico ao do instante da entrega.
 - **Rastreio:** M-P1; M-P2; A-P1; A-P3.
 
-#### RF-REV-002 — Desfazer a entrega
+##### RF-REV-002 — Desfazer a entrega
 
 - **Descrição:** permite à equipe reverter a entrega enquanto o prazo da etapa não venceu e o
   orientador não iniciou a correção, devolvendo o artigo à edição.
@@ -1564,9 +1582,9 @@ automática.
   impedida de trabalhar até a devolução.
 - **Critério de aceitação:** entrega feita dois dias antes do prazo é desfeita e o artigo volta a ser
   editável; após o primeiro apontamento, o desfazimento é recusado.
-- **Rastreio:** §10, item 11.
+- **Rastreio:** §3, item 11.
 
-#### RF-REV-003 — Encerrar a entrega no vencimento do prazo
+##### RF-REV-003 — Encerrar a entrega no vencimento do prazo
 
 - **Descrição:** no vencimento do prazo da etapa, o sistema entrega automaticamente o estado corrente
   do artigo das equipes que não entregaram, e assinala a omissão.
@@ -1584,7 +1602,7 @@ automática.
 - **Regras de negócio:**
   - RN1. Nenhuma etapa fica sem entrega. O cronograma não trava por omissão de uma equipe.
   - RN2. A entrega automática é distinguível da espontânea e é sinal de acompanhamento da equipe.
-  - RN3. Não existe prorrogação individual de prazo nesta versão — §10, item 15.
+  - RN3. Não existe prorrogação individual de prazo nesta versão — §3, item 15.
 - **Permissões geradas:** nenhuma — ação do sistema, sem ator humano.
 - **Escopo de titularidade:** não se aplica.
 - **Prioridade:** E (proposta)
@@ -1594,7 +1612,7 @@ automática.
   como entrega não espontânea; o orientador vê a distinção.
 - **Rastreio:** M-perfil; A-perfil; A-P3.
 
-#### RF-REV-004 — Registrar apontamento no texto entregue
+##### RF-REV-004 — Registrar apontamento no texto entregue
 
 - **Descrição:** permite ao orientador responsável ancorar um apontamento a um trecho do texto
   entregue, indicando o que deve ser corrigido.
@@ -1624,7 +1642,7 @@ automática.
   de outra equipe do mesmo evento não consegue apontar nesta.
 - **Rastreio:** M-P4.
 
-#### RF-REV-005 — Alterar ou complementar apontamento
+##### RF-REV-005 — Alterar ou complementar apontamento
 
 - **Descrição:** permite ao orientador editar o texto de um apontamento seu, inclusive depois da
   devolução, para esclarecer, reforçar ou acrescentar exigência.
@@ -1651,7 +1669,7 @@ automática.
   o texto original continua consultável.
 - **Rastreio:** M-P4.
 
-#### RF-REV-006 — Devolver o artigo à equipe
+##### RF-REV-006 — Devolver o artigo à equipe
 
 - **Descrição:** permite ao orientador encerrar a correção da etapa em ato único, publicando à equipe
   todos os apontamentos e devolvendo o artigo à edição.
@@ -1683,7 +1701,7 @@ automática.
   apontamentos e volta a poder editar; apontamento não encerrado continua listado na etapa seguinte.
 - **Rastreio:** M-P2; M-P4; A-P3.
 
-#### RF-REV-007 — Marcar apontamento como corrigido
+##### RF-REV-007 — Marcar apontamento como corrigido
 
 - **Descrição:** permite ao integrante da equipe declarar que atendeu a um apontamento, submetendo-o
   à validação do orientador.
@@ -1713,7 +1731,7 @@ automática.
   seguinte; o aluno consegue desmarcá-lo antes da entrega.
 - **Rastreio:** M-P4; A-P3.
 
-#### RF-REV-008 — Validar, reabrir ou dispensar apontamento
+##### RF-REV-008 — Validar, reabrir ou dispensar apontamento
 
 - **Descrição:** permite ao orientador, durante a correção de uma etapa, encerrar cada apontamento
   pendente das etapas anteriores — validando a correção, reabrindo-a por insuficiência ou
@@ -1746,7 +1764,7 @@ automática.
   não reaparece e fica registrado como dispensado, com autor e data.
 - **Rastreio:** M-P4; A-P3.
 
-#### RF-REV-009 — Consultar o apontamento na origem e no estado atual
+##### RF-REV-009 — Consultar o apontamento na origem e no estado atual
 
 - **Descrição:** permite ver, ao abrir um apontamento, o trecho tal como estava quando ele foi feito e
   o trecho tal como está agora, confrontados.
@@ -1775,7 +1793,7 @@ automática.
   texto de origem e o texto atual; fechado o apontamento, nenhuma marcação permanece no documento.
 - **Rastreio:** M-P4.
 
-#### RF-REV-010 — Comparar a versão entregue com a anterior
+##### RF-REV-010 — Comparar a versão entregue com a anterior
 
 - **Descrição:** permite ver, lado a lado, a versão entregue na etapa e a entregue na etapa anterior,
   com as diferenças assinaladas.
@@ -1802,7 +1820,7 @@ automática.
   colunas, com as palavras alteradas destacadas.
 - **Rastreio:** M-perfil; A-perfil; M-P4.
 
-#### RF-REV-011 — Concluir o artigo
+##### RF-REV-011 — Concluir o artigo
 
 - **Descrição:** permite ao orientador declarar o artigo concluído, encerrando o ciclo de correção e
   habilitando a avaliação.
@@ -1834,7 +1852,7 @@ automática.
 
 ---
 
-### 7.11 DSC — Discussão e notificações
+#### 2.1.11 DSC — Discussão e notificações
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -1847,7 +1865,7 @@ automática.
 
 ---
 
-#### RF-DSC-001 — Publicar mensagem na discussão da equipe
+##### RF-DSC-001 — Publicar mensagem na discussão da equipe
 
 - **Descrição:** permite aos integrantes da equipe e ao seu orientador responsável trocarem mensagens
   em uma discussão contínua vinculada ao artigo.
@@ -1869,17 +1887,17 @@ automática.
   - RN3. A discussão permanece aberta em todos os estados do artigo, inclusive durante `IN_REVIEW`
     (RE-12). É o canal do orientador fora do ciclo de apontamentos.
   - RN4. Toda mensagem é visível a todos os participantes. Não existe mensagem privada entre
-    professores nesta versão — §10, item 13.
+    professores nesta versão — §3, item 13.
   - RN5. O autor pode excluir a própria mensagem; o registro de que houve exclusão permanece.
 - **Permissões geradas:** `MESSAGE:CREATE`, `MESSAGE:READ`, `MESSAGE:DELETE`
 - **Escopo de titularidade:** restrito à discussão da equipe a que o ator está vinculado.
 - **Prioridade:** E (proposta)
-- **Origem:** `DER` — definição de produto; ver §10, item 11.
+- **Origem:** `DER` — definição de produto; ver §3, item 11.
 - **Critério de aceitação:** aluno de outra equipe do mesmo evento não alcança a discussão; o
   orientador responsável publica e a equipe recebe.
-- **Rastreio:** §10, item 11.
+- **Rastreio:** §3, item 11.
 
-#### RF-DSC-002 — Responder a mensagem da discussão
+##### RF-DSC-002 — Responder a mensagem da discussão
 
 - **Descrição:** permite responder a uma mensagem específica da discussão, mantendo a resposta
   agrupada sob a mensagem que a originou.
@@ -1902,9 +1920,9 @@ automática.
 - **Origem:** `DER` — definição de produto.
 - **Critério de aceitação:** responder a uma resposta agrupa a nova mensagem sob a mesma raiz, sem
   criar terceiro nível.
-- **Rastreio:** §10, item 11.
+- **Rastreio:** §3, item 11.
 
-#### RF-DSC-003 — Responder a apontamento
+##### RF-DSC-003 — Responder a apontamento
 
 - **Descrição:** permite ao integrante responder a um apontamento; a resposta é publicada na discussão
   da equipe, com referência ao apontamento que a originou.
@@ -1929,9 +1947,9 @@ automática.
 - **Origem:** `DER` — definição de produto.
 - **Critério de aceitação:** a resposta aparece na discussão como mensagem comum, com o apontamento
   referenciado e navegável; o estado do apontamento permanece inalterado.
-- **Rastreio:** §10, item 11.
+- **Rastreio:** §3, item 11.
 
-#### RF-DSC-004 — Acompanhar a discussão em tempo real
+##### RF-DSC-004 — Acompanhar a discussão em tempo real
 
 - **Descrição:** permite que a mensagem publicada por um participante apareça aos demais que estejam
   com a discussão aberta, sem que precisem recarregar a página.
@@ -1952,9 +1970,9 @@ automática.
 - **Origem:** `DER` — definição de produto.
 - **Critério de aceitação:** dois participantes com a discussão aberta veem a mensagem do outro
   aparecer sem recarregar; após queda de conexão, nada se perde.
-- **Rastreio:** §10, item 11.
+- **Rastreio:** §3, item 11.
 
-#### RF-DSC-005 — Receber notificação
+##### RF-DSC-005 — Receber notificação
 
 - **Descrição:** permite que o usuário seja avisado dos fatos que exigem ação ou atenção sua, na
   interface e, quando ele assim configurar, por e-mail.
@@ -1986,9 +2004,9 @@ automática.
   ação da outra parte.
 - **Critério de aceitação:** quem entregou não recebe a notificação da própria entrega; o orientador
   recebe; o e-mail sai no idioma do destinatário.
-- **Rastreio:** §10, item 11; `ADR-0026` §18.
+- **Rastreio:** §3, item 11; `ADR-0026` §18.
 
-#### RF-DSC-006 — Consultar e marcar notificações
+##### RF-DSC-006 — Consultar e marcar notificações
 
 - **Descrição:** permite ao usuário consultar as suas notificações, distinguir as não lidas e
   marcá-las como lidas.
@@ -2009,11 +2027,11 @@ automática.
 - **Origem:** `DER` — definição de produto.
 - **Critério de aceitação:** notificação de outro usuário não é alcançável; abrir o objeto marca a
   notificação como lida.
-- **Rastreio:** §10, item 11.
+- **Rastreio:** §3, item 11.
 
 ---
 
-### 7.12 IAA — Assistência automatizada
+#### 2.1.12 IAA — Assistência automatizada
 
 Reúne as verificações que o sistema executa sobre o artigo. Destas, **apenas `RF-IAA-001` submete o
 conteúdo do artigo a serviço externo de inteligência artificial** e depende do consentimento de
@@ -2029,7 +2047,7 @@ conteúdo do artigo a serviço externo de inteligência artificial** e depende d
 
 ---
 
-#### RF-IAA-001 — Resumir as alterações da entrega
+##### RF-IAA-001 — Resumir as alterações da entrega
 
 - **Descrição:** apresenta ao orientador, no início da correção de uma etapa, um resumo do que mudou
   desde a entrega anterior, indicando os apontamentos pendentes cujo trecho não sofreu alteração e
@@ -2064,7 +2082,7 @@ conteúdo do artigo a serviço externo de inteligência artificial** e depende d
   de não atendidos; com o serviço fora do ar, o orientador ainda corrige e devolve normalmente.
 - **Rastreio:** M-perfil; A-perfil; M-P4; A-P3.
 
-#### RF-IAA-002 — Verificar a conformidade do artigo à norma
+##### RF-IAA-002 — Verificar a conformidade do artigo à norma
 
 - **Descrição:** permite verificar em que o artigo diverge da norma vigente — formatação, estrutura e
   referências —, apresentando cada divergência ligada ao ponto do texto em que ocorre.
@@ -2097,7 +2115,7 @@ conteúdo do artigo a serviço externo de inteligência artificial** e depende d
   ponto do texto em que a citação ocorre.
 - **Rastreio:** A-P5; M-P5.
 
-#### RF-IAA-003 — Verificar a similaridade do artigo com o acervo
+##### RF-IAA-003 — Verificar a similaridade do artigo com o acervo
 
 - **Descrição:** permite verificar a similaridade do texto com os artigos já produzidos na
   plataforma, apresentando os trechos coincidentes e a sua origem.
@@ -2112,7 +2130,7 @@ conteúdo do artigo a serviço externo de inteligência artificial** e depende d
   - E1. Acervo vazio ou insuficiente → o sistema informa e nada afirma.
 - **Regras de negócio:**
   - RN1. O acervo desta versão é **interno**: os artigos já produzidos na própria plataforma. Serviço
-    externo de detecção é expansão prevista — §10, item 16.
+    externo de detecção é expansão prevista — §3, item 16.
   - RN2. A verificação aponta; não acusa. A decisão sobre o que constitui plágio é do orientador.
   - RN3. Citação corretamente referenciada **NÃO DEVE** ser contada como similaridade indevida.
   - RN4. A equipe pode verificar antes de entregar.
@@ -2127,7 +2145,7 @@ conteúdo do artigo a serviço externo de inteligência artificial** e depende d
   origem ao orientador; citação direta devidamente referenciada não é assinalada.
 - **Rastreio:** A-P5.
 
-#### RF-IAA-004 — Consultar indícios sobre a autoria do texto
+##### RF-IAA-004 — Consultar indícios sobre a autoria do texto
 
 - **Descrição:** apresenta ao orientador os indícios objetivos sobre como o texto foi produzido —
   histórico de edição no sistema e metadados do documento importado —, para subsidiar a conversa com
@@ -2161,7 +2179,7 @@ conteúdo do artigo a serviço externo de inteligência artificial** e depende d
   com data e autor; o sistema em nenhum ponto afirma que o texto foi gerado por IA.
 - **Rastreio:** A-P5.
 
-#### RF-IAA-005 — Consentir com o uso de inteligência artificial
+##### RF-IAA-005 — Consentir com o uso de inteligência artificial
 
 - **Descrição:** permite ao administrador institucional registrar o consentimento da instituição com
   o processamento do conteúdo dos artigos por serviço externo de inteligência artificial, e revogá-lo.
@@ -2187,11 +2205,11 @@ conteúdo do artigo a serviço externo de inteligência artificial** e depende d
   não da equipe nem do orientador.
 - **Critério de aceitação:** sem consentimento, o orientador corrige e devolve normalmente e o resumo
   não é oferecido; revogado o consentimento, o resumo deixa de ser gerado a partir daquele instante.
-- **Rastreio:** §10, item 12.
+- **Rastreio:** §3, item 12.
 
 ---
 
-### 7.13 ACP — Acompanhamento e relatórios
+#### 2.1.13 ACP — Acompanhamento e relatórios
 
 Reúne o que se observa **sobre** o ciclo, sem interferir nele. Nenhum requisito desta categoria
 altera o artigo, o apontamento ou a nota: todos apresentam o que já foi registrado pelas categorias
@@ -2208,7 +2226,7 @@ anteriores.
 
 ---
 
-#### RF-ACP-001 — Acompanhar as equipes sob orientação
+##### RF-ACP-001 — Acompanhar as equipes sob orientação
 
 - **Descrição:** apresenta ao orientador, em uma única tela, a situação de todas as equipes de que é
   orientador responsável, de modo que ele perceba quem está parado ou atrasado sem precisar abrir
@@ -2247,7 +2265,7 @@ anteriores.
   do mesmo evento não aparece na lista.
 - **Rastreio:** M-P3; M-perfil; A-perfil.
 
-#### RF-ACP-002 — Acompanhar os eventos e as equipes do curso
+##### RF-ACP-002 — Acompanhar os eventos e as equipes do curso
 
 - **Descrição:** apresenta ao coordenador a situação dos eventos do seu curso e das equipes que
   participam deles, com o andamento agregado por evento.
@@ -2273,12 +2291,12 @@ anteriores.
 - **Escopo de titularidade:** restrito aos eventos e equipes do curso que o ator coordena.
 - **Prioridade:** I (proposta)
 - **Origem:** `DER` — deriva de `RF-CUR-002` RN2, que identifica o coordenador como destinatário do
-  acompanhamento. O coordenador não foi entrevistado — §10, item 5.
+  acompanhamento. O coordenador não foi entrevistado — §3, item 5.
 - **Critério de aceitação:** coordenador de um curso não alcança evento de outro curso da mesma
   instituição; abrir um evento seu lista as suas equipes com o mesmo detalhe do painel do orientador.
-- **Rastreio:** M-P9; §10, item 5.
+- **Rastreio:** M-P9; §3, item 5.
 
-#### RF-ACP-003 — Sinalizar equipe parada ou em risco
+##### RF-ACP-003 — Sinalizar equipe parada ou em risco
 
 - **Descrição:** identifica automaticamente as equipes cuja situação exige atenção e avisa o
   orientador responsável, sem depender de que ele vá procurar.
@@ -2315,7 +2333,7 @@ anteriores.
   recebe a notificação uma única vez; retomada a edição, o sinal cessa sem intervenção.
 - **Rastreio:** M-P3; M-perfil; A-perfil.
 
-#### RF-ACP-004 — Consultar a contribuição de cada integrante
+##### RF-ACP-004 — Consultar a contribuição de cada integrante
 
 - **Descrição:** apresenta ao orientador a participação de cada integrante na produção do artigo,
   para subsidiar a avaliação individual.
@@ -2348,7 +2366,7 @@ anteriores.
   quadro; o quadro não é alcançável por nenhum aluno.
 - **Rastreio:** RE-09; M-P3; A-P3.
 
-#### RF-ACP-005 — Gerar o relatório de produção do curso
+##### RF-ACP-005 — Gerar o relatório de produção do curso
 
 - **Descrição:** gera, para um curso e um período, o relatório consolidado da produção acadêmica, a
   ser prestado à coordenação.
@@ -2388,9 +2406,9 @@ anteriores.
   pesquisa, hoje consolidado manualmente a cada semestre.
 - **Critério de aceitação:** para um curso com dois eventos no período, o relatório responde às seis
   perguntas da RN1; período sem produção gera relatório vazio, e não erro.
-- **Rastreio:** M-P9; §10, item 5.
+- **Rastreio:** M-P9; §3, item 5.
 
-#### RF-ACP-006 — Exportar o relatório
+##### RF-ACP-006 — Exportar o relatório
 
 - **Descrição:** permite obter o relatório como arquivo, para envio e arquivamento fora do sistema.
 - **Ator:** Coordenador do curso, Administrador Institucional
@@ -2413,7 +2431,7 @@ anteriores.
 
 ---
 
-### 7.14 INT — Internacionalização
+#### 2.1.14 INT — Internacionalização
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -2421,7 +2439,7 @@ anteriores.
 
 ---
 
-#### RF-INT-001 — Selecionar o idioma da interface
+##### RF-INT-001 — Selecionar o idioma da interface
 
 - **Descrição:** permite ao usuário escolher o idioma da interface, com data, número e fuso
   apresentados conforme o idioma escolhido.
@@ -2448,11 +2466,44 @@ anteriores.
   (`PAD-REQ-004`).
 - **Critério de aceitação:** a preferência persiste entre sessões; chave sem tradução recai no idioma
   padrão sem erro visível.
-- **Rastreio:** §10, item 9; `ADR-0026` §3, §11, §25–§27; `PAD-REQ-008`; `ADR-0025` §20.
+- **Rastreio:** §3, item 9; `ADR-0026` §3, §11, §25–§27; `PAD-REQ-008`; `ADR-0025` §20.
 
 ---
 
-## 8. Catálogo de permissões
+### 2.2 Requisitos Não Funcionais
+
+**Não existe requisito não funcional nesta URS, e a ausência é deliberada.**
+
+Um requisito só entra nesta URS se tiver origem em parte interessada (1. e `PAD-REQ-004`). Nenhuma
+das entrevistadas declarou exigência de desempenho, disponibilidade, segurança ou tecnologia: tudo o
+que ocuparia esta seção é decisão da equipe, e decisão da equipe registrada como requisito do
+usuário é falseamento de origem.
+
+Esses itens existem, são normativos e são verificados em revisão de código — apenas moram em
+[`Padroes/Padroes-de-Engenharia.md`](../Padroes/Padroes-de-Engenharia.md), no formato
+`PAD-<CATEGORIA>-<NNN>`, cada um rastreado até o ADR que o originou:
+
+| Categoria | Domínio | Itens |
+| :--- | :--- | :--: |
+| `MOD` | Modularidade e manutenibilidade | 18 |
+| `EVO` | Evolutividade e capacidade de extração | 12 |
+| `ESC` | Escalabilidade e desempenho | 17 |
+| `CON` | Confiabilidade e integridade | 22 |
+| `OBS` | Observabilidade | 13 |
+| `SEG` | Segurança | 25 |
+| `VER` | Verificação e qualidade | 12 |
+| `REQ` | Especificação de requisitos | 8 |
+| `NOM` | Nomeação e internacionalização | 15 |
+| `TEC` | Restrição tecnológica imposta | 16 |
+| | **Total** | **158** |
+
+Se alguma parte interessada vier a declarar exigência não funcional — prazo de resposta, janela de
+indisponibilidade tolerada, exigência de auditoria —, ela passa a ter origem `ELI` ou `STK` e entra
+aqui, com quadro próprio, sem sair dos Padrões.
+
+---
+
+### 2.3 Catálogo de permissões
 
 Formato `RECURSO:ACAO`, recurso no singular, tudo em maiúsculas, sem curinga (`PAD-REQ-007`,
 `ADR-0014` §2, §3). Toda permissão possui requisito funcional de origem.
@@ -2558,7 +2609,7 @@ Formato `RECURSO:ACAO`, recurso no singular, tudo em maiúsculas, sem curinga (`
 | `REPORT:READ` | RF-ACP-005 |
 | `REPORT:EXPORT` | RF-ACP-006 |
 
-### 8.1 Composição dos papéis padrão
+#### 2.3.1 Composição dos papéis padrão
 
 Os papéis são criados pela carga inicial com a composição abaixo. O papel autoriza a ação; o alcance
 sobre registros específicos é resolvido pela titularidade declarada em cada requisito.
@@ -2576,7 +2627,7 @@ efetivas são sempre enumeradas, sem curinga (`ADR-0014` §3).
 
 ---
 
-## 9. Catálogo de códigos de resposta
+### 2.4 Catálogo de códigos de resposta
 
 Em maiúsculas, sem acento, independentes de idioma (`PAD-REQ-008`, `ADR-0025` §20). A tradução para
 exibição ocorre no cliente, a partir do código.
@@ -2622,7 +2673,7 @@ exibição ocorre no cliente, a partir do código.
 
 ---
 
-## 10. Pendências
+## 3. Pendências
 
 | # | Pendência | Efeito |
 | :--- | :--- | :--- |
@@ -2647,11 +2698,48 @@ exibição ocorre no cliente, a partir do código.
 
 ---
 
-## 11. Histórico de revisões
+## 4. Controle de versão
 
-| Versão | Data | Alteração |
-| :--- | :--- | :--- |
-| 0.0 | 2026-08-13 | Documento zerado. Todo o conteúdo das versões 0.1 a 0.9.1 era decisão da própria equipe, não requisito de parte interessada, e foi movido para `Padroes/Padroes-de-Engenharia.md`. A URS recomeça vazia, a ser elaborada a partir da elicitação. O histórico anterior está no versionamento do repositório. |
-| 0.3 | 2026-08-26 | Registrada a fatia de acompanhamento e relatórios: categoria `ACP`, 6 requisitos funcionais, 6 permissões e 1 código de resposta. `INT` passa de §7.13 a §7.14. Com ela o escopo funcional se fecha: 70 requisitos em 14 categorias. `RF-ACP-003` e `RF-ACP-005` fixam as condições a detectar e as perguntas a responder, deixando limiares e composição à implementação. A pendência 5 passa a registrar a decisão de não entrevistar o coordenador, e a visão do aluno é separada nela como item 5.1. A pendência 10 deixa de designar a fatia faltante e passa a registrar o que foi deixado à implementação. |
-| 0.2 | 2026-08-25 | Registrada a fatia de produção e correção do artigo: 5 categorias novas — `TPL`, `EDT`, `REV`, `DSC`, `IAA` —, 32 requisitos funcionais, 8 regras estruturais (RE-10 a RE-17), 41 permissões e 15 códigos de resposta. O modelo de domínio passa a incluir Template, Referência, Citação, Discussão, Mensagem, Entrega e Apontamento. `INT` passa de §7.8 a §7.13. Pendências 11 a 17 acrescentadas; a pendência 10 passa a designar a fatia de acompanhamento e relatórios. |
-| 0.1 | 2026-08-19 | Registrada a fatia estrutural: 8 categorias, 32 requisitos funcionais, catálogo de 51 permissões e catálogo de 20 códigos de resposta, com rastreabilidade às entrevistas de Marciele e Angélica. Os catálogos de permissões e de códigos passam a existir, atendendo às pendências correspondentes de `Padroes-de-Engenharia.md` §6 no que se refere a esta fatia. Prioridades registradas como proposta, pendentes de atribuição por parte interessada. |
+| Versão | Data | Justificativa | Responsável |
+| :--- | :--- | :--- | :--- |
+| 0.4 | 2026-08-26 | Documento adequado ao padrão institucional de especificação de requisitos: capa, controle de versão, quadro por requisito e termo de aceite. O conteúdo normativo não mudou — nenhum requisito foi acrescentado, removido ou reescrito. A numeração das seções passa a seguir o padrão: 1 Objetivo do Documento, 2 Lista de Requisitos, 3 Pendências, 4 Controle de versão, 5 Aceite; o que era seção de primeiro nível passa a subseção de 1 e de 2. Acrescentada a seção 2.2, que registra por que não há requisito não funcional nesta URS. | Vitor Fernandes |
+| 0.3 | 2026-08-26 | Registrada a fatia de acompanhamento e relatórios: categoria `ACP`, 6 requisitos funcionais, 6 permissões e 1 código de resposta. `INT` passa de §7.13 a §7.14. Com ela o escopo funcional se fecha: 70 requisitos em 14 categorias. `RF-ACP-003` e `RF-ACP-005` fixam as condições a detectar e as perguntas a responder, deixando limiares e composição à implementação. A pendência 5 passa a registrar a decisão de não entrevistar o coordenador, e a visão do aluno é separada nela como item 5.1. A pendência 10 deixa de designar a fatia faltante e passa a registrar o que foi deixado à implementação. | Vitor Fernandes |
+| 0.2 | 2026-08-25 | Registrada a fatia de produção e correção do artigo: 5 categorias novas — `TPL`, `EDT`, `REV`, `DSC`, `IAA` —, 32 requisitos funcionais, 8 regras estruturais (RE-10 a RE-17), 41 permissões e 15 códigos de resposta. O modelo de domínio passa a incluir Template, Referência, Citação, Discussão, Mensagem, Entrega e Apontamento. `INT` passa de §7.8 a §7.13. Pendências 11 a 17 acrescentadas; a pendência 10 passa a designar a fatia de acompanhamento e relatórios. | Vitor Fernandes |
+| 0.1 | 2026-08-19 | Registrada a fatia estrutural: 8 categorias, 32 requisitos funcionais, catálogo de 51 permissões e catálogo de 20 códigos de resposta, com rastreabilidade às entrevistas de Marciele e Angélica. Os catálogos de permissões e de códigos passam a existir, atendendo às pendências correspondentes de `Padroes-de-Engenharia.md` §6 no que se refere a esta fatia. Prioridades registradas como proposta, pendentes de atribuição por parte interessada. | Vitor Fernandes |
+| 0.0 | 2026-08-13 | Documento zerado. Todo o conteúdo das versões 0.1 a 0.9.1 era decisão da própria equipe, não requisito de parte interessada, e foi movido para `Padroes/Padroes-de-Engenharia.md`. A URS recomeça vazia, a ser elaborada a partir da elicitação. O histórico anterior está no versionamento do repositório. | Vitor Fernandes |
+
+---
+
+## 5. Aceite
+
+As partes interessadas abaixo declaram que os requisitos especificados neste documento correspondem
+ao que necessitam do sistema.
+
+O aceite é a ratificação de que trata `PAD-REQ-003` e `PAD-REQ-006`: com ele, as prioridades
+registradas em 2.1 deixam de ser proposta da equipe e os requisitos de origem `DER` passam a ser
+considerados acordados. **Enquanto não houver aceite, nenhum requisito desta versão deve ser
+encaminhado à implementação** — ver 3, itens 1, 2 e 11.
+
+
+
+
+
+&nbsp;
+
+&nbsp;
+
+_____________________________________________ Aceito em ____/____/________
+
+Marciele R. Siveres — Orientadora, curso de Administração
+
+
+
+
+
+&nbsp;
+
+&nbsp;
+
+_____________________________________________ Aceito em ____/____/________
+
+Angélica P. S. Meurer — Orientadora, curso de Administração

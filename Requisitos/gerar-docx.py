@@ -18,6 +18,7 @@ Google, sumário estático (o campo TOC do Word chega vazio na importação) e d
 dimensionados para não quebrar linha em A4.
 """
 
+import os
 import re
 import sys
 
@@ -33,10 +34,21 @@ SUBHEADING_COLOR = RGBColor(0x2E, 0x5A, 0x88)
 CODE_COLOR = RGBColor(0xC7, 0x25, 0x4E)
 CODE_FILL = "F7F2F4"
 TABLE_HEADER_FILL = "DEE6F1"
+LABEL_FILL = "EDEFF3"
 CODEBLOCK_FILL = "F5F5F5"
 
 # Courier New existe nativamente no Google Docs; Consolas não, e seria substituída na importação.
 MONO_FONT = "Courier New"
+
+BODY_FONT = "Arial"
+
+# O padrão institucional não usa hierarquia visual de cor; os quadros de requisito e as
+# tabelas carregam a estrutura sozinhos.
+CAPA_CAMPOS = ("Disciplina", "Professor", "Acadêmicos")
+FICHA_CAMPOS = ("Projeto", "Cliente", "Versão", "Data", "Status")
+FIELD_RE = re.compile(r"^\*\*(.+?):\*\*\s*(.*)$")
+RF_TITLE_RE = re.compile(r"^(RF-[A-Z]{3}-\d{3})\s+—\s+(.*)$")
+RF_REF_RE = re.compile(r"RF-[A-Z]{3}-\d{3}")
 
 INLINE_RE = re.compile(r"(\*\*.+?\*\*|`[^`]+`|\[[^\]]+\]\([^)]*\))")
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
@@ -179,7 +191,7 @@ def add_inline(paragraph, text, bold=False, size=None):
 
 def configure_styles(doc):
     normal = doc.styles["Normal"]
-    normal.font.name = "Calibri"
+    normal.font.name = BODY_FONT
     normal.font.size = Pt(10.5)
     normal.paragraph_format.space_after = Pt(6)
     normal.paragraph_format.line_spacing = 1.15
@@ -193,7 +205,7 @@ def configure_styles(doc):
     }
     for name, (size, color, before, after) in spec.items():
         st = doc.styles[name]
-        st.font.name = "Calibri"
+        st.font.name = BODY_FONT
         st.font.size = Pt(size)
         st.font.bold = True
         st.font.color.rgb = color
@@ -206,7 +218,7 @@ def configure_styles(doc):
             st = doc.styles[name]
         except KeyError:
             continue
-        st.font.name = "Calibri"
+        st.font.name = BODY_FONT
         st.font.size = Pt(10.5)
         st.paragraph_format.space_after = Pt(2)
 
@@ -215,10 +227,10 @@ def configure_page(doc):
     for section in doc.sections:
         section.page_width = Cm(21)
         section.page_height = Cm(29.7)
-        section.top_margin = Cm(2.5)
-        section.bottom_margin = Cm(2.5)
-        section.left_margin = Cm(2.5)
-        section.right_margin = Cm(2.5)
+        section.top_margin = Cm(2.54)
+        section.bottom_margin = Cm(2.54)
+        section.left_margin = Cm(2.54)
+        section.right_margin = Cm(2.54)
 
 
 def add_field(paragraph, instruction):
@@ -251,7 +263,7 @@ def add_footer(doc):
 
 def add_toc(doc, headings):
     """Sumário estático: campo TOC do Word chega vazio no Google Docs e parece defeito."""
-    doc.add_heading("Sumário", level=1)
+    doc.add_heading("Índice", level=1)
     for level, text in headings:
         if level > 3:
             continue
@@ -264,6 +276,167 @@ def add_toc(doc, headings):
         if level > 2:
             run.font.color.rgb = RGBColor(0x44, 0x44, 0x44)
     doc.add_page_break()
+
+
+# ----------------------------------------------------------------- capa e quadros
+
+
+def shade(cell, fill):
+    shd = OxmlElement("w:shd")
+    shd.set(qn("w:val"), "clear")
+    shd.set(qn("w:fill"), fill)
+    cell._tc.get_or_add_tcPr().append(shd)
+
+
+def parse_meta(linhas):
+    """Bloco de metadados da capa. Linha continuada pertence ao campo anterior — a
+    detecção não pode depender de todas as linhas começarem em negrito."""
+    meta, atual = {}, None
+    for linha in linhas:
+        m = FIELD_RE.match(linha)
+        if m:
+            atual = m.group(1)
+            meta[atual] = m.group(2)
+        elif atual:
+            meta[atual] += " " + linha.strip()
+        else:
+            return None
+    return meta if len(meta) >= 3 else None
+
+
+def render_capa(doc, meta, logo_path):
+    """Capa no padrão institucional: marca, identificação da disciplina e ficha do projeto."""
+    if logo_path and os.path.exists(logo_path):
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.add_run().add_picture(logo_path, width=Cm(7.32))
+
+    for campo in CAPA_CAMPOS:
+        if campo not in meta:
+            continue
+        p = doc.add_paragraph()
+        p.paragraph_format.space_after = Pt(2)
+        add_inline(p, f"**{campo}:** {meta[campo]}")
+
+    for _ in range(4):
+        doc.add_paragraph()
+
+    p = doc.add_paragraph(style="Title")
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    add_inline(p, meta.get("__titulo__", "Especificação de Requisitos"))
+
+    if "Projeto" in meta:
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        add_inline(p, f"**{meta['Projeto']}**", size=Pt(14))
+
+    for _ in range(4):
+        doc.add_paragraph()
+
+    ficha = [(c, meta[c]) for c in FICHA_CAMPOS if c in meta]
+    table = doc.add_table(rows=0, cols=2)
+    table.style = "Table Grid"
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    for rotulo, valor in ficha:
+        cells = table.add_row().cells
+        cells[0].width = Cm(4.5)
+        cells[1].width = Cm(11.4)
+        for idx, (texto, negrito) in enumerate(((f"{rotulo}:", True), (valor, False))):
+            cell = cells[idx]
+            cell.text = ""
+            par = cell.paragraphs[0]
+            par.paragraph_format.space_after = Pt(2)
+            add_inline(par, texto, bold=negrito)
+        shade(cells[0], LABEL_FILL)
+
+    doc.add_page_break()
+
+
+def _fields(items):
+    """Agrupa a lista de um requisito em (rótulo, linhas), na ordem em que aparecem."""
+    campos = []
+    for level, ordered, text in items:
+        m = FIELD_RE.match(text) if level == 0 else None
+        if m:
+            campos.append([m.group(1), ([(0, False, m.group(2))] if m.group(2) else [])])
+        elif campos:
+            campos[-1][1].append((level, ordered, text))
+    return campos
+
+
+def _fill_cell(cell, linhas):
+    contadores = {}
+    primeiro = True
+    for level, ordered, text in linhas:
+        par = cell.paragraphs[0] if primeiro else cell.add_paragraph()
+        primeiro = False
+        par.paragraph_format.space_after = Pt(2)
+        par.paragraph_format.line_spacing = 1.0
+        if level:
+            par.paragraph_format.left_indent = Cm(0.45 * level)
+            if ordered:
+                contadores[level] = contadores.get(level, 0) + 1
+                marcador = f"{contadores[level]}. "
+            else:
+                contadores.pop(level, None)
+                marcador = "• " if level == 1 else "– "
+            par.paragraph_format.first_line_indent = Cm(-0.45)
+            text = marcador + text
+        else:
+            contadores.clear()
+        add_inline(par, text, size=Pt(9.5))
+
+
+def render_requisito(doc, rf_id, nome, items):
+    """Um requisito por quadro, no formato da especificação institucional."""
+    campos = _fields(items)
+    valores = {rotulo: linhas for rotulo, linhas in campos}
+
+    def texto_de(rotulo):
+        return " ".join(t for _, _, t in valores.get(rotulo, []))
+
+    relacionados = sorted(
+        {r for rotulo, linhas in campos for _, _, t in linhas for r in RF_REF_RE.findall(t)}
+        - {rf_id}
+    )
+
+    table = doc.add_table(rows=0, cols=4)
+    table.style = "Table Grid"
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+
+    cabecalho = table.add_row().cells
+    for idx, (texto, largura, rotulo) in enumerate((
+        ("ID:", Cm(2.6), True), (rf_id, Cm(5.0), False),
+        ("Prioridade:", Cm(2.6), True), (texto_de("Prioridade") or "—", Cm(5.7), False),
+    )):
+        cabecalho[idx].width = largura
+        cabecalho[idx].text = ""
+        par = cabecalho[idx].paragraphs[0]
+        par.paragraph_format.space_after = Pt(2)
+        add_inline(par, texto, bold=True, size=Pt(9.5))
+        if rotulo:
+            shade(cabecalho[idx], LABEL_FILL)
+
+    def linha(rotulo, linhas):
+        cells = table.add_row().cells
+        cells[1].merge(cells[3])
+        cells[0].width = Cm(2.6)
+        cells[0].text = ""
+        par = cells[0].paragraphs[0]
+        par.paragraph_format.space_after = Pt(2)
+        add_inline(par, rotulo, bold=True, size=Pt(9.5))
+        shade(cells[0], LABEL_FILL)
+        cells[1].text = ""
+        _fill_cell(cells[1], linhas)
+
+    linha("Requisito:", [(0, False, f"**{nome}**")])
+    for rotulo, linhas in campos:
+        if rotulo == "Prioridade":
+            continue
+        linha(f"{rotulo}:", linhas)
+    linha("Requisitos relacionados:", [(0, False, ", ".join(relacionados) if relacionados else "N/A")])
+
+    doc.add_paragraph()
 
 
 # --------------------------------------------------------------------------- render
@@ -334,40 +507,50 @@ def render_list(doc, items):
         add_inline(p, text)
 
 
-def render(blocks, out_path):
+def render(blocks, out_path, logo_path=None):
     doc = Document()
     configure_styles(doc)
     configure_page(doc)
 
-    doc.core_properties.title = "URS — Especificação de Requisitos do Usuário"
+    doc.core_properties.title = "Especificação de Requisitos"
     doc.core_properties.subject = "VinceArt"
     doc.core_properties.comments = "Gerado a partir de Requisitos/URS.md"
 
-    headings = [payload for kind, payload in blocks if kind == "heading" and payload[0] > 1]
+    headings = [payload for kind, payload in blocks if kind == "heading" and 1 < payload[0] <= 3]
 
-    toc_inserted = False
-    for kind, payload in blocks:
+    meta = {}
+    capa_feita = False
+    i = 0
+    while i < len(blocks):
+        kind, payload = blocks[i]
+        i += 1
+
         if kind == "heading":
             level, text = payload
             if level == 1:
-                p = doc.add_paragraph(style="Title")
-                add_inline(p, text)
-            else:
-                p = doc.add_heading(level=level - 1)
-                add_inline(p, text)
+                meta["__titulo__"] = text
+                continue
+            m = RF_TITLE_RE.match(text) if level >= 4 else None
+            if m and i < len(blocks) and blocks[i][0] == "list":
+                render_requisito(doc, m.group(1), m.group(2), blocks[i][1])
+                i += 1
+                continue
+            p = doc.add_heading(level=min(level - 1, 9))
+            add_inline(p, text)
+
         elif kind == "para":
-            if all(line.startswith("**") for line in payload):
-                for line in payload:
-                    p = doc.add_paragraph()
-                    p.paragraph_format.space_after = Pt(2)
-                    add_inline(p, line)
-                if not toc_inserted:
-                    doc.add_paragraph()
-                    add_toc(doc, headings)
-                    toc_inserted = True
+            campos = None if capa_feita else parse_meta(payload)
+            if campos:
+                meta.update(campos)
+                render_capa(doc, meta, logo_path)
+                add_toc(doc, headings)
+                capa_feita = True
+            elif payload == ["&nbsp;"]:
+                doc.add_paragraph()          # espaçador explícito, para assinaturas
             else:
                 p = doc.add_paragraph()
                 add_inline(p, " ".join(payload))
+
         elif kind == "list":
             render_list(doc, payload)
         elif kind == "table":
@@ -383,7 +566,8 @@ def main():
     src, dst = sys.argv[1], sys.argv[2]
     with open(src, encoding="utf-8") as fh:
         lines = fh.readlines()
-    render(parse_blocks(lines), dst)
+    logo = os.path.join(os.path.dirname(os.path.abspath(src)), "logo-biopark.png")
+    render(parse_blocks(lines), dst, logo)
     print(f"gerado: {dst}")
 
 

@@ -28,6 +28,13 @@ e NÃO DEVE ser editado diretamente.
 A versão publicada de cada documento fica na pasta do projeto no Google Drive, convertida em Google
 Docs para leitura e distribuição às partes interessadas.
 
+O documento publicado segue o **padrão institucional de especificação de requisitos**: capa com a
+marca, índice, controle de versão, um quadro por requisito e termo de aceite. O formato é aplicado
+pelo conversor, não escrito à mão no Markdown — `Requisitos/gerar-docx.py` monta a capa a partir do
+bloco de metadados do início do arquivo e transforma cada requisito em quadro. Os modelos de
+referência da instituição estão versionados na raiz (`Capa Padrão Docs.docx`,
+`Lista de Requisitos - 1º b.doc`) e a marca em `Requisitos/logo-biopark.png`.
+
 | Item | Identificador |
 | :--- | :--- |
 | Pasta do projeto no Drive | `1_0pTI8OCNCmm8zTS3hR0HNFvJylFYd79` |
