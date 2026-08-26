@@ -1,10 +1,10 @@
 # URS — Especificação de Requisitos do Usuário
 
 **Projeto:** VinceArt
-**Versão:** 0.2
-**Status:** Em elaboração — fatias estrutural e de produção do artigo registradas; acompanhamento e
-relatórios pendentes
-**Data:** 2026-08-25
+**Versão:** 0.3
+**Status:** Em elaboração — escopo funcional completo; pendente de ratificação pelas partes
+interessadas
+**Data:** 2026-08-26
 
 ---
 
@@ -33,9 +33,12 @@ Esta versão registra duas fatias:
   equipes e o artigo como entidade.
 - **Produção e correção do artigo** — edição do artigo dentro do sistema, template, norma, entrega
   por etapa, apontamento ancorado, devolução, discussão, notificação e verificações automatizadas.
+- **Acompanhamento e relatórios** — painéis de orientação e de coordenação, sinalização de equipe
+  parada ou em risco, contribuição por integrante e relatório de produção do curso.
 
-**Não está nesta versão**, e será registrado a seguir: o acompanhamento de progresso das equipes e
-os relatórios à coordenação.
+Com esta versão o escopo funcional está coberto. O que resta é ratificação, não elicitação: nenhum
+requisito teve prioridade atribuída por parte interessada e nenhum requisito `DER` foi validado —
+§10, itens 1, 2 e 11.
 
 **Fora do escopo do produto nesta fase**, por decisão registrada em §10: eventos científicos
 externos e periódicos (radar de oportunidades), participação de um usuário em mais de uma
@@ -63,6 +66,7 @@ instituição e matrícula em mais de uma turma.
 | `REV` | Ciclo de correção |
 | `DSC` | Discussão e notificações |
 | `IAA` | Assistência automatizada |
+| `ACP` | Acompanhamento e relatórios |
 | `INT` | Internacionalização |
 
 Os códigos de categoria acompanham a convenção em português já adotada pelos identificadores
@@ -105,7 +109,7 @@ ver §10, item 1.
 | Marciele R. Siveres | Orientadora, Administração, 5 anos, ~35 orientandos simultâneos | Entrevistada |
 | Angélica P. S. Meurer | Orientadora, Administração, 12 anos, 50+ orientandos por semestre | Entrevistada |
 | Aluno orientando | Ator de grande parte dos requisitos | **Não entrevistado** — §10, item 5 |
-| Coordenador de curso | Destinatário dos relatórios | **Não entrevistado** — §10, item 5 |
+| Coordenador de curso | Destinatário dos relatórios | **Não será entrevistado** — decisão registrada em §10, item 5 |
 
 Ambas as entrevistadas pertencem ao curso de Administração. Não há evidência de outras áreas, o que
 limita a generalização das normas exigidas — ver §10, item 6.
@@ -1104,8 +1108,8 @@ Instituição
     e periódicos externos nem verifica prazos de submissão — ver §10, item 3.
   - RN2. Publicação em evento interno do sistema não constitui publicação externa e não é contada
     como tal.
-  - RN3. O registro alimenta a consolidação de publicações a ser especificada com os relatórios à
-    coordenação.
+  - RN3. O registro alimenta a consolidação de publicações do relatório de produção do curso
+    (`RF-ACP-005` RN1).
 - **Permissões geradas:** `PUBLICATION:CREATE`, `PUBLICATION:READ`, `PUBLICATION:UPDATE`,
   `PUBLICATION:DELETE`
 - **Escopo de titularidade:** restrito aos artigos alcançados pelos vínculos do ator.
@@ -2187,7 +2191,229 @@ conteúdo do artigo a serviço externo de inteligência artificial** e depende d
 
 ---
 
-### 7.13 INT — Internacionalização
+### 7.13 ACP — Acompanhamento e relatórios
+
+Reúne o que se observa **sobre** o ciclo, sem interferir nele. Nenhum requisito desta categoria
+altera o artigo, o apontamento ou a nota: todos apresentam o que já foi registrado pelas categorias
+anteriores.
+
+| ID | Nome | Prior. | Origem |
+| :--- | :--- | :--: | :--: |
+| RF-ACP-001 | Acompanhar as equipes sob orientação | E (proposta) | `ELI` |
+| RF-ACP-002 | Acompanhar os eventos e as equipes do curso | I (proposta) | `DER` |
+| RF-ACP-003 | Sinalizar equipe parada ou em risco | E (proposta) | `ELI` |
+| RF-ACP-004 | Consultar a contribuição de cada integrante | I (proposta) | `DER` |
+| RF-ACP-005 | Gerar o relatório de produção do curso | I (proposta) | `ELI` |
+| RF-ACP-006 | Exportar o relatório | D (proposta) | `DER` |
+
+---
+
+#### RF-ACP-001 — Acompanhar as equipes sob orientação
+
+- **Descrição:** apresenta ao orientador, em uma única tela, a situação de todas as equipes de que é
+  orientador responsável, de modo que ele perceba quem está parado ou atrasado sem precisar abrir
+  artigo por artigo.
+- **Ator:** Professor orientador responsável
+- **Pré-condições:** ator designado orientador responsável por ao menos uma equipe.
+- **Fluxo principal:**
+  1. O ator abre o acompanhamento.
+  2. O sistema apresenta, para cada equipe sob a sua responsabilidade: o evento, os integrantes, o
+     estado do artigo, a etapa corrente e o seu prazo, se a etapa foi entregue e se a entrega foi
+     espontânea ou automática, a quantidade de apontamentos pendentes e o tempo decorrido desde a
+     última edição do artigo.
+  3. O sistema destaca as equipes com sinal ativo (`RF-ACP-003`).
+  4. O ator ordena e filtra a lista, e navega dali para o artigo, para a correção ou para a
+     discussão da equipe.
+- **Fluxos alternativos e de exceção:**
+  - E1. Ator sem equipe sob responsabilidade → o sistema apresenta a tela vazia, com a informação de
+    que não há equipes designadas a ele.
+- **Regras de negócio:**
+  - RN1. O acompanhamento alcança apenas as equipes de que o ator é orientador **responsável**, não
+    todas as do evento. A visão das demais permanece a de `RF-ART-001`.
+  - RN2. O acompanhamento apresenta o que já foi registrado. **NÃO DEVE** oferecer ação que altere o
+    artigo, o apontamento ou a nota; ele leva às telas que as executam.
+  - RN3. O tempo desde a última edição conta a partir da última alteração do texto por qualquer
+    integrante (`RF-EDT-001`), não da última mensagem da discussão.
+  - RN4. A composição da tela, os recortes e a apresentação são decisão de implementação, desde que
+    os dados enumerados no fluxo principal estejam presentes.
+- **Permissões geradas:** `PROGRESS:READ`
+- **Escopo de titularidade:** restrito às equipes de que o ator é orientador responsável.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — Marciele relata a percepção tardia de alunos travados ou atrasados. O volume
+  declarado por ambas — cerca de 35 orientandos simultâneos e mais de 50 por semestre — torna
+  inviável a verificação artigo por artigo.
+- **Critério de aceitação:** o orientador identifica, sem abrir nenhum artigo, quais das suas equipes
+  não entregaram a etapa corrente e quais estão sem edição há mais tempo; equipe de outro orientador
+  do mesmo evento não aparece na lista.
+- **Rastreio:** M-P3; M-perfil; A-perfil.
+
+#### RF-ACP-002 — Acompanhar os eventos e as equipes do curso
+
+- **Descrição:** apresenta ao coordenador a situação dos eventos do seu curso e das equipes que
+  participam deles, com o andamento agregado por evento.
+- **Ator:** Coordenador do curso
+- **Pré-condições:** ator designado coordenador de um curso com eventos.
+- **Fluxo principal:**
+  1. O ator abre o acompanhamento do curso.
+  2. O sistema apresenta os eventos do curso e, para cada um, o cronograma, a quantidade de equipes,
+     quantas entregaram a etapa corrente, quantas têm sinal ativo e quantos artigos já foram
+     concluídos.
+  3. O ator abre um evento e vê as suas equipes, com os mesmos dados de `RF-ACP-001`.
+- **Fluxos alternativos e de exceção:**
+  - E1. Curso sem evento no período → o sistema apresenta a tela vazia e informa.
+- **Regras de negócio:**
+  - RN1. O alcance é o **curso** do ator: os eventos de escopo de curso que ele coordena, os de
+    escopo de turma das turmas desse curso e os de escopo institucional que alcancem o seu curso.
+  - RN2. O coordenador vê a situação das equipes, mas **não** participa da discussão nem do ciclo de
+    apontamentos (`RF-DSC-001` RN2).
+  - RN3. Vale para esta tela a RN2 de `RF-ACP-001`: apresenta, não altera.
+  - RN4. A composição e a apresentação são decisão de implementação.
+- **Permissões geradas:** `PROGRESS:READ` — a mesma de `RF-ACP-001`; o alcance é resolvido pela
+  titularidade, conforme `ADR-0014` §12.
+- **Escopo de titularidade:** restrito aos eventos e equipes do curso que o ator coordena.
+- **Prioridade:** I (proposta)
+- **Origem:** `DER` — deriva de `RF-CUR-002` RN2, que identifica o coordenador como destinatário do
+  acompanhamento. O coordenador não foi entrevistado — §10, item 5.
+- **Critério de aceitação:** coordenador de um curso não alcança evento de outro curso da mesma
+  instituição; abrir um evento seu lista as suas equipes com o mesmo detalhe do painel do orientador.
+- **Rastreio:** M-P9; §10, item 5.
+
+#### RF-ACP-003 — Sinalizar equipe parada ou em risco
+
+- **Descrição:** identifica automaticamente as equipes cuja situação exige atenção e avisa o
+  orientador responsável, sem depender de que ele vá procurar.
+- **Ator:** Sistema; Professor orientador responsável como destinatário
+- **Pré-condições:** equipe com artigo em evento em andamento.
+- **Fluxo principal:**
+  1. O sistema avalia continuamente a situação de cada equipe.
+  2. Ao identificar uma condição de risco, o sistema ativa o sinal na equipe.
+  3. O sistema notifica o orientador responsável (`RF-DSC-005`).
+  4. O sinal é apresentado em `RF-ACP-001` e em `RF-ACP-002`.
+  5. Cessada a condição, o sistema desativa o sinal.
+- **Fluxos alternativos e de exceção:**
+  - E1. Condição já sinalizada e ainda ativa → o sistema não notifica de novo.
+- **Regras de negócio:**
+  - RN1. O sistema DEVE detectar, no mínimo: artigo sem edição por período prolongado; entrega
+    automática por vencimento de prazo (`RF-REV-003`) em duas etapas seguidas; apontamentos
+    pendentes acumulados sem atendimento entre etapas; integrante que nunca editou o artigo;
+    proximidade do prazo da etapa com o artigo sem alteração desde a devolução anterior.
+  - RN2. Os limiares de cada condição são decisão de implementação. O que esta URS fixa são as
+    condições a detectar, não os seus valores.
+  - RN3. O sinal é **subsídio**. **NÃO DEVE** alterar o estado do artigo, gerar apontamento, afetar
+    nota nem produzir sanção automática (RE-17).
+  - RN4. O sinal é dirigido ao orientador responsável e ao coordenador do curso. **NÃO DEVE** ser
+    apresentado à equipe: ele é instrumento de intervenção do orientador, não de cobrança
+    automatizada.
+  - RN5. O sinal cessa sozinho quando a condição deixa de valer; não é encerrado manualmente.
+- **Permissões geradas:** `RISK_SIGNAL:READ`
+- **Escopo de titularidade:** restrito às equipes alcançadas pelo vínculo do ator — responsabilidade
+  de orientação ou coordenação do curso.
+- **Prioridade:** E (proposta)
+- **Origem:** `ELI` — é o atendimento direto da percepção tardia relatada por Marciele. O painel de
+  `RF-ACP-001` só ajuda quem foi olhar; o sinal vai até o orientador.
+- **Critério de aceitação:** equipe sem edição pelo período definido tem sinal ativo e o orientador
+  recebe a notificação uma única vez; retomada a edição, o sinal cessa sem intervenção.
+- **Rastreio:** M-P3; M-perfil; A-perfil.
+
+#### RF-ACP-004 — Consultar a contribuição de cada integrante
+
+- **Descrição:** apresenta ao orientador a participação de cada integrante na produção do artigo,
+  para subsidiar a avaliação individual.
+- **Ator:** Professor orientador responsável
+- **Pré-condições:** artigo com histórico de edição; ator orientador responsável pela equipe.
+- **Fluxo principal:**
+  1. O ator abre a contribuição da equipe.
+  2. O sistema apresenta, por integrante, a proporção do texto de sua autoria, as sessões de edição,
+     o atendimento a apontamentos (`RF-REV-007`) e a participação na discussão.
+  3. O ator usa o quadro ao atribuir a nota individual (`RF-ART-003`).
+- **Fluxos alternativos e de exceção:**
+  - E1. Artigo importado de documento externo, sem histórico próprio → o sistema informa que a maior
+    parte do texto não foi produzida na plataforma e nada afirma sobre a divisão do trabalho.
+- **Regras de negócio:**
+  - RN1. A contribuição é **subsídio** à avaliação. O sistema **NÃO DEVE** sugerir nota, calcular
+    nota nem ordenar os integrantes por desempenho (RE-17).
+  - RN2. Volume de texto não é medida de contribuição. A apresentação DEVE deixar isso explícito ao
+    orientador.
+  - RN3. O quadro é visível ao orientador responsável e **NÃO DEVE** ser apresentado aos integrantes
+    da equipe.
+  - RN4. A fonte é o histórico de edição (`RF-EDT-008`) e a autoria por trecho registrada em
+    `RF-EDT-002` RN3.
+- **Permissões geradas:** `CONTRIBUTION:READ`
+- **Escopo de titularidade:** restrito às equipes de que o ator é orientador responsável.
+- **Prioridade:** I (proposta)
+- **Origem:** `DER` — deriva de RE-09 e de `RF-ART-003`, que exigem nota individual, e de
+  `RF-EDT-002` RN3, que já registra a autoria por trecho. Nenhuma entrevistada pediu o quadro; ambas
+  atribuem nota individual.
+- **Critério de aceitação:** integrante que nunca editou o artigo aparece com contribuição nula no
+  quadro; o quadro não é alcançável por nenhum aluno.
+- **Rastreio:** RE-09; M-P3; A-P3.
+
+#### RF-ACP-005 — Gerar o relatório de produção do curso
+
+- **Descrição:** gera, para um curso e um período, o relatório consolidado da produção acadêmica, a
+  ser prestado à coordenação.
+- **Ator:** Coordenador do curso, Administrador Institucional
+- **Pré-condições:** curso com ao menos um evento encerrado ou em andamento no período.
+- **Fluxo principal:**
+  1. O ator seleciona o curso e o período.
+  2. O sistema consolida os dados registrados no período.
+  3. O sistema apresenta o relatório.
+- **Fluxos alternativos e de exceção:**
+  - E1. Período sem dados → o sistema gera o relatório vazio, informando a ausência de produção. Não
+    é erro.
+  - E2. Consolidação ainda em curso → `REPORT_NOT_READY`.
+  - E3. Curso fora do alcance do ator → `PERMISSION_DENIED`.
+- **Regras de negócio:**
+  - RN1. O relatório DEVE responder, no mínimo:
+    - quantas equipes o curso teve no período, por evento;
+    - quantos artigos foram concluídos e quantos não;
+    - quantos alunos participaram;
+    - qual o desempenho, pela nota do artigo e pelas notas individuais (`RF-ART-002`,
+      `RF-ART-003`);
+    - quantas publicações externas foram registradas (`RF-ART-004`);
+    - quais equipes ficaram para trás e em que etapa.
+  - RN2. **A composição do relatório, os recortes, os agrupamentos, os dados adicionais e a
+    apresentação são decisão de implementação.** Esta URS fixa as perguntas que o relatório precisa
+    responder, não as suas colunas. Acrescentar dado que amplie a resposta é conforme; deixar
+    pergunta da RN1 sem resposta não é.
+  - RN3. O relatório é apuração do que foi registrado. **NÃO DEVE** conter juízo, projeção nem
+    recomendação produzidos pelo sistema.
+  - RN4. O período é o do calendário do curso, delimitado pelos eventos nele contidos.
+  - RN5. O relatório não alcança o conteúdo do artigo, os apontamentos nem a discussão das equipes.
+- **Permissões geradas:** `REPORT:GENERATE`, `REPORT:READ`
+- **Escopo de titularidade:** restrito ao curso que o ator coordena; para o Administrador
+  Institucional, aos cursos da sua instituição.
+- **Prioridade:** I (proposta)
+- **Origem:** `ELI` — Marciele identifica o coordenador do curso como destinatário do relatório de
+  pesquisa, hoje consolidado manualmente a cada semestre.
+- **Critério de aceitação:** para um curso com dois eventos no período, o relatório responde às seis
+  perguntas da RN1; período sem produção gera relatório vazio, e não erro.
+- **Rastreio:** M-P9; §10, item 5.
+
+#### RF-ACP-006 — Exportar o relatório
+
+- **Descrição:** permite obter o relatório como arquivo, para envio e arquivamento fora do sistema.
+- **Ator:** Coordenador do curso, Administrador Institucional
+- **Pré-condições:** relatório gerado (`RF-ACP-005`).
+- **Fluxo principal:**
+  1. O ator escolhe o formato.
+  2. O sistema gera o arquivo e o entrega ao ator.
+- **Fluxos alternativos e de exceção:**
+  - E1. Relatório ainda em consolidação → `REPORT_NOT_READY`.
+- **Regras de negócio:**
+  - RN1. O arquivo exportado reproduz o relatório apresentado, sem acrescentar nem omitir dado.
+  - RN2. Os formatos oferecidos são decisão de implementação.
+- **Permissões geradas:** `REPORT:EXPORT`
+- **Escopo de titularidade:** o mesmo de `RF-ACP-005`.
+- **Prioridade:** D (proposta)
+- **Origem:** `DER` — deriva de `RF-ACP-005`: o relatório é prestado a terceiro, e a prestação
+  pressupõe documento destacável do sistema.
+- **Critério de aceitação:** o arquivo exportado contém as mesmas respostas apresentadas na tela.
+- **Rastreio:** M-P9.
+
+---
+
+### 7.14 INT — Internacionalização
 
 | ID | Nome | Prior. | Origem |
 | :--- | :--- | :--: | :--: |
@@ -2325,6 +2551,12 @@ Formato `RECURSO:ACAO`, recurso no singular, tudo em maiúsculas, sem curinga (`
 | `SIMILARITY_CHECK:READ` | RF-IAA-003 |
 | `AUTHORSHIP_SIGNAL:READ` | RF-IAA-004 |
 | `INSTITUTION:CONSENT_AI` | RF-IAA-005 |
+| `PROGRESS:READ` | RF-ACP-001, RF-ACP-002 |
+| `RISK_SIGNAL:READ` | RF-ACP-003 |
+| `CONTRIBUTION:READ` | RF-ACP-004 |
+| `REPORT:GENERATE` | RF-ACP-005 |
+| `REPORT:READ` | RF-ACP-005 |
+| `REPORT:EXPORT` | RF-ACP-006 |
 
 ### 8.1 Composição dos papéis padrão
 
@@ -2334,9 +2566,9 @@ sobre registros específicos é resolvido pela titularidade declarada em cada re
 | Papel | Permissões |
 | :--- | :--- |
 | `SYSTEM_ADMIN` | `INSTITUTION:CREATE`, `INSTITUTION:READ`, `INSTITUTION:UPDATE`, `INSTITUTION:DEACTIVATE`, `INSTITUTION:ASSIGN_ADMIN`, `INSTITUTION:REVOKE_ADMIN` |
-| `INSTITUTION_ADMIN` | `COURSE:CREATE/READ/UPDATE/DEACTIVATE`, `COURSE:ASSIGN_COORDINATOR`, `COURSE:REVOKE_COORDINATOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `INSTITUTION:CONSENT_AI` |
-| `COORDINATOR` | `COHORT:CREATE/READ/UPDATE/DEACTIVATE`, `COHORT:ASSIGN_PROFESSOR`, `COHORT:REVOKE_PROFESSOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `ARTICLE:READ`, `ARTICLE:EXPORT`, `PUBLICATION:READ`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `SUBMISSION:READ` |
-| `PROFESSOR` | `ENROLLMENT:CREATE`, `ENROLLMENT:READ`, `INVITATION:CREATE/READ/REVOKE`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:CREATE/READ`, `TEAM:ASSIGN_MEMBER`, `TEAM:REMOVE_MEMBER`, `TEAM:INVITE_MEMBER`, `ARTICLE:READ`, `ARTICLE:GRADE`, `ARTICLE:GRADE_MEMBER`, `PUBLICATION:CREATE/READ/UPDATE/DELETE`, `PERMISSION_GRANT:CREATE`, `PERMISSION_GRANT:REVOKE`, `PERMISSION_GRANT:READ`, `COHORT:READ`, `COURSE:READ`, `TEMPLATE:READ`, `ARTICLE:EXPORT`, `ARTICLE:RETURN`, `ARTICLE:CONCLUDE`, `SUBMISSION:READ`, `SUBMISSION:COMPARE`, `REMARK:CREATE/READ/UPDATE/RESOLVE/REOPEN/DISMISS`, `MESSAGE:CREATE/READ/REPLY/DELETE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ`, `AI_SUMMARY:READ`, `COMPLIANCE_CHECK:REQUEST/READ`, `SIMILARITY_CHECK:REQUEST/READ`, `AUTHORSHIP_SIGNAL:READ` |
+| `INSTITUTION_ADMIN` | `COURSE:CREATE/READ/UPDATE/DEACTIVATE`, `COURSE:ASSIGN_COORDINATOR`, `COURSE:REVOKE_COORDINATOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `INSTITUTION:CONSENT_AI`, `REPORT:GENERATE`, `REPORT:READ`, `REPORT:EXPORT` |
+| `COORDINATOR` | `COHORT:CREATE/READ/UPDATE/DEACTIVATE`, `COHORT:ASSIGN_PROFESSOR`, `COHORT:REVOKE_PROFESSOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `ARTICLE:READ`, `ARTICLE:EXPORT`, `PUBLICATION:READ`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `SUBMISSION:READ`, `PROGRESS:READ`, `RISK_SIGNAL:READ`, `REPORT:GENERATE`, `REPORT:READ`, `REPORT:EXPORT` |
+| `PROFESSOR` | `ENROLLMENT:CREATE`, `ENROLLMENT:READ`, `INVITATION:CREATE/READ/REVOKE`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:CREATE/READ`, `TEAM:ASSIGN_MEMBER`, `TEAM:REMOVE_MEMBER`, `TEAM:INVITE_MEMBER`, `ARTICLE:READ`, `ARTICLE:GRADE`, `ARTICLE:GRADE_MEMBER`, `PUBLICATION:CREATE/READ/UPDATE/DELETE`, `PERMISSION_GRANT:CREATE`, `PERMISSION_GRANT:REVOKE`, `PERMISSION_GRANT:READ`, `COHORT:READ`, `COURSE:READ`, `TEMPLATE:READ`, `ARTICLE:EXPORT`, `ARTICLE:RETURN`, `ARTICLE:CONCLUDE`, `SUBMISSION:READ`, `SUBMISSION:COMPARE`, `REMARK:CREATE/READ/UPDATE/RESOLVE/REOPEN/DISMISS`, `MESSAGE:CREATE/READ/REPLY/DELETE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ`, `AI_SUMMARY:READ`, `COMPLIANCE_CHECK:REQUEST/READ`, `SIMILARITY_CHECK:REQUEST/READ`, `AUTHORSHIP_SIGNAL:READ`, `PROGRESS:READ`, `RISK_SIGNAL:READ`, `CONTRIBUTION:READ` |
 | `STUDENT` | `EVENT:READ`, `MILESTONE:READ`, `TEAM:READ`, `TEAM:JOIN`, `ARTICLE:READ`, `PUBLICATION:CREATE/READ/UPDATE`, `COHORT:READ`, `ARTICLE:EDIT`, `ARTICLE:FORMAT`, `ARTICLE:IMPORT`, `ARTICLE:EXPORT`, `ARTICLE:READ_HISTORY`, `ARTICLE:RESTORE_VERSION`, `REFERENCE:CREATE/READ/UPDATE/DELETE`, `REFERENCE:CITE`, `SUBMISSION:CREATE/READ/REVOKE/COMPARE`, `REMARK:READ`, `REMARK:ADDRESS`, `MESSAGE:CREATE/READ/REPLY/DELETE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ`, `COMPLIANCE_CHECK:REQUEST/READ`, `SIMILARITY_CHECK:REQUEST/READ` |
 
 A notação `A/B/C` acima abrevia a leitura desta tabela e **não** existe no catálogo: as permissões
@@ -2354,7 +2586,7 @@ exibição ocorre no cliente, a partir do código.
 | `AUTHENTICATION_FAILED` | RF-ACS-001 |
 | `INSTITUTION_INACTIVE` | RF-ACS-001, RF-INS-001, RF-INS-002, RF-IAA-005 |
 | `VALIDATION_FAILED` | RF-ACS-004, RF-ACS-005, RF-INS-001, RF-CUR-001, RF-TUR-001, RF-TUR-004, RF-TUR-005, RF-EVT-001, RF-EVT-002, RF-EQP-001, RF-EQP-002, RF-ART-002, RF-ART-003, RF-ART-004, RF-TPL-001, RF-EDT-003, RF-DSC-001 |
-| `PERMISSION_DENIED` | RF-ACS-005, RF-CUR-001, RF-CUR-002, RF-TUR-001, RF-TUR-002, RF-TUR-003, RF-TUR-004, RF-EVT-002, RF-EVT-003, RF-EQP-005, RF-ART-002, RF-ART-003, RF-TPL-001, RF-REV-004, RF-REV-005, RF-REV-006, RF-REV-008, RF-REV-011 |
+| `PERMISSION_DENIED` | RF-ACP-005, RF-ACS-005, RF-CUR-001, RF-CUR-002, RF-TUR-001, RF-TUR-002, RF-TUR-003, RF-TUR-004, RF-EVT-002, RF-EVT-003, RF-EQP-005, RF-ART-002, RF-ART-003, RF-TPL-001, RF-REV-004, RF-REV-005, RF-REV-006, RF-REV-008, RF-REV-011 |
 | `RESOURCE_NOT_FOUND` | RF-ACS-006, RF-ACS-007, RF-ACS-008, RF-INS-002, RF-CUR-002, RF-EVT-001, RF-EVT-004, RF-ART-001, RF-ART-004, RF-TPL-002, RF-EDT-001, RF-EDT-004, RF-EDT-007, RF-REV-002, RF-DSC-001, RF-DSC-003, RF-DSC-006 |
 | `EMAIL_ALREADY_REGISTERED` | RF-TUR-003, RF-TUR-005 |
 | `INVITATION_EXPIRED` | RF-ACS-003, RF-ACS-004, RF-TUR-005, RF-EQP-004 |
@@ -2386,6 +2618,7 @@ exibição ocorre no cliente, a partir do código.
 | `REMARK_ALREADY_CLOSED` | RF-REV-005, RF-REV-007, RF-REV-008 |
 | `REMARK_PENDING` | RF-REV-011 |
 | `AI_CONSENT_REQUIRED` | RF-IAA-001 |
+| `REPORT_NOT_READY` | RF-ACP-005, RF-ACP-006 |
 
 ---
 
@@ -2397,12 +2630,13 @@ exibição ocorre no cliente, a partir do código.
 | 2 | **Requisitos `DER` não validados.** A hierarquia institucional, a autenticação, a cadeia de criação de usuários e boa parte da fatia de produção do artigo derivam da definição de produto, não de solicitação direta — ver item 11. | Por `PAD-REQ-004`, não são considerados acordados antes de validação com as partes interessadas. |
 | 3 | **Radar de eventos externos adiado.** Marciele nomeou, em P10, duas condições obrigatórias para a plataforma valer o tempo de aprendizado: apoio às correções e busca de eventos. A segunda foi adiada por decisão de escopo. Em P5 ela descreve o item como externo — "radar de eventos científicos, congressos e periódicos" com prazo, temática, requisitos e links, e o trabalho manual de "identificação de eventos e periódicos adequados à temática" e "repasse dessas oportunidades aos alunos". O congresso interno aparece separadamente, como template já conhecido. | Requisito elicitado, conhecido e não atendido. `RF-ART-004` o atende parcialmente ao permitir o registro manual da publicação externa. O módulo de correção passa a sustentar sozinho o caso de adoção dessa parte interessada. |
 | 4 | **Um usuário por instituição.** Quem atua em mais de uma instituição usa contas e e-mails distintos. | Decisão de escopo. Expansão prevista. |
-| 5 | **Elicitação faltante.** Nenhum aluno e nenhum coordenador foi entrevistado, embora ambos sejam atores desta URS. | A visão do aluno consta apenas em terceira pessoa. Recomenda-se nova rodada de elicitação. |
+| 5 | **Coordenador não será entrevistado.** Decisão de escopo. O que o sistema deve prestar à coordenação foi derivado de `RF-CUR-002` RN2 e de M-P9, sem confirmação do destinatário. | `RF-ACP-002` e `RF-ACP-005` nascem `DER` sem validação possível pelo destinatário. Ninguém conferirá se o relatório responde ao que a coordenação de fato pergunta. `RF-ACP-005` RN1 fixa as perguntas mínimas justamente para que a lacuna não fique implícita. |
+| 5.1 | **Aluno não entrevistado.** O aluno é ator de mais de vinte requisitos desta URS e a sua visão consta apenas em terceira pessoa, pela fala das duas orientadoras. | Pendência aberta, distinta do item 5: não houve decisão de não entrevistá-lo. Recomenda-se rodada de elicitação antes da implementação da fatia de edição. |
 | 6 | **Cobertura de área.** Ambas as entrevistadas são do curso de Administração. As normas registradas se limitam a ABNT e ao template do congresso interno. | Outras áreas podem exigir normas distintas, ainda sem evidência. |
 | 7 | **Coordenador único por curso.** Registrado como RN1 de `RF-CUR-002` sem evidência que o confirme. | Premissa a confirmar. |
 | 8 | **Divergência de visibilidade (P8).** Marciele defende que qualquer professor da instituição veja o trabalho em qualquer fase; Angélica restringe a orientadores e autores. Esta versão implementa a posição restritiva. | Se a posição ampla prevalecer, será necessária permissão de leitura em escopo institucional, hoje inexistente. |
 | 9 | **Idiomas.** Apenas português do Brasil no lançamento; nenhuma parte interessada solicitou idioma adicional. | `RF-INT-001` permanece `DER` até validação. A estratégia técnica está fixada em `ADR-0026` e nos padrões `PAD-NOM-001` a `PAD-NOM-014`; resta apenas a validação do requisito com as partes interessadas. |
-| 10 | **Acompanhamento e relatórios não especificados.** Painel de progresso das equipes, sinalização de equipe parada ou atrasada e relatórios à coordenação. | É a próxima fatia desta URS. O coordenador, destinatário desses relatórios, permanece não entrevistado — item 5. |
+| 10 | **Conteúdo do relatório e limiares dos sinais deixados à implementação.** `RF-ACP-005` RN2 fixa as perguntas que o relatório responde, não as suas colunas; `RF-ACP-003` RN2 fixa as condições a detectar, não os seus limiares. | Decisão deliberada, e não omissão. O critério de aceitação recai sobre as perguntas e as condições, que são verificáveis. O risco é a implementação responder às perguntas de forma que não sirva ao destinatário — agravado pelo item 5. |
 | 11 | **Fatia de produção sem elicitação direta.** A edição do artigo no sistema, a edição simultânea, a discussão, as notificações, a comparação de versões e o resumo automático são definição de produto. O que a elicitação sustenta diretamente é o apontamento no texto (M-P4), a verificação de conformidade e de plágio (A-P5) e o template do congresso (M-P5). | Por `PAD-REQ-004`, esses requisitos não são considerados acordados antes de validação. É a maior concentração de `DER` da URS. |
 | 12 | **Envio de conteúdo a terceiro.** `RF-IAA-001` submete o texto do artigo a serviço externo de inteligência artificial. `RF-IAA-005` exige consentimento institucional, mas o teor do consentimento, a base legal e o serviço a contratar não estão definidos. | Bloqueia `RF-IAA-001` em produção até que sejam. Nenhum outro requisito depende disso. |
 | 13 | **Sem canal privado entre professores.** Toda mensagem da discussão é visível à equipe (`RF-DSC-001` RN4). | Decisão de escopo. Expansão prevista, a nascer junto do modelo de discussão caso seja adotada. |
@@ -2418,5 +2652,6 @@ exibição ocorre no cliente, a partir do código.
 | Versão | Data | Alteração |
 | :--- | :--- | :--- |
 | 0.0 | 2026-08-13 | Documento zerado. Todo o conteúdo das versões 0.1 a 0.9.1 era decisão da própria equipe, não requisito de parte interessada, e foi movido para `Padroes/Padroes-de-Engenharia.md`. A URS recomeça vazia, a ser elaborada a partir da elicitação. O histórico anterior está no versionamento do repositório. |
+| 0.3 | 2026-08-26 | Registrada a fatia de acompanhamento e relatórios: categoria `ACP`, 6 requisitos funcionais, 6 permissões e 1 código de resposta. `INT` passa de §7.13 a §7.14. Com ela o escopo funcional se fecha: 70 requisitos em 14 categorias. `RF-ACP-003` e `RF-ACP-005` fixam as condições a detectar e as perguntas a responder, deixando limiares e composição à implementação. A pendência 5 passa a registrar a decisão de não entrevistar o coordenador, e a visão do aluno é separada nela como item 5.1. A pendência 10 deixa de designar a fatia faltante e passa a registrar o que foi deixado à implementação. |
 | 0.2 | 2026-08-25 | Registrada a fatia de produção e correção do artigo: 5 categorias novas — `TPL`, `EDT`, `REV`, `DSC`, `IAA` —, 32 requisitos funcionais, 8 regras estruturais (RE-10 a RE-17), 41 permissões e 15 códigos de resposta. O modelo de domínio passa a incluir Template, Referência, Citação, Discussão, Mensagem, Entrega e Apontamento. `INT` passa de §7.8 a §7.13. Pendências 11 a 17 acrescentadas; a pendência 10 passa a designar a fatia de acompanhamento e relatórios. |
 | 0.1 | 2026-08-19 | Registrada a fatia estrutural: 8 categorias, 32 requisitos funcionais, catálogo de 51 permissões e catálogo de 20 códigos de resposta, com rastreabilidade às entrevistas de Marciele e Angélica. Os catálogos de permissões e de códigos passam a existir, atendendo às pendências correspondentes de `Padroes-de-Engenharia.md` §6 no que se refere a esta fatia. Prioridades registradas como proposta, pendentes de atribuição por parte interessada. |

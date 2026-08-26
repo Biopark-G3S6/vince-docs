@@ -1,9 +1,9 @@
 # Padrões de Engenharia
 
 **Projeto:** VinceArt
-**Versão:** 1.4
+**Versão:** 1.5
 **Status:** Vigente
-**Data:** 2026-08-25
+**Data:** 2026-08-26
 
 ---
 
@@ -330,6 +330,10 @@ aqui não é preferência de estilo: é compromisso.
 | Verificação de similaridade | `SimilarityCheck` | Confronto do artigo com o acervo. `PlagiarismCheck` afirmaria o que a verificação não apura: plágio é conclusão do orientador, não saída do sistema. |
 | Indício de autoria | `AuthorshipSignal` | Fato registrado sobre como o texto foi produzido. `AiDetection` nomearia um juízo que o sistema NÃO DEVE emitir. |
 | Consentimento de uso de IA | `AiConsent` | Decisão da instituição, não do orientador nem da equipe. |
+| Progresso da equipe | `Progress` | Visão apurada, não entidade: nada é registrado como progresso, ele é derivado do que as demais entidades já guardam. |
+| Sinal de risco | `RiskSignal` | Condição detectada sobre a equipe. `Alert` colidiria com `Notification`, que é o aviso; o sinal é a condição, e um pode existir sem o outro. |
+| Contribuição | `Contribution` | Participação apurada de um integrante na produção do artigo. Subsídio à nota, nunca a própria nota. |
+| Relatório de produção | `Report` | Apuração consolidada por curso e período. Não guarda juízo nem projeção. |
 
 ---
 
@@ -422,6 +426,7 @@ tradução é derivado deles e do texto de interface, e nasce vazio enquanto nã
 
 | Versão | Data | Alteração |
 | :--- | :--- | :--- |
+| 1.5 | 2026-08-26 | Glossário 3.9.1 estendido com os conceitos da fatia de acompanhamento registrada na URS 0.3. Registrada a distinção entre `RiskSignal`, que é a condição, e `Notification`, que é o aviso dela — um existe sem o outro. `Progress` fica anotado como visão apurada, e não entidade, para que não nasça tabela para o que é derivado. |
 | 1.4 | 2026-08-25 | Glossário 3.9.1 estendido com os conceitos da fatia de produção e correção do artigo registrada na URS 0.2. `Section`, `Submission` e `Remark` deixam de ser reservados e passam a estar em uso; a tabela de reservados é suprimida por ter ficado vazia. Registradas as três escolhas de nomeação que carregam decisão de produto: `SimilarityCheck` em vez de `PlagiarismCheck`, `AuthorshipSignal` em vez de `AiDetection` e `Revision` distinta de `Submission`. |
 | 1.3 | 2026-08-21 | Acrescentados `PAD-NOM-015` e a seção 3.9.1, com o glossário de nomeação: a correspondência português–inglês dos conceitos do domínio e o motivo de cada escolha não óbvia. Registrados também os termos reservados que já condicionaram escolhas em uso, em especial a colisão entre seção do artigo e turma. |
 | 1.2 | 2026-08-19 | Acrescentada a categoria `NOM` e a seção 3.9, com os padrões de nomeação e internacionalização decorrentes de `ADR-0026`: idioma dos identificadores de software, origem do texto exibido, fronteira de tradução entre servidor e cliente, mensagens fora da interface, formatação por `Intl` e seleção de idioma. Acrescentada a restrição `PAD-TEC-016`. Atualizada a matriz de rastreabilidade e as pendências dos catálogos, agora parcialmente atendidas pela URS 0.1. |
