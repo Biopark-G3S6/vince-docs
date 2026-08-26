@@ -7,6 +7,3 @@
 .venv/
 venv/
 __pycache__/
-
-# Modelos institucionais de referência: são fonte do formato, não artefato derivado.
-!Capa Padrão Docs.docx

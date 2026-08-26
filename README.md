@@ -31,9 +31,8 @@ Docs para leitura e distribuição às partes interessadas.
 O documento publicado segue o **padrão institucional de especificação de requisitos**: capa com a
 marca, índice, controle de versão, um quadro por requisito e termo de aceite. O formato é aplicado
 pelo conversor, não escrito à mão no Markdown — `Requisitos/gerar-docx.py` monta a capa a partir do
-bloco de metadados do início do arquivo e transforma cada requisito em quadro. Os modelos de
-referência da instituição estão versionados na raiz (`Capa Padrão Docs.docx`,
-`Lista de Requisitos - 1º b.doc`) e a marca em `Requisitos/logo-biopark.png`.
+bloco de metadados do início do arquivo e transforma cada requisito em quadro. A marca está em
+`Requisitos/logo-biopark.png`; os modelos de referência da instituição não são versionados aqui.
 
 | Item | Identificador |
 | :--- | :--- |
