@@ -1,9 +1,9 @@
 # Padrões de Engenharia
 
 **Projeto:** VinceArt
-**Versão:** 1.5
+**Versão:** 1.6
 **Status:** Vigente
-**Data:** 2026-08-26
+**Data:** 2026-08-27
 
 ---
 
@@ -305,6 +305,8 @@ aqui não é preferência de estilo: é compromisso.
 | Equipe | `Team` | `Group` seria ambíguo diante do vocabulário de RBAC. `Team` ainda coincide com a palavra usada pela parte interessada na elicitação. |
 | Artigo | `Article` | — |
 | Publicação externa | `Publication` | Reservado à publicação em evento ou periódico externo. Submissão a evento interno do sistema NÃO É publicação. |
+| Conta de usuário | `User` | A identidade que se autentica, distinta do papel que ela exerce e do vínculo que lhe dá escopo. O e-mail é seu identificador único global (URS §1.4.1), e quem atua em mais de uma instituição possui mais de uma conta. |
+| Acesso (a capacidade) | `Access` | Nome do módulo que reúne identidade e autorização. `Auth` seria ambíguo entre autenticação e autorização, e o módulo faz as duas; `Identity` deixaria de fora papel, permissão e concessão, que são a maior parte do que ele possui. |
 | Papel | `Role` | — |
 | Permissão | `Permission` | — |
 | Concessão direta | `PermissionGrant` | Distinta de `Role`: são as duas origens das permissões efetivas. |
@@ -426,6 +428,7 @@ tradução é derivado deles e do texto de interface, e nasce vazio enquanto nã
 
 | Versão | Data | Alteração |
 | :--- | :--- | :--- |
+| 1.6 | 2026-08-27 | Glossário 3.9.1 estendido com `User` e `Access`, exigidos por `PAD-NOM-015` antes de a primeira vertical de autorização escrever código. Registrado o motivo de `Access` em vez de `Auth` ou `Identity` como nome do módulo decidido em `ADR-0027`. |
 | 1.5 | 2026-08-26 | Glossário 3.9.1 estendido com os conceitos da fatia de acompanhamento registrada na URS 0.3. Registrada a distinção entre `RiskSignal`, que é a condição, e `Notification`, que é o aviso dela — um existe sem o outro. `Progress` fica anotado como visão apurada, e não entidade, para que não nasça tabela para o que é derivado. |
 | 1.4 | 2026-08-25 | Glossário 3.9.1 estendido com os conceitos da fatia de produção e correção do artigo registrada na URS 0.2. `Section`, `Submission` e `Remark` deixam de ser reservados e passam a estar em uso; a tabela de reservados é suprimida por ter ficado vazia. Registradas as três escolhas de nomeação que carregam decisão de produto: `SimilarityCheck` em vez de `PlagiarismCheck`, `AuthorshipSignal` em vez de `AiDetection` e `Revision` distinta de `Submission`. |
 | 1.3 | 2026-08-21 | Acrescentados `PAD-NOM-015` e a seção 3.9.1, com o glossário de nomeação: a correspondência português–inglês dos conceitos do domínio e o motivo de cada escolha não óbvia. Registrados também os termos reservados que já condicionaram escolhas em uso, em especial a colisão entre seção do artigo e turma. |
