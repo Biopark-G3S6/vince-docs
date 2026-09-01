@@ -38,12 +38,13 @@ repositório de versionamento.
 | [0024](0024-estrategia-de-testes.md) | Estratégia de testes | Aceito | 2026-08-12 |
 | [0025](0025-formato-de-resposta-da-api.md) | Formato de resposta da API | Aceito | 2026-08-12 |
 | [0026](0026-estrategia-de-internacionalizacao.md) | Estratégia de internacionalização | Aceito | 2026-08-19 |
+| [0027](0027-modulo-access.md) | Módulo `access`: identidade e autorização | Aceito | 2026-08-31 |
 
 ## Decisões pendentes
 
 | Tópico | Observação |
 | :--- | :--- |
-| Decomposição do sistema em módulos | Exige um ADR por módulo (ADR-0003 §12); depende dos requisitos funcionais. |
+| Decomposição do sistema em módulos | Exige um ADR por módulo (ADR-0003 §12); depende dos requisitos funcionais. O módulo `access` está decidido em ADR-0027; os demais permanecem pendentes. |
 | Carga de referência e capacidade | Necessária para revalidar as metas de ADR-0011. |
 | Infraestrutura de implantação | Automação de implantação, ambientes, segredos, coletor de log e servidor de métricas (ADR-0022 §6 e §34; ADR-0023 §19). |
 | Conformidade legal no tratamento de dados pessoais | Padrões de Engenharia, PAD-SEG-015. |
