@@ -38,7 +38,7 @@ repositório de versionamento.
 | [0024](0024-estrategia-de-testes.md) | Estratégia de testes | Aceito | 2026-08-12 |
 | [0025](0025-formato-de-resposta-da-api.md) | Formato de resposta da API | Aceito | 2026-08-12 |
 | [0026](0026-estrategia-de-internacionalizacao.md) | Estratégia de internacionalização | Aceito | 2026-08-19 |
-| [0027](0027-modulo-access.md) | Módulo `access`: identidade e autorização | Aceito | 2026-08-27 |
+| [0027](0027-modulo-access.md) | Módulo `access`: identidade e autorização | Aceito | 2026-08-31 |
 
 ## Decisões pendentes
 
