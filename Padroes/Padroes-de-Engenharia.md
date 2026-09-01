@@ -306,6 +306,7 @@ aqui não é preferência de estilo: é compromisso.
 | Artigo | `Article` | — |
 | Publicação externa | `Publication` | Reservado à publicação em evento ou periódico externo. Submissão a evento interno do sistema NÃO É publicação. |
 | Conta de usuário | `User` | A identidade que se autentica, distinta do papel que ela exerce e do vínculo que lhe dá escopo. O e-mail é seu identificador único global (URS §1.4.1), e quem atua em mais de uma instituição possui mais de uma conta. |
+| Área de atuação ou pesquisa | `ExpertiseArea` | Registrada no perfil, é a área em que o professor atua ou pesquisa (RF-ACS-005 RN2). Um termo só para as duas metades: `ResearchArea` deixaria a atuação de fora, e `Field` já significa **campo** no detalhamento de erro (`ADR-0025` §17). |
 | Acesso (a capacidade) | `Access` | Nome do módulo que reúne identidade e autorização. `Auth` seria ambíguo entre autenticação e autorização, e o módulo faz as duas; `Identity` deixaria de fora papel, permissão e concessão, que são a maior parte do que ele possui. |
 | Papel | `Role` | — |
 | Permissão | `Permission` | — |
