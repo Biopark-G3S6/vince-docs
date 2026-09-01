@@ -1,8 +1,8 @@
 # ADR-0027 — Módulo `access`: identidade e autorização
 
 - **Status:** Aceito
-- **Data:** 2026-08-27
-- **Relacionados:** ADR-0003, ADR-0004, ADR-0005, ADR-0006, ADR-0013, ADR-0014, ADR-0018
+- **Data:** 2026-08-31
+- **Relacionados:** ADR-0003, ADR-0004, ADR-0005, ADR-0006, ADR-0013, ADR-0014, ADR-0018, ADR-0019
 
 ## Contexto
 
@@ -34,6 +34,14 @@ como pendência desde a adoção dos ADRs.
    | `password_credential` | a credencial de senha da conta |
    | `permission_grant` | a concessão direta de permissão entre contas (ADR-0014 §5) |
    | `invitation` | o convite como via de criação de conta |
+   | `role_assignment_audit` | a trilha imutável de atribuição e revogação de papel |
+
+   `role_assignment_audit` consta desta lista por força de ADR-0014 §18 e ADR-0018 §6: a
+   trilha é produzida pelo módulo `access` e, portanto, reside no schema dele. Ela NÃO DEVE
+   receber operação de alteração nem de remoção, e DEVE ser gravada na mesma transação da
+   atribuição ou da revogação que a origina (ADR-0019 §1). Ela não é derivável de `user_role`,
+   cuja linha é removida na revogação, nem de `permission_grant`, que registra a concessão
+   direta e não a atribuição de papel.
 
 6. Tabela não enumerada em §5 NÃO DEVE ser criada no schema `access` sem a reescrita deste ADR.
 7. As tabelas de §5 residem no mesmo módulo porque a resolução das permissões efetivas percorre `user`, `user_role`, `role_permission` e `permission_grant` em toda requisição autenticada (ADR-0014 §9); separá-las faria dessa travessia uma junção entre módulos, vedada por ADR-0006 §3, e uma referência sem integridade declarada, por ADR-0006 §4.
@@ -71,11 +79,14 @@ como pendência desde a adoção dos ADRs.
 | Papéis administráveis por endpoint | Produziria permissão sem requisito funcional de origem, vedado por ADR-0014 §7; a URS §1.4 declara os papéis pré-criados. |
 | Catálogo lido da URS em tempo de execução | Elimina a segunda cópia, mas põe o repositório de documentação no caminho crítico da aplicação e perde a verificação de tipo sobre os símbolos de permissão. |
 | Conferência com a URS dentro do comando de verificação | Pegaria a divergência mais cedo, ao custo de acoplar o build do backend à disponibilidade de `vince-docs` a cada execução. |
+| §5 sem a trilha de auditoria, com oito tabelas *(decisão anterior, 2026-08-27)* | Abandonada porque ADR-0014 §18 exige trilha imutável e ADR-0018 §6 a localiza no schema do módulo que a produz: a tabela era exigida por duas regras aceitas e ausente da enumeração, o que fazia de §6 um impedimento a decisão já tomada. |
+| Trilha de auditoria derivada de `user_role` | A revogação remove a linha, e a trilha precisa sobreviver a ela; a derivação perderia exatamente o registro que a auditoria existe para guardar. |
+| Trilha de auditoria gravada em `permission_grant` | `permission_grant` registra a concessão direta de permissão entre contas (ADR-0014 §5), fato distinto da atribuição de papel; reuni-los daria à tabela duas semânticas e duas cardinalidades. |
 | Módulo `access` autorizado a chamar a fachada de outro módulo | Todo módulo depende de `access`; qualquer dependência de volta fecha ciclo, cuja resolução ADR-0005 §6 já determina ser por evento. |
 
 ## Implicações
 
-1. O módulo `access` concentra oito tabelas e é o módulo de maior superfície do sistema; crescimento além das tabelas de §5 é indício de fronteira mal recortada e DEVE motivar a reescrita deste ADR (ADR-0004, implicação 2).
+1. O módulo `access` concentra nove tabelas e é o módulo de maior superfície do sistema; crescimento além das tabelas de §5 é indício de fronteira mal recortada e DEVE motivar a reescrita deste ADR (ADR-0004, implicação 2).
 2. Todo módulo passa a depender da fachada de `access`, que se torna ponto único de falha da autorização síncrona.
 3. O catálogo declarado em código e o catálogo da URS são duas cópias do mesmo fato; a conferência de §18 é a única proteção contra sua divergência, e por §19 ela depende de execução deliberada na revisão.
 4. A carga inicial passa a ser pré-requisito de qualquer ambiente utilizável: sem ela não existe papel, e sem papel não existe autorização concedida.
