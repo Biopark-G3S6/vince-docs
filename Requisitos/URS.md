@@ -2632,8 +2632,15 @@ efetivas são sempre enumeradas, sem curinga (`ADR-0014` §3).
 Em maiúsculas, sem acento, independentes de idioma (`PAD-REQ-008`, `ADR-0025` §20). A tradução para
 exibição ocorre no cliente, a partir do código.
 
+As duas primeiras entradas não nascem de requisito funcional, e sim de regra: `ADR-0025` §4 obriga
+**toda** resposta a trazer `status`, §9 exige que a severidade `success` exista e §29 exige que a
+falha inesperada responda `500`. Sem elas, nem o sucesso nem o erro interno teriam código, e o
+cliente não teria o que traduzir (`PAD-NOM-008`).
+
 | Código | Origem |
 | :--- | :--- |
+| `SUCCESS` | `ADR-0025` §4, §9 |
+| `INTERNAL_ERROR` | `ADR-0025` §29 |
 | `AUTHENTICATION_FAILED` | RF-ACS-001 |
 | `INSTITUTION_INACTIVE` | RF-ACS-001, RF-INS-001, RF-INS-002, RF-IAA-005 |
 | `VALIDATION_FAILED` | RF-ACS-004, RF-ACS-005, RF-INS-001, RF-CUR-001, RF-TUR-001, RF-TUR-004, RF-TUR-005, RF-EVT-001, RF-EVT-002, RF-EQP-001, RF-EQP-002, RF-ART-002, RF-ART-003, RF-ART-004, RF-TPL-001, RF-EDT-003, RF-DSC-001 |

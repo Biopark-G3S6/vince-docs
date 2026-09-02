@@ -5,11 +5,12 @@ de arquitetura e os requisitos do sistema; divergência entre o código e o que 
 
 ## Estrutura
 
-| Diretório | Conteúdo |
+| Caminho | Conteúdo |
 | :--- | :--- |
 | [`ADR/`](ADR/) | Registros de decisão arquitetural. As regras do processo estão em [ADR-0000](ADR/0000-adocao-de-adrs.md). |
 | [`Requisitos/`](Requisitos/) | [URS](Requisitos/URS.md) — o que o **cliente** precisa, e o material bruto de elicitação. |
 | [`Padroes/`](Padroes/) | [Padrões de Engenharia](Padroes/Padroes-de-Engenharia.md) — o que a **equipe** decidiu: como construir o sistema e como especificá-lo. |
+| [`front-end-implementations.md`](front-end-implementations.md) | Changelog do backend **para o frontend**: uma entrada por vertical entregue, com os códigos de resposta, os cabeçalhos e o que ficou por fazer. |
 
 ## Repositórios do projeto
 
