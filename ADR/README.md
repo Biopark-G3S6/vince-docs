@@ -50,6 +50,8 @@ repositório de versionamento.
 | Conformidade legal no tratamento de dados pessoais | Padrões de Engenharia, PAD-SEG-015. |
 | Catálogo de códigos de resposta | Derivado dos requisitos funcionais (ADR-0025 §20); mantido na URS §9. Parcialmente preenchido pela URS 0.1; a fatia de correção o ampliará. |
 | Catálogo de permissões | Derivado dos requisitos funcionais (ADR-0014 §8); mantido na URS §8. Parcialmente preenchido pela URS 0.1; a fatia de correção o ampliará. |
+| Limitação de taxa | Nenhum ADR a trata e nenhum requisito a pede. Sem ela, a autenticação e a solicitação de recuperação de senha são meio de enumeração e de exaustão — agravado porque ambas gastam, de propósito, o custo de uma derivação Argon2id por requisição (`add-session-authentication`, decisão D6). DEVE virar decisão registrada **antes de o sistema ser exposto**. Efeito no cliente declarado em [`front-end-implementations.md`](../front-end-implementations.md). |
+| Rotação da chave de assinatura do token anti-CSRF | Origem e rotação da chave exigida por ADR-0013 §14. Não altera comportamento observável em regime; a rotação, porém, invalida o token de todas as sessões vivas de uma vez, e o cliente precisa reobtê-lo pelo endpoint de identidade. Efeito no cliente declarado em [`front-end-implementations.md`](../front-end-implementations.md). |
 
 ## Uso
 
