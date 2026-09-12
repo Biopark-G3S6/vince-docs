@@ -245,8 +245,10 @@ sozinho, e o `SYSTEM_ADMIN` da carga inicial não tem via de entrada.
 
 ### B. Não há limitação de taxa
 
-**Questão em aberto** do `design.md` de `add-session-authentication`. Nenhum ADR a trata e nenhum
-requisito a pede. Hoje, `POST /sessions` e `POST /password/recovery` aceitam tentativas sem limite.
+**Questão em aberto** do `design.md` de `add-session-authentication`, ampliada por
+`add-user-invitation`. Nenhum ADR a trata e nenhum requisito a pede. Hoje, `POST /sessions`,
+`POST /password/recovery`, `GET /invitations/:token` e `POST /invitations/:token/acceptance` aceitam
+tentativas sem limite.
 
 **O que a interface deve fazer, hoje:**
 
