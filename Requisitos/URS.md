@@ -220,6 +220,7 @@ dos requisitos funcionais e não acrescentam exigência: consolidam o que os qua
 | RF-ACS-006 | Conceder permissão a outro usuário | I (proposta) | `ELI` |
 | RF-ACS-007 | Revogar concessão de permissão | I (proposta) | `DER` |
 | RF-ACS-008 | Consultar concessões diretas ativas | D (proposta) | `DER` |
+| RF-ACS-009 | Convidar usuário | E (proposta) | `DER` |
 
 ---
 
@@ -424,6 +425,53 @@ dos requisitos funcionais e não acrescentam exigência: consolidam o que os qua
 - **Critério de aceitação:** a lista apresenta toda concessão ativa com seu concedente e nenhuma
   concessão expirada.
 - **Rastreio:** `RF-ACS-006`; `ADR-0014` §20.
+
+##### RF-ACS-009 — Convidar usuário
+
+- **Descrição:** permite a um usuário autorizado criar um convite para que outra pessoa passe a ter
+  conta no sistema, com papel e vínculo institucional definidos pelo convite.
+- **Ator:** Usuário autenticado com a permissão `INVITATION:CREATE`.
+- **Pré-condições:** ator ativo; instituição de vínculo existente e ativa; ator atua na instituição,
+  salvo `SYSTEM_ADMIN`; papel solicitado dentro da cadeia que o ator pode conceder.
+- **Fluxo principal:**
+  1. O ator escolhe a instituição, o papel, o prazo e a forma do convite.
+  2. No convite dirigido, informa o e-mail destinatário; no convite aberto, não informa destinatário
+     e pode informar limite de usos.
+  3. O sistema cria o convite, devolve o seu endereço de ingresso e registra a emissão.
+  4. A pessoa consulta o endereço e aceita o convite informando nome e senha; no convite aberto,
+     informa também o próprio e-mail.
+  5. O sistema cria a conta ativa com o papel e o vínculo do convite, registra a aceitação e não
+     estabelece sessão.
+- **Fluxos alternativos e de exceção:**
+  - E1. E-mail já pertence a uma conta → `EMAIL_ALREADY_REGISTERED`.
+  - E2. Prazo ausente ou vencido → `VALIDATION_FAILED` na emissão; `INVITATION_EXPIRED` na aceitação.
+  - E3. Instituição inexistente ou inativa → `INSTITUTION_INACTIVE` ou `RESOURCE_NOT_FOUND`.
+  - E4. Ator não atua na instituição ou papel fora da cadeia → `PERMISSION_DENIED`.
+  - E5. Convite revogado → `INVITATION_REVOKED`.
+  - E6. Convite aberto sem usos disponíveis → `INVITATION_LIMIT_REACHED`.
+- **Regras de negócio:**
+  - RN1. O convite dirigido é de uso único e destinado ao e-mail declarado; o convite aberto não tem
+    destinatário, admite múltiplas aceitações e pode ter limite de usos.
+  - RN2. As duas formas têm prazo obrigatório e podem ser revogadas imediatamente.
+  - RN3. A cadeia de concessão é `SYSTEM_ADMIN` para `INSTITUTION_ADMIN`; `INSTITUTION_ADMIN` para
+    `COORDINATOR` ou `PROFESSOR`; `COORDINATOR` para `PROFESSOR`; e `PROFESSOR` para `STUDENT`.
+    Nenhum convite concede `SYSTEM_ADMIN`.
+  - RN4. A consulta pública não revela o emissor, e convite inexistente, expirado, revogado ou esgotado
+    produz a mesma resposta.
+  - RN5. A aceitação usa os atributos do convite, desconsidera papel ou instituição submetidos e não
+    estabelece sessão.
+  - RN6. Emissão, aceitação e revogação são registradas em trilha imutável sem senha nem endereço
+    secreto; a aceitação identifica a conta criada.
+- **Permissões geradas:** `INVITATION:CREATE`, `INVITATION:READ`, `INVITATION:REVOKE`
+- **Escopo de titularidade:** restrito à instituição em que o ator atua; `SYSTEM_ADMIN` atua sobre
+  qualquer instituição ativa.
+- **Prioridade:** E (proposta)
+- **Origem:** `DER` — deriva da cadeia de designação de RF-INS-002, RF-CUR-002, RF-TUR-002 e
+  RF-TUR-004, e fecha a lacuna de criação de contas reconhecida na seção 3.
+- **Critério de aceitação:** ator autorizado emite convite dirigido ou aberto, a pessoa aceita com os
+  dados permitidos e a conta recebe exatamente o papel e o vínculo declarados; limite, prazo e
+  revogação impedem aceitações posteriores.
+- **Rastreio:** RF-INS-002; RF-CUR-002; RF-TUR-002; RF-TUR-004; `ADR-0014`; `ADR-0027`.
 
 ---
 
@@ -2533,9 +2581,9 @@ Formato `RECURSO:ACAO`, recurso no singular, tudo em maiúsculas, sem curinga (`
 | `COHORT:REVOKE_PROFESSOR` | RF-TUR-002 |
 | `ENROLLMENT:CREATE` | RF-TUR-003 |
 | `ENROLLMENT:READ` | RF-TUR-003 |
-| `INVITATION:CREATE` | RF-TUR-004 |
-| `INVITATION:READ` | RF-TUR-004 |
-| `INVITATION:REVOKE` | RF-TUR-004 |
+| `INVITATION:CREATE` | RF-ACS-009, RF-TUR-004 |
+| `INVITATION:READ` | RF-ACS-009, RF-TUR-004 |
+| `INVITATION:REVOKE` | RF-ACS-009, RF-TUR-004 |
 | `EVENT:CREATE` | RF-EVT-001 |
 | `EVENT:READ` | RF-EVT-001, RF-EVT-004 |
 | `EVENT:UPDATE` | RF-EVT-001 |
@@ -2616,9 +2664,9 @@ sobre registros específicos é resolvido pela titularidade declarada em cada re
 
 | Papel | Permissões |
 | :--- | :--- |
-| `SYSTEM_ADMIN` | `INSTITUTION:CREATE`, `INSTITUTION:READ`, `INSTITUTION:UPDATE`, `INSTITUTION:DEACTIVATE`, `INSTITUTION:ASSIGN_ADMIN`, `INSTITUTION:REVOKE_ADMIN` |
-| `INSTITUTION_ADMIN` | `COURSE:CREATE/READ/UPDATE/DEACTIVATE`, `COURSE:ASSIGN_COORDINATOR`, `COURSE:REVOKE_COORDINATOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `INSTITUTION:CONSENT_AI`, `REPORT:GENERATE`, `REPORT:READ`, `REPORT:EXPORT` |
-| `COORDINATOR` | `COHORT:CREATE/READ/UPDATE/DEACTIVATE`, `COHORT:ASSIGN_PROFESSOR`, `COHORT:REVOKE_PROFESSOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `ARTICLE:READ`, `ARTICLE:EXPORT`, `PUBLICATION:READ`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `SUBMISSION:READ`, `PROGRESS:READ`, `RISK_SIGNAL:READ`, `REPORT:GENERATE`, `REPORT:READ`, `REPORT:EXPORT` |
+| `SYSTEM_ADMIN` | `INSTITUTION:CREATE`, `INSTITUTION:READ`, `INSTITUTION:UPDATE`, `INSTITUTION:DEACTIVATE`, `INSTITUTION:ASSIGN_ADMIN`, `INSTITUTION:REVOKE_ADMIN`, `INVITATION:CREATE/READ/REVOKE` |
+| `INSTITUTION_ADMIN` | `COURSE:CREATE/READ/UPDATE/DEACTIVATE`, `COURSE:ASSIGN_COORDINATOR`, `COURSE:REVOKE_COORDINATOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `INSTITUTION:CONSENT_AI`, `REPORT:GENERATE`, `REPORT:READ`, `REPORT:EXPORT`, `INVITATION:CREATE/READ/REVOKE` |
+| `COORDINATOR` | `COHORT:CREATE/READ/UPDATE/DEACTIVATE`, `COHORT:ASSIGN_PROFESSOR`, `COHORT:REVOKE_PROFESSOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `ARTICLE:READ`, `ARTICLE:EXPORT`, `PUBLICATION:READ`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `SUBMISSION:READ`, `PROGRESS:READ`, `RISK_SIGNAL:READ`, `REPORT:GENERATE`, `REPORT:READ`, `REPORT:EXPORT`, `INVITATION:CREATE/READ/REVOKE` |
 | `PROFESSOR` | `ENROLLMENT:CREATE`, `ENROLLMENT:READ`, `INVITATION:CREATE/READ/REVOKE`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:CREATE/READ`, `TEAM:ASSIGN_MEMBER`, `TEAM:REMOVE_MEMBER`, `TEAM:INVITE_MEMBER`, `ARTICLE:READ`, `ARTICLE:GRADE`, `ARTICLE:GRADE_MEMBER`, `PUBLICATION:CREATE/READ/UPDATE/DELETE`, `PERMISSION_GRANT:CREATE`, `PERMISSION_GRANT:REVOKE`, `PERMISSION_GRANT:READ`, `COHORT:READ`, `COURSE:READ`, `TEMPLATE:READ`, `ARTICLE:EXPORT`, `ARTICLE:RETURN`, `ARTICLE:CONCLUDE`, `SUBMISSION:READ`, `SUBMISSION:COMPARE`, `REMARK:CREATE/READ/UPDATE/RESOLVE/REOPEN/DISMISS`, `MESSAGE:CREATE/READ/REPLY/DELETE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ`, `AI_SUMMARY:READ`, `COMPLIANCE_CHECK:REQUEST/READ`, `SIMILARITY_CHECK:REQUEST/READ`, `AUTHORSHIP_SIGNAL:READ`, `PROGRESS:READ`, `RISK_SIGNAL:READ`, `CONTRIBUTION:READ` |
 | `STUDENT` | `EVENT:READ`, `MILESTONE:READ`, `TEAM:READ`, `TEAM:JOIN`, `ARTICLE:READ`, `PUBLICATION:CREATE/READ/UPDATE`, `COHORT:READ`, `ARTICLE:EDIT`, `ARTICLE:FORMAT`, `ARTICLE:IMPORT`, `ARTICLE:EXPORT`, `ARTICLE:READ_HISTORY`, `ARTICLE:RESTORE_VERSION`, `REFERENCE:CREATE/READ/UPDATE/DELETE`, `REFERENCE:CITE`, `SUBMISSION:CREATE/READ/REVOKE/COMPARE`, `REMARK:READ`, `REMARK:ADDRESS`, `MESSAGE:CREATE/READ/REPLY/DELETE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ`, `COMPLIANCE_CHECK:REQUEST/READ`, `SIMILARITY_CHECK:REQUEST/READ` |
 
@@ -2643,12 +2691,13 @@ cliente não teria o que traduzir (`PAD-NOM-008`).
 | `INTERNAL_ERROR` | `ADR-0025` §29 |
 | `AUTHENTICATION_FAILED` | RF-ACS-001 |
 | `INSTITUTION_INACTIVE` | RF-ACS-001, RF-INS-001, RF-INS-002, RF-IAA-005 |
-| `VALIDATION_FAILED` | RF-ACS-004, RF-ACS-005, RF-INS-001, RF-CUR-001, RF-TUR-001, RF-TUR-004, RF-TUR-005, RF-EVT-001, RF-EVT-002, RF-EQP-001, RF-EQP-002, RF-ART-002, RF-ART-003, RF-ART-004, RF-TPL-001, RF-EDT-003, RF-DSC-001 |
-| `PERMISSION_DENIED` | RF-ACP-005, RF-ACS-005, RF-CUR-001, RF-CUR-002, RF-TUR-001, RF-TUR-002, RF-TUR-003, RF-TUR-004, RF-EVT-002, RF-EVT-003, RF-EQP-005, RF-ART-002, RF-ART-003, RF-TPL-001, RF-REV-004, RF-REV-005, RF-REV-006, RF-REV-008, RF-REV-011 |
+| `VALIDATION_FAILED` | RF-ACS-004, RF-ACS-005, RF-ACS-009, RF-INS-001, RF-CUR-001, RF-TUR-001, RF-TUR-004, RF-TUR-005, RF-EVT-001, RF-EVT-002, RF-EQP-001, RF-EQP-002, RF-ART-002, RF-ART-003, RF-ART-004, RF-TPL-001, RF-EDT-003, RF-DSC-001 |
+| `PERMISSION_DENIED` | RF-ACP-005, RF-ACS-005, RF-ACS-009, RF-CUR-001, RF-CUR-002, RF-TUR-001, RF-TUR-002, RF-TUR-003, RF-TUR-004, RF-EVT-002, RF-EVT-003, RF-EQP-005, RF-ART-002, RF-ART-003, RF-TPL-001, RF-REV-004, RF-REV-005, RF-REV-006, RF-REV-008, RF-REV-011 |
 | `RESOURCE_NOT_FOUND` | RF-ACS-006, RF-ACS-007, RF-ACS-008, RF-INS-002, RF-CUR-002, RF-EVT-001, RF-EVT-004, RF-ART-001, RF-ART-004, RF-TPL-002, RF-EDT-001, RF-EDT-004, RF-EDT-007, RF-REV-002, RF-DSC-001, RF-DSC-003, RF-DSC-006 |
-| `EMAIL_ALREADY_REGISTERED` | RF-TUR-003, RF-TUR-005 |
-| `INVITATION_EXPIRED` | RF-ACS-003, RF-ACS-004, RF-TUR-005, RF-EQP-004 |
-| `INVITATION_REVOKED` | RF-TUR-005 |
+| `EMAIL_ALREADY_REGISTERED` | RF-ACS-009, RF-TUR-003, RF-TUR-005 |
+| `INVITATION_EXPIRED` | RF-ACS-003, RF-ACS-004, RF-ACS-009, RF-TUR-005, RF-EQP-004 |
+| `INVITATION_REVOKED` | RF-ACS-009, RF-TUR-005 |
+| `INVITATION_LIMIT_REACHED` | RF-ACS-009 |
 | `STUDENT_ALREADY_ENROLLED` | RF-TUR-003, RF-TUR-005 |
 | `COORDINATOR_ALREADY_ASSIGNED` | RF-CUR-002 |
 | `EVENT_SCOPE_NOT_ALLOWED` | RF-EVT-001 |

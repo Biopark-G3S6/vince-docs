@@ -35,13 +35,20 @@ como pendência desde a adoção dos ADRs.
    | `permission_grant` | a concessão direta de permissão entre contas (ADR-0014 §5) |
    | `invitation` | o convite como via de criação de conta |
    | `role_assignment_audit` | a trilha imutável de atribuição e revogação de papel |
+   | `invitation_audit` | a trilha imutável de emissão, aceitação e revogação de convite |
 
    `role_assignment_audit` consta desta lista por força de ADR-0014 §18 e ADR-0018 §6: a
    trilha é produzida pelo módulo `access` e, portanto, reside no schema dele. Ela NÃO DEVE
-   receber operação de alteração nem de remoção, e DEVE ser gravada na mesma transação da
-   atribuição ou da revogação que a origina (ADR-0019 §1). Ela não é derivável de `user_role`,
-   cuja linha é removida na revogação, nem de `permission_grant`, que registra a concessão
-   direta e não a atribuição de papel.
+    receber operação de alteração nem de remoção, e DEVE ser gravada na mesma transação da
+    atribuição ou da revogação que a origina (ADR-0019 §1). Ela não é derivável de `user_role`,
+    cuja linha é removida na revogação, nem de `permission_grant`, que registra a concessão
+    direta e não a atribuição de papel.
+
+    `invitation_audit` consta desta lista por força da trilha exigida pelo convite de criação de
+    conta. Ela DEVE registrar emissão, aceitação e revogação, sobreviver ao convite e à conta que
+    documenta, NÃO DEVE receber operação de alteração nem de remoção, e DEVE ser gravada na mesma
+    transação da operação que a origina (ADR-0019 §1). O registro de aceitação DEVE identificar a
+    conta criada, mas NÃO DEVE conter senha nem o endereço secreto do convite.
 
 6. Tabela não enumerada em §5 NÃO DEVE ser criada no schema `access` sem a reescrita deste ADR.
 7. As tabelas de §5 residem no mesmo módulo porque a resolução das permissões efetivas percorre `user`, `user_role`, `role_permission` e `permission_grant` em toda requisição autenticada (ADR-0014 §9); separá-las faria dessa travessia uma junção entre módulos, vedada por ADR-0006 §3, e uma referência sem integridade declarada, por ADR-0006 §4.
@@ -86,7 +93,7 @@ como pendência desde a adoção dos ADRs.
 
 ## Implicações
 
-1. O módulo `access` concentra nove tabelas e é o módulo de maior superfície do sistema; crescimento além das tabelas de §5 é indício de fronteira mal recortada e DEVE motivar a reescrita deste ADR (ADR-0004, implicação 2).
+1. O módulo `access` concentra dez tabelas e é o módulo de maior superfície do sistema; crescimento além das tabelas de §5 é indício de fronteira mal recortada e DEVE motivar a reescrita deste ADR (ADR-0004, implicação 2).
 2. Todo módulo passa a depender da fachada de `access`, que se torna ponto único de falha da autorização síncrona.
 3. O catálogo declarado em código e o catálogo da URS são duas cópias do mesmo fato; a conferência de §18 é a única proteção contra sua divergência, e por §19 ela depende de execução deliberada na revisão.
 4. A carga inicial passa a ser pré-requisito de qualquer ambiente utilizável: sem ela não existe papel, e sem papel não existe autorização concedida.
