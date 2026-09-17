@@ -40,6 +40,7 @@ repositório de versionamento.
 | [0026](0026-estrategia-de-internacionalizacao.md) | Estratégia de internacionalização | Aceito | 2026-08-19 |
 | [0027](0027-modulo-access.md) | Módulo `access`: identidade e autorização | Aceito | 2026-08-31 |
 | [0028](0028-modulo-institution.md) | Módulo `institution`: a instituição como fronteira de isolamento | Aceito | 2026-09-02 |
+| [0029](0029-modulo-course.md) | Módulo `course`: manutenção de cursos e coordenação | Aceito | 2026-09-17 |
 
 ## Decisões pendentes
 
