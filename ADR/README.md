@@ -41,6 +41,7 @@ repositório de versionamento.
 | [0027](0027-modulo-access.md) | Módulo `access`: identidade e autorização | Aceito | 2026-08-31 |
 | [0028](0028-modulo-institution.md) | Módulo `institution`: a instituição como fronteira de isolamento | Aceito | 2026-09-02 |
 | [0029](0029-modulo-course.md) | Módulo `course`: manutenção de cursos e coordenação | Aceito | 2026-09-17 |
+| [0031](0031-modulo-cohort.md) | Módulo `cohort`: turmas, matrículas e ingresso | Aceito | 2026-09-26 |
 
 ## Decisões pendentes
 
