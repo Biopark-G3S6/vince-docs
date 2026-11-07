@@ -34,7 +34,7 @@ transação entre módulos.
 
    | Tabela | Conteúdo |
    | :--- | :--- |
-   | `team` | identificação da equipe, evento, instituição e estado |
+   | `team` | identificação da equipe, evento e instituição |
    | `team_member` | participação do aluno na equipe, com situação e instante de entrada e saída |
    | `team_invitation` | convite de integrante, com prazo de validade e situação |
    | `team_advisor` | orientador responsável corrente pela equipe |
@@ -89,8 +89,8 @@ transação entre módulos.
 19. `TeamCreated` DEVE transportar identificadores opacos — equipe, evento, instituição e ator — e o
     instante do fato, com versão de contrato explícita. Falhas de entrega DEVEM usar retentativa e
     dead-letter queue (`ADR-0012`, `ADR-0021`).
-20. O módulo DEVE publicar também os fatos de alteração da composição — criação e encerramento de
-    equipe, entrada e saída de integrante —, cada um transportando o evento, a equipe e a
+20. O módulo DEVE publicar também os fatos de alteração da composição — criação de equipe, entrada e
+    saída de integrante —, cada um transportando o evento, a equipe e a
     **contagem resultante** que o módulo apurou dentro da sua transação. É deles que `event`
     alimenta a sua projeção de uso (`ADR-0032` §16); publicar apenas o fato sem a contagem obrigaria
     o consumidor a perguntar de volta e fecharia o ciclo que `ADR-0005` §6 proíbe.
@@ -127,6 +127,7 @@ transação entre módulos.
 | Guardar a contagem de equipes no evento | Faria a transação de `team` escrever em tabela de outro módulo. |
 | Reutilizar o convite de `access` para a equipe | Confunde criação de conta com formação de equipe; os prazos, as validações e o alcance são distintos. |
 | Expirar convites por rotina de varredura | A validade importa no instante do aceite; a varredura apenas antecipa limpeza e abriria janela de divergência. |
+| Dar estado à equipe | Nenhum requisito a encerra nesta versão (`RF-EQP-001` a `RF-EQP-006`); a coluna nasceria com um único valor alcançável. O integrante, esse sim, tem estado, porque a remoção precisa preservar a participação (§9). |
 
 ## Implicações
 
