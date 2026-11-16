@@ -5,9 +5,9 @@
 **Acadêmicos:** Grupo 03 — Camilly Azevedo, Gustavo Ferreira, Matheus Akio, Vitor Fernandes
 **Projeto:** VinceArt
 **Cliente:** Marciele R. Siveres e Angélica P. S. Meurer — curso de Administração
-**Versão:** 0.4
+**Versão:** 0.5
 **Status:** Em elaboração — pendente de ratificação pelas partes interessadas
-**Data:** 2026-08-26
+**Data:** 2026-11-05
 
 ---
 
@@ -2664,9 +2664,9 @@ sobre registros específicos é resolvido pela titularidade declarada em cada re
 
 | Papel | Permissões |
 | :--- | :--- |
-| `SYSTEM_ADMIN` | `INSTITUTION:CREATE`, `INSTITUTION:READ`, `INSTITUTION:UPDATE`, `INSTITUTION:DEACTIVATE`, `INSTITUTION:ASSIGN_ADMIN`, `INSTITUTION:REVOKE_ADMIN`, `INVITATION:CREATE/READ/REVOKE` |
-| `INSTITUTION_ADMIN` | `COURSE:CREATE/READ/UPDATE/DEACTIVATE`, `COURSE:ASSIGN_COORDINATOR`, `COURSE:REVOKE_COORDINATOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `INSTITUTION:CONSENT_AI`, `REPORT:GENERATE`, `REPORT:READ`, `REPORT:EXPORT`, `INVITATION:CREATE/READ/REVOKE` |
-| `COORDINATOR` | `COHORT:CREATE/READ/UPDATE/DEACTIVATE`, `COHORT:ASSIGN_PROFESSOR`, `COHORT:REVOKE_PROFESSOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `ARTICLE:READ`, `ARTICLE:EXPORT`, `PUBLICATION:READ`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `SUBMISSION:READ`, `PROGRESS:READ`, `RISK_SIGNAL:READ`, `REPORT:GENERATE`, `REPORT:READ`, `REPORT:EXPORT`, `INVITATION:CREATE/READ/REVOKE` |
+| `SYSTEM_ADMIN` | `INSTITUTION:CREATE`, `INSTITUTION:READ`, `INSTITUTION:UPDATE`, `INSTITUTION:DEACTIVATE`, `INSTITUTION:ASSIGN_ADMIN`, `INSTITUTION:REVOKE_ADMIN`, `INVITATION:CREATE/READ/REVOKE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ` |
+| `INSTITUTION_ADMIN` | `COURSE:CREATE/READ/UPDATE/DEACTIVATE`, `COURSE:ASSIGN_COORDINATOR`, `COURSE:REVOKE_COORDINATOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `INSTITUTION:CONSENT_AI`, `REPORT:GENERATE`, `REPORT:READ`, `REPORT:EXPORT`, `INVITATION:CREATE/READ/REVOKE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ` |
+| `COORDINATOR` | `COHORT:CREATE/READ/UPDATE/DEACTIVATE`, `COHORT:ASSIGN_PROFESSOR`, `COHORT:REVOKE_PROFESSOR`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:ASSIGN_ADVISOR`, `TEAM:REVOKE_ADVISOR`, `ARTICLE:READ`, `ARTICLE:EXPORT`, `PUBLICATION:READ`, `TEMPLATE:CREATE/READ/UPDATE/DEACTIVATE`, `SUBMISSION:READ`, `PROGRESS:READ`, `RISK_SIGNAL:READ`, `REPORT:GENERATE`, `REPORT:READ`, `REPORT:EXPORT`, `INVITATION:CREATE/READ/REVOKE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ` |
 | `PROFESSOR` | `ENROLLMENT:CREATE`, `ENROLLMENT:READ`, `INVITATION:CREATE/READ/REVOKE`, `EVENT:CREATE/READ/UPDATE/CANCEL`, `EVENT:ASSIGN_ADVISOR`, `EVENT:REVOKE_ADVISOR`, `MILESTONE:CREATE/READ/UPDATE/DELETE`, `TEAM:CREATE/READ`, `TEAM:ASSIGN_MEMBER`, `TEAM:REMOVE_MEMBER`, `TEAM:INVITE_MEMBER`, `ARTICLE:READ`, `ARTICLE:GRADE`, `ARTICLE:GRADE_MEMBER`, `PUBLICATION:CREATE/READ/UPDATE/DELETE`, `PERMISSION_GRANT:CREATE`, `PERMISSION_GRANT:REVOKE`, `PERMISSION_GRANT:READ`, `COHORT:READ`, `COURSE:READ`, `TEMPLATE:READ`, `ARTICLE:EXPORT`, `ARTICLE:RETURN`, `ARTICLE:CONCLUDE`, `SUBMISSION:READ`, `SUBMISSION:COMPARE`, `REMARK:CREATE/READ/UPDATE/RESOLVE/REOPEN/DISMISS`, `MESSAGE:CREATE/READ/REPLY/DELETE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ`, `AI_SUMMARY:READ`, `COMPLIANCE_CHECK:REQUEST/READ`, `SIMILARITY_CHECK:REQUEST/READ`, `AUTHORSHIP_SIGNAL:READ`, `PROGRESS:READ`, `RISK_SIGNAL:READ`, `CONTRIBUTION:READ` |
 | `STUDENT` | `EVENT:READ`, `MILESTONE:READ`, `TEAM:READ`, `TEAM:JOIN`, `ARTICLE:READ`, `PUBLICATION:CREATE/READ/UPDATE`, `COHORT:READ`, `ARTICLE:EDIT`, `ARTICLE:FORMAT`, `ARTICLE:IMPORT`, `ARTICLE:EXPORT`, `ARTICLE:READ_HISTORY`, `ARTICLE:RESTORE_VERSION`, `REFERENCE:CREATE/READ/UPDATE/DELETE`, `REFERENCE:CITE`, `SUBMISSION:CREATE/READ/REVOKE/COMPARE`, `REMARK:READ`, `REMARK:ADDRESS`, `MESSAGE:CREATE/READ/REPLY/DELETE`, `NOTIFICATION:READ`, `NOTIFICATION:MARK_READ`, `COMPLIANCE_CHECK:REQUEST/READ`, `SIMILARITY_CHECK:REQUEST/READ` |
 
@@ -2725,6 +2725,7 @@ cliente não teria o que traduzir (`PAD-NOM-008`).
 | `REMARK_ALREADY_CLOSED` | RF-REV-005, RF-REV-007, RF-REV-008 |
 | `REMARK_PENDING` | RF-REV-011 |
 | `AI_CONSENT_REQUIRED` | RF-IAA-001 |
+| `AI_SERVICE_UNAVAILABLE` | RF-IAA-001 |
 | `REPORT_NOT_READY` | RF-ACP-005, RF-ACP-006 |
 
 ---
@@ -2758,6 +2759,7 @@ cliente não teria o que traduzir (`PAD-NOM-008`).
 
 | Versão | Data | Justificativa | Responsável |
 | :--- | :--- | :--- | :--- |
+| 0.5 | 2026-11-05 | Proposta técnica para resolver a divergência entre `RF-DSC-006` (“qualquer usuário autenticado”) e a composição padrão de papéis: `NOTIFICATION:READ` e `NOTIFICATION:MARK_READ` passam a todos os papéis. Acrescentado `AI_SERVICE_UNAVAILABLE` como resposta para a indisponibilidade prevista em `RF-IAA-001`. Pendente de validação das partes interessadas. | Equipe de implementação |
 | 0.4 | 2026-08-26 | Documento adequado ao padrão institucional de especificação de requisitos: capa, controle de versão, quadro por requisito e termo de aceite. O conteúdo normativo não mudou — nenhum requisito foi acrescentado, removido ou reescrito. A numeração das seções passa a seguir o padrão: 1 Objetivo do Documento, 2 Lista de Requisitos, 3 Pendências, 4 Controle de versão, 5 Aceite; o que era seção de primeiro nível passa a subseção de 1 e de 2. Acrescentada a seção 2.2, que registra por que não há requisito não funcional nesta URS. | Vitor Fernandes |
 | 0.3 | 2026-08-26 | Registrada a fatia de acompanhamento e relatórios: categoria `ACP`, 6 requisitos funcionais, 6 permissões e 1 código de resposta. `INT` passa de §7.13 a §7.14. Com ela o escopo funcional se fecha: 70 requisitos em 14 categorias. `RF-ACP-003` e `RF-ACP-005` fixam as condições a detectar e as perguntas a responder, deixando limiares e composição à implementação. A pendência 5 passa a registrar a decisão de não entrevistar o coordenador, e a visão do aluno é separada nela como item 5.1. A pendência 10 deixa de designar a fatia faltante e passa a registrar o que foi deixado à implementação. | Vitor Fernandes |
 | 0.2 | 2026-08-25 | Registrada a fatia de produção e correção do artigo: 5 categorias novas — `TPL`, `EDT`, `REV`, `DSC`, `IAA` —, 32 requisitos funcionais, 8 regras estruturais (RE-10 a RE-17), 41 permissões e 15 códigos de resposta. O modelo de domínio passa a incluir Template, Referência, Citação, Discussão, Mensagem, Entrega e Apontamento. `INT` passa de §7.8 a §7.13. Pendências 11 a 17 acrescentadas; a pendência 10 passa a designar a fatia de acompanhamento e relatórios. | Vitor Fernandes |

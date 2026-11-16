@@ -41,12 +41,16 @@ repositório de versionamento.
 | [0027](0027-modulo-access.md) | Módulo `access`: identidade e autorização | Aceito | 2026-08-31 |
 | [0028](0028-modulo-institution.md) | Módulo `institution`: a instituição como fronteira de isolamento | Aceito | 2026-09-02 |
 | [0029](0029-modulo-course.md) | Módulo `course`: manutenção de cursos e coordenação | Aceito | 2026-09-17 |
+| [0030](0030-modulo-discussion.md) | Módulo `discussion`: conversa contínua da equipe | Aceito | 2026-11-05 |
+| [0031](0031-modulo-notification.md) | Módulo `notification`: caixa e entrega de notificações | Aceito | 2026-11-05 |
+| [0032](0032-modulo-assistance.md) | Módulo `assistance`: análises de apoio ao artigo | Aceito | 2026-11-05 |
+| [0033](0033-modulo-progress.md) | Módulo `progress`: acompanhamento, sinais e relatórios | Aceito | 2026-11-05 |
 
 ## Decisões pendentes
 
 | Tópico | Observação |
 | :--- | :--- |
-| Decomposição do sistema em módulos | Exige um ADR por módulo (ADR-0003 §12); depende dos requisitos funcionais. Os módulos `access` e `institution` estão decididos em ADR-0027 e ADR-0028; os demais permanecem pendentes. |
+| Decomposição do sistema em módulos | Exige um ADR por módulo (ADR-0003 §12); depende dos requisitos funcionais. `access`, `institution`, `course`, `discussion`, `notification`, `assistance` e `progress` estão decididos. `team`, `event`, `cohort` e `article` permanecem pendentes. |
 | Carga de referência e capacidade | Necessária para revalidar as metas de ADR-0011. |
 | Infraestrutura de implantação | Automação de implantação, ambientes, segredos, coletor de log e servidor de métricas (ADR-0022 §6 e §34; ADR-0023 §19). |
 | Conformidade legal no tratamento de dados pessoais | Padrões de Engenharia, PAD-SEG-015. |
